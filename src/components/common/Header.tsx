@@ -3,13 +3,13 @@ import React from "react";
 const Header = () => {
   return (
     <header className="bg-gradient-to-r from-red-700 to-red-500 text-white py-6 px-4 sm:px-8 md:px-16">
-      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="h-[15vh] min-h-[80px] max-h-[150px] w-full bg-gradient-to-r from-red-700 to-red-500 text-white px-4 md:px-16 flex items-center justify-between">
         
-        <div className="flex justify-center sm:justify-start">
+        <div className="flex justify-center gap-4">
           <img
             src="/logo-heroes.png"
             alt="Logo Héroes"
-            className="w-20 sm:w-16 md:w-20 h-auto"
+            className="w-16 h-auto bg-transparent"
           />
         </div>
 
