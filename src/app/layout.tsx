@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Libre_Franklin, Yaldevi } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/common/Header";
+import Navbar from "@/components/common/Navbar";
 
 const libreFranklin = Libre_Franklin({
   subsets: ["latin"],
@@ -31,6 +33,8 @@ export default function RootLayout({
       <body
         className={`${libreFranklin.variable} ${yaldevi.variable} antialiased font-sans`}
       >
+        <Header/>
+        <Navbar/>
         {children}
       </body>
     </html>
