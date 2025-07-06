@@ -20,56 +20,91 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-black text-white py-2 px-4 shadow-md">
+    <nav
+      className="bg-black text-white py-2 px-4 shadow-md"
+      role="navigation"
+      aria-label="Menú principal"
+    >
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        
-        <ul className="flex gap-8 text-xs md:text-sm font-semibold relative">
-          
+        <ul className="flex gap-8 text-xs md:text-sm font-semibold relative ml-12">
           <li className="relative">
             <button
               onClick={() => toggleMenu("donaciones")}
               className="flex items-center gap-1 hover:underline"
+              aria-haspopup="true"
+              aria-expanded={openMenu === "donaciones"}
+              aria-controls="menu-donaciones"
             >
               Donaciones y campañas <ChevronDown className="w-4 h-4" />
             </button>
-            <div className={getDropdownClasses("donaciones")}>
-              <a href="#activas" className="block hover:underline">Campañas activas</a>
-              <a href="#campanias" className="block hover:underline">Recursos entregados</a>
+            <div
+              id="menu-donaciones"
+              role="menu"
+              aria-label="Submenú Donaciones y campañas"
+              className={getDropdownClasses("donaciones")}
+            >
+              <a role="menuitem" href="#activas" className="block hover:underline">
+                Campañas activas
+              </a>
+              <a role="menuitem" href="#campanias" className="block hover:underline">
+                Recursos entregados
+              </a>
             </div>
           </li>
 
-          
           <li className="relative">
             <button
               onClick={() => toggleMenu("cuartel")}
               className="flex items-center gap-1 hover:underline"
+              aria-haspopup="true"
+              aria-expanded={openMenu === "cuartel"}
+              aria-controls="menu-cuartel"
             >
               Cuartel <ChevronDown className="w-4 h-4" />
             </button>
-            <div className={getDropdownClasses("cuartel")}>
-              <a href="#mapa" className="block hover:underline">¿Dónde estamos?</a>
-              <a href="#necesidades" className="block hover:underline">Necesidades actuales</a>
+            <div
+              id="menu-cuartel"
+              role="menu"
+              aria-label="Submenú Cuartel"
+              className={getDropdownClasses("cuartel")}
+            >
+              <a role="menuitem" href="#mapa" className="block hover:underline">
+                ¿Dónde estamos?
+              </a>
+              <a role="menuitem" href="#necesidades" className="block hover:underline">
+                Necesidades actuales
+              </a>
             </div>
           </li>
 
-          
           <li className="relative">
             <button
               onClick={() => toggleMenu("info")}
               className="flex items-center gap-1 hover:underline"
+              aria-haspopup="true"
+              aria-expanded={openMenu === "info"}
+              aria-controls="menu-info"
             >
               Información <ChevronDown className="w-4 h-4" />
             </button>
-            <div className={getDropdownClasses("info")}>
-              <a href="#faq" className="block hover:underline">Preguntas frecuentes</a>
-              <a href="#capacitaciones" className="block hover:underline">Capacitaciones</a>
+            <div
+              id="menu-info"
+              role="menu"
+              aria-label="Submenú Información"
+              className={getDropdownClasses("info")}
+            >
+              <a role="menuitem" href="#faq" className="block hover:underline">
+                Preguntas frecuentes
+              </a>
+              <a role="menuitem" href="#capacitaciones" className="block hover:underline">
+                Capacitaciones
+              </a>
             </div>
           </li>
         </ul>
 
-        
         <button aria-label="Iniciar sesión">
-          <LogIn className="w-5 h-5" />
+          <LogIn className="w-5 h-5 mr-12" />
         </button>
       </div>
     </nav>
