@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@600;700&family=Yaldevi:wght@400;500&display=swap');
 
+@import "leaflet/dist/leaflet.css";
+
 :root {
   --font-titulos: 'Libre-Franlin', sans-serif;
   --font-cuerpo: 'Yaldevi', sans-serif;
