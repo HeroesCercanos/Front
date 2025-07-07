@@ -14,3 +14,7 @@ h2, h3, p {
      font-family: var(--font-cuerpo);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
