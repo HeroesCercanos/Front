@@ -3,8 +3,8 @@ import { Libre_Franklin, Yaldevi } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/common/Header';
 import Navbar from '@/components/common/Navbar';
-import { ReportButton } from '@/components/common/ReportButton';
 import Footer from '@/components/common/Footer';
+import { ReportButton } from '@/components/common/ReportButton';
 
 const libreFranklin = Libre_Franklin({
 	subsets: ['latin'],
@@ -38,7 +38,7 @@ export default function RootLayout({
 				<Header />
 				<Navbar />
 				{children}
-				<ReportButton />
+				<ReportButton/>
 				<Footer />
 			</body>
 		</html>

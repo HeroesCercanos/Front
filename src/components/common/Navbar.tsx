@@ -43,8 +43,8 @@ const Navbar = () => {
               aria-label="Submenú Donaciones y campañas"
               className={getDropdownClasses("donaciones")}
             >
-              <a role="menuitem" href="#activas" className="block hover:underline cursor-pointer">
-                Campañas activas
+              <a role="menuitem" href="#campañas" className="block hover:underline cursor-pointer">
+                Ver campañas
               </a>
               <a role="menuitem" href="#campanias" className="block hover:underline cursor-pointer">
                 Recursos entregados
