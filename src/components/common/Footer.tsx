@@ -15,17 +15,22 @@ export default function Footer() {
 					<ul className='space-y-2'>
 						<li>
 							<Link href='#' className='hover:underline'>
-								Link 1
+								Donaciones
 							</Link>
 						</li>
 						<li>
 							<Link href='#' className='hover:underline'>
-								Link 2
+								Campañas activas
 							</Link>
 						</li>
 						<li>
 							<Link href='#' className='hover:underline'>
-								Link 3
+								Capacitaciones
+							</Link>
+						</li>
+						<li>
+							<Link href='#' className='hover:underline'>
+								Contacto / Preguntas frecuentes
 							</Link>
 						</li>
 					</ul>
