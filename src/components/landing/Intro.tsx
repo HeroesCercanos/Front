@@ -6,8 +6,7 @@ const PresentationSection = () => {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div>
           <h2 className="text-3xl md:text-4xl font-bold mb-4 uppercase">
-            Red de apoyo y ayuda comunitaria <br /> Al servicio de nuestros
-            bomberos voluntarios
+            Red de apoyo y ayuda comunitaria - Al servicio de nuestros bomberos voluntarios
           </h2>
           <p className="text-base md:text-lg leading-relaxed">
             Héroes Cercanos nace como una solución solidaria y accesible para

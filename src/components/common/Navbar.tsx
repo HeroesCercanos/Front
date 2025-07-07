@@ -30,7 +30,7 @@ const Navbar = () => {
           <li className="relative">
             <button
               onClick={() => toggleMenu("donaciones")}
-              className="flex items-center gap-1 hover:underline"
+              className="flex items-center gap-1 hover:underline cursor-pointer"
               aria-haspopup="true"
               aria-expanded={openMenu === "donaciones"}
               aria-controls="menu-donaciones"
@@ -43,10 +43,10 @@ const Navbar = () => {
               aria-label="Submenú Donaciones y campañas"
               className={getDropdownClasses("donaciones")}
             >
-              <a role="menuitem" href="#activas" className="block hover:underline">
+              <a role="menuitem" href="#activas" className="block hover:underline cursor-pointer">
                 Campañas activas
               </a>
-              <a role="menuitem" href="#campanias" className="block hover:underline">
+              <a role="menuitem" href="#campanias" className="block hover:underline cursor-pointer">
                 Recursos entregados
               </a>
             </div>
@@ -55,7 +55,7 @@ const Navbar = () => {
           <li className="relative">
             <button
               onClick={() => toggleMenu("cuartel")}
-              className="flex items-center gap-1 hover:underline"
+              className="flex items-center gap-1 hover:underline cursor-pointer"
               aria-haspopup="true"
               aria-expanded={openMenu === "cuartel"}
               aria-controls="menu-cuartel"
@@ -68,10 +68,10 @@ const Navbar = () => {
               aria-label="Submenú Cuartel"
               className={getDropdownClasses("cuartel")}
             >
-              <a role="menuitem" href="#mapa" className="block hover:underline">
+              <a role="menuitem" href="#cuartel" className="block hover:underline cursor-pointer">
                 ¿Dónde estamos?
               </a>
-              <a role="menuitem" href="#necesidades" className="block hover:underline">
+              <a role="menuitem" href="#necesidades" className="block hover:underline cursor-pointer">
                 Necesidades actuales
               </a>
             </div>
@@ -80,7 +80,7 @@ const Navbar = () => {
           <li className="relative">
             <button
               onClick={() => toggleMenu("info")}
-              className="flex items-center gap-1 hover:underline"
+              className="flex items-center gap-1 hover:underline cursor-pointer"
               aria-haspopup="true"
               aria-expanded={openMenu === "info"}
               aria-controls="menu-info"
@@ -93,10 +93,10 @@ const Navbar = () => {
               aria-label="Submenú Información"
               className={getDropdownClasses("info")}
             >
-              <a role="menuitem" href="#faq" className="block hover:underline">
+              <a role="menuitem" href="#faq" className="block hover:underline cursor-pointer">
                 Preguntas frecuentes
               </a>
-              <a role="menuitem" href="#capacitaciones" className="block hover:underline">
+              <a role="menuitem" href="#capacitaciones" className="block hover:underline cursor-pointer">
                 Capacitaciones
               </a>
             </div>
@@ -104,7 +104,7 @@ const Navbar = () => {
         </ul>
 
         <button aria-label="Iniciar sesión">
-          <LogIn className="w-5 h-5 mr-12" />
+          <LogIn className="w-5 h-5 mr-12 cursor-pointer" />
         </button>
       </div>
     </nav>
