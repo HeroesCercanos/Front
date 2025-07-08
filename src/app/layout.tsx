@@ -4,7 +4,8 @@ import './globals.css';
 import Header from '@/components/common/Header';
 import Navbar from '@/components/common/Navbar';
 import Footer from '@/components/common/Footer';
-import { ReportButton } from '@/components/common/ReportButton';
+import { ReportFloatingButton } from '@/components/common/ReportFloatingButton';
+
 
 const libreFranklin = Libre_Franklin({
 	subsets: ['latin'],
@@ -38,7 +39,8 @@ export default function RootLayout({
 				<Header />
 				<Navbar />
 				{children}
-				<ReportButton/>
+				<ReportFloatingButton />
+
 				<Footer />
 			</body>
 		</html>

@@ -15,4 +15,15 @@ export interface Need {
   quarterId: number;
 }
 
+export interface IncidentReport {
+  type: "incendio" | "accidente" | string;
+  location: {
+    lat: number;
+    lng: number;
+  } | null;
+  description?: string; 
+  comments?: string;
+}
+
+
 
