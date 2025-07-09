@@ -10,7 +10,9 @@ export default function InfoSection() {
 	const handleClick = (id: string) => router.push(`/faqs#${id}`);
 
 	return (
-		<section className='w-full px-4 md:px-16 py-12 bg-gray-100'>
+		<section 
+		id="FAQ"
+		className='w-full px-4 md:px-16 py-12 bg-gray-100'>
 			<div className='max-w-7xl mx-auto px-4 md:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start'>
 				<div className='w-full'>
 					<div className='w-full bg-white rounded-xl shadow-lg overflow-hidden'>
