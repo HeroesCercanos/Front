@@ -4,9 +4,21 @@ import React, { useState } from "react";
 import CampaignList from "@/components/campaign/CampaignList";
 import { preLoadCampaigns } from "@/helpers/preLoadCampaigns";
 import DonationForm from "../forms/DonationsForm";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 const Campaigns = () => {
+  const { userData } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
+
+  const handleDonateClick = () => {
+    if (userData) {
+      setIsModalOpen(true);
+    } else {
+      router.push("/login");
+    }
+  };
 
   return (
     <section
@@ -21,7 +33,7 @@ const Campaigns = () => {
         <CampaignList campaigns={preLoadCampaigns} />
 
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={handleDonateClick}
           className="mt-10 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-full transition duration-300"
         >
           QUIERO DONAR
