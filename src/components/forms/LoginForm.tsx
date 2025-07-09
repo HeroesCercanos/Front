@@ -5,8 +5,14 @@ import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import { ILoginProps, ILoginErrors } from "@/interfaces";
 import { validateLoginForm } from "@/helpers/validateLoginRegister";
+import { sendLogin } from "@/helpers/sendLogin";
+import { useRouter } from "next/navigation";
+
+
 
 const LoginForm = () => {
+  const router = useRouter();
+  
   const [showPassword, setShowPassword] = useState(false);
   const [formValues, setFormValues] = useState<ILoginProps>({
     email: "",
@@ -19,18 +25,27 @@ const LoginForm = () => {
     setFormValues({ ...formValues, [name]: value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const errors = validateLoginForm(formValues);
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  const errors = validateLoginForm(formValues);
 
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
-    } else {
-      setFormErrors({});
-      console.log("Enviar al backend:", formValues);
-      // TODO: Acá va la lógica para autenticar
+  if (Object.keys(errors).length > 0) {
+    setFormErrors(errors);
+  } else {
+    setFormErrors({});
+    try {
+      const response = await sendLogin(formValues);
+
+      if (response) {
+        console.log("Login exitoso:", response);
+        // TODO: Guardar token, etc.
+        router.push("/")
+      }
+    } catch (error) {
+      console.error("Error en login:", error);
     }
-  };
+  }
+};
 
   return (
     <div className="bg-white bg-opacity-80 p-6 rounded-lg shadow-lg w-full max-w-md text-black mx-auto">
