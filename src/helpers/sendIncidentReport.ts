@@ -1,6 +1,21 @@
 import { IncidentReport } from "@/interfaces";
 
 export const sendIncidentReport = async (report: IncidentReport) => {
+  console.log("Simulando envío del reporte:", report);
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      alert("Simulación: reporte enviado correctamente");
+      resolve({ ok: true });
+    }, 1000);
+  });
+};
+
+//Se usará el codigo de arriba hasta que se conecte al back, luego usaré el de aca abajo
+
+/*import { IncidentReport } from "@/interfaces";
+
+export const sendIncidentReport = async (report: IncidentReport) => {
   try {
     const response = await fetch("/api/incidents", {
       method: "POST",
@@ -19,4 +34,4 @@ export const sendIncidentReport = async (report: IncidentReport) => {
     console.error(error);
     alert("Ocurrió un error al enviar el reporte.");
   }
-};
+};*/
