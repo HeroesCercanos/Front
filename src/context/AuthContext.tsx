@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { IUserSession } from '@/interfaces';
+import Cookies from 'js-cookie';
 
 interface IAuthContextProps {
   userData: IUserSession | null;
@@ -23,10 +24,10 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
   useEffect(() => {
     if (userData) {
       localStorage.setItem('userSession', JSON.stringify(userData));
-      // Cookies.set('userSession', JSON.stringify(userData)); 
+      Cookies.set('userSession', JSON.stringify(userData)); 
     } else {
       localStorage.removeItem('userSession');
-      // Cookies.remove('userSession'); 
+      Cookies.remove('userSession'); 
     }
   }, [userData]);
 
