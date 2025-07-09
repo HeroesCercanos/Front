@@ -5,6 +5,7 @@ import Header from '@/components/common/Header';
 import Navbar from '@/components/common/Navbar';
 import Footer from '@/components/common/Footer';
 import { ReportFloatingButton } from '@/components/common/ReportFloatingButton';
+import { AuthProvider } from '@/context/AuthContext';
 
 
 const libreFranklin = Libre_Franklin({
@@ -36,12 +37,13 @@ export default function RootLayout({
 			<body
 				className={`${libreFranklin.variable} ${yaldevi.variable} antialiased font-sans`}
 			>
+				<AuthProvider>
 				<Header />
 				<Navbar />
 				{children}
 				<ReportFloatingButton />
-
 				<Footer />
+				</AuthProvider>
 			</body>
 		</html>
 	);
