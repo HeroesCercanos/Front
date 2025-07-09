@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { LogIn, ChevronDown } from "lucide-react";
 import { useState } from "react";
 
@@ -15,11 +16,7 @@ const Navbar = () => {
     return `
       absolute top-full mt-2 bg-white text-black shadow-lg rounded p-2 space-y-1 z-50 origin-top
       transform transition-all duration-300 ease-in-out
-      ${
-        isOpen
-          ? "scale-y-100 opacity-100"
-          : "scale-y-0 opacity-0 pointer-events-none"
-      }
+      ${isOpen ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0 pointer-events-none"}
     `;
   };
 
@@ -31,6 +28,8 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <ul className="flex gap-8 text-xs md:text-sm font-semibold relative ml-12">
+          
+          
           <li className="relative">
             <button
               onClick={() => toggleMenu("donaciones")}
@@ -47,23 +46,26 @@ const Navbar = () => {
               aria-label="Submenú Donaciones y campañas"
               className={getDropdownClasses("donaciones")}
             >
-              <a
+              <Link
                 role="menuitem"
-                href="#campañas"
+                href="/#campañas"
+                scroll={true}
                 className="block hover:underline cursor-pointer"
               >
                 Ver campañas
-              </a>
-              <a
+              </Link>
+              <Link
                 role="menuitem"
-                href="#campanias"
+                href="/#campanias"
+                scroll={true}
                 className="block hover:underline cursor-pointer"
               >
                 Recursos entregados - Testimonios
-              </a>
+              </Link>
             </div>
           </li>
 
+          
           <li className="relative">
             <button
               onClick={() => toggleMenu("cuartel")}
@@ -80,23 +82,26 @@ const Navbar = () => {
               aria-label="Submenú Cuartel"
               className={getDropdownClasses("cuartel")}
             >
-              <a
+              <Link
                 role="menuitem"
-                href="#cuartel"
+                href="/#cuartel"
+                scroll={true}
                 className="block hover:underline cursor-pointer"
               >
                 ¿Dónde estamos?
-              </a>
-              <a
+              </Link>
+              <Link
                 role="menuitem"
-                href="#necesidades"
+                href="/#necesidades"
+                scroll={true}
                 className="block hover:underline cursor-pointer"
               >
                 Necesidades actuales
-              </a>
+              </Link>
             </div>
           </li>
 
+          
           <li className="relative">
             <button
               onClick={() => toggleMenu("info")}
@@ -113,27 +118,30 @@ const Navbar = () => {
               aria-label="Submenú Información"
               className={getDropdownClasses("info")}
             >
-              <a
+              <Link
                 role="menuitem"
-                href="#FAQ"
+                href="/#FAQ"
+                scroll={true}
                 className="block hover:underline cursor-pointer"
               >
                 Preguntas frecuentes
-              </a>
-              <a
+              </Link>
+              <Link
                 role="menuitem"
-                href="#capacitaciones"
+                href="/#capacitaciones"
+                scroll={true}
                 className="block hover:underline cursor-pointer"
               >
                 Capacitaciones
-              </a>
+              </Link>
             </div>
           </li>
         </ul>
 
-        <a href="/login" aria-label="Iniciar sesión" className="mr-12">
+        
+        <Link href="/login" aria-label="Iniciar sesión" className="mr-12">
           <LogIn className="w-5 h-5 cursor-pointer" />
-        </a>
+        </Link>
       </div>
     </nav>
   );
