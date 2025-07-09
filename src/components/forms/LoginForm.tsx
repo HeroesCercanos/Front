@@ -7,12 +7,11 @@ import { ILoginProps, ILoginErrors } from "@/interfaces";
 import { validateLoginForm } from "@/helpers/validateLoginRegister";
 import { sendLogin } from "@/helpers/sendLogin";
 import { useRouter } from "next/navigation";
-
-
+import { useEffect } from "react";
 
 const LoginForm = () => {
   const router = useRouter();
-  
+
   const [showPassword, setShowPassword] = useState(false);
   const [formValues, setFormValues] = useState<ILoginProps>({
     email: "",
@@ -26,32 +25,46 @@ const LoginForm = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  const errors = validateLoginForm(formValues);
+    e.preventDefault();
+    const errors = validateLoginForm(formValues);
 
-  if (Object.keys(errors).length > 0) {
-    setFormErrors(errors);
-  } else {
-    setFormErrors({});
-    try {
-      const response = await sendLogin(formValues);
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+    } else {
+      setFormErrors({});
+      try {
+        const response = await sendLogin(formValues);
 
-      if (response) {
-        console.log("Login exitoso:", response);
-        // TODO: Guardar token, etc.
-        router.push("/")
+        if (response) {
+          console.log("Login exitoso:", response);
+          // TODO: Guardar token, etc.
+          router.push("/");
+        }
+      } catch (error) {
+        console.error("Error en login:", error);
       }
-    } catch (error) {
-      console.error("Error en login:", error);
     }
-  }
-};
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:3000/auth/google/login";
+  };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+
+    if (token) {
+      localStorage.setItem("jwtToken", token);
+      window.location.href = "/";
+    }
+  }, []);
 
   return (
     <div className="bg-white bg-opacity-80 p-6 rounded-lg shadow-lg w-full max-w-md text-black mx-auto">
       <h2 className="text-2xl font-bold text-center mb-2">Iniciar sesión</h2>
       <p className="text-center text-sm text-gray-700 mb-4">
-        ¡Bienvenido! <br/>
+        ¡Bienvenido! <br />
         Gracias por donar, ayudar y salvar.
       </p>
 
@@ -114,6 +127,7 @@ const LoginForm = () => {
         </button>
 
         <button
+          onClick={handleGoogleLogin}
           type="button"
           className="w-full border border-gray-300 hover:bg-gray-100 text-black font-medium py-2 px-4 rounded flex items-center justify-center gap-2"
         >
