@@ -1,4 +1,4 @@
-import { IncidentReport } from "@/interfaces";
+import { IncidentReport } from "@/interfaces/incident.interface";
 
 export const sendIncidentReport = async (report: IncidentReport) => {
   console.log("Simulando envío del reporte:", report);

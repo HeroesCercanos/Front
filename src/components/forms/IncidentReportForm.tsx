@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { validateIncidentReport } from "@/helpers/validateIncidentReport";
 import { sendIncidentReport } from "@/helpers/sendIncidentReport";
-import { IncidentReport, IncidentType } from "@/interfaces";
+import { IncidentReport, IncidentType } from "@/interfaces/incident.interface";
 import dynamic from "next/dynamic";
 
 const MapSelector = dynamic(() => import("../Map/MapSelector"), { ssr: false });
