@@ -71,3 +71,12 @@ export interface IRegisterResponse {
   token?: string;
 }
 
+export interface IUserSession {
+    token: string,
+    user: {
+        id: number,
+        email: string,
+        name: string,
+        donations: []
+    }
+}
