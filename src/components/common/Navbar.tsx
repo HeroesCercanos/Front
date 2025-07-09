@@ -15,7 +15,11 @@ const Navbar = () => {
     return `
       absolute top-full mt-2 bg-white text-black shadow-lg rounded p-2 space-y-1 z-50 origin-top
       transform transition-all duration-300 ease-in-out
-      ${isOpen ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0 pointer-events-none"}
+      ${
+        isOpen
+          ? "scale-y-100 opacity-100"
+          : "scale-y-0 opacity-0 pointer-events-none"
+      }
     `;
   };
 
@@ -43,11 +47,19 @@ const Navbar = () => {
               aria-label="Submenú Donaciones y campañas"
               className={getDropdownClasses("donaciones")}
             >
-              <a role="menuitem" href="#campañas" className="block hover:underline cursor-pointer">
+              <a
+                role="menuitem"
+                href="#campañas"
+                className="block hover:underline cursor-pointer"
+              >
                 Ver campañas
               </a>
-              <a role="menuitem" href="#campanias" className="block hover:underline cursor-pointer">
-                Recursos entregados
+              <a
+                role="menuitem"
+                href="#campanias"
+                className="block hover:underline cursor-pointer"
+              >
+                Recursos entregados - Testimonios
               </a>
             </div>
           </li>
@@ -68,10 +80,18 @@ const Navbar = () => {
               aria-label="Submenú Cuartel"
               className={getDropdownClasses("cuartel")}
             >
-              <a role="menuitem" href="#cuartel" className="block hover:underline cursor-pointer">
+              <a
+                role="menuitem"
+                href="#cuartel"
+                className="block hover:underline cursor-pointer"
+              >
                 ¿Dónde estamos?
               </a>
-              <a role="menuitem" href="#necesidades" className="block hover:underline cursor-pointer">
+              <a
+                role="menuitem"
+                href="#necesidades"
+                className="block hover:underline cursor-pointer"
+              >
                 Necesidades actuales
               </a>
             </div>
@@ -93,19 +113,27 @@ const Navbar = () => {
               aria-label="Submenú Información"
               className={getDropdownClasses("info")}
             >
-              <a role="menuitem" href="#faq" className="block hover:underline cursor-pointer">
+              <a
+                role="menuitem"
+                href="#FAQ"
+                className="block hover:underline cursor-pointer"
+              >
                 Preguntas frecuentes
               </a>
-              <a role="menuitem" href="#capacitaciones" className="block hover:underline cursor-pointer">
+              <a
+                role="menuitem"
+                href="#capacitaciones"
+                className="block hover:underline cursor-pointer"
+              >
                 Capacitaciones
               </a>
             </div>
           </li>
         </ul>
 
-        <button aria-label="Iniciar sesión">
-          <LogIn className="w-5 h-5 mr-12 cursor-pointer" />
-        </button>
+        <a href="/login" aria-label="Iniciar sesión" className="mr-12">
+          <LogIn className="w-5 h-5 cursor-pointer" />
+        </a>
       </div>
     </nav>
   );

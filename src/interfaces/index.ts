@@ -1,8 +1,8 @@
 export interface ICampaign {
-  id: number;
   title: string;
   description: string;
   startDate: string;
+  id: number;
   endDate: string;
   isActive: boolean;
 }
@@ -25,5 +25,14 @@ export interface IncidentReport {
   comments?: string;
 }
 
+export interface ILoginProps {
+  email: string;
+  password: string;
+}
+
+export interface ILoginErrors {
+  email?: string;
+  password?: string;
+}
 
 
