@@ -1,9 +1,8 @@
-
 "use client";
 
 import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import L from "leaflet";
 
 const customIcon = new L.Icon({
@@ -16,24 +15,44 @@ interface MapSelectorProps {
   onSelectLocation: (location: { lat: number; lng: number }) => void;
 }
 
-const LocationMarker = ({ onSelectLocation }: MapSelectorProps) => {
-  const [position, setPosition] = useState<L.LatLng | null>(null);
-
-  useMapEvents({
-    click(e) {
-      setPosition(e.latlng);
-      onSelectLocation({ lat: e.latlng.lat, lng: e.latlng.lng });
-    },
-  });
-
-  return position === null ? null : <Marker position={position} icon={customIcon} />;
-};
+const defaultPosition = { lat: -30.2531, lng: -57.6362 }; // Monte Caseros
 
 const MapSelector = ({ onSelectLocation }: MapSelectorProps) => {
+  const [position, setPosition] = useState<{ lat: number; lng: number }>(defaultPosition);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        setPosition(coords);
+        onSelectLocation(coords);
+      },
+      (err) => {
+        console.error("No se pudo obtener la ubicación del usuario", err);
+        // ya queda Monte Caseros como fallback
+        onSelectLocation(defaultPosition);
+      }
+    );
+  }, []);
+
+  const LocationMarker = () => {
+    useMapEvents({
+      click(e) {
+        const coords = { lat: e.latlng.lat, lng: e.latlng.lng };
+        setPosition(coords);
+        onSelectLocation(coords);
+      },
+    });
+
+    return (
+      <Marker position={[position.lat, position.lng]} icon={customIcon} />
+    );
+  };
+
   return (
     <MapContainer
-      center={[-38.4161, -63.6167]} // Argentina
-      zoom={5}
+      center={[position.lat, position.lng]}
+      zoom={13}
       scrollWheelZoom={false}
       style={{ height: "300px", width: "100%" }}
     >
@@ -41,11 +60,15 @@ const MapSelector = ({ onSelectLocation }: MapSelectorProps) => {
         attribution="&copy; OpenStreetMap"
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <LocationMarker onSelectLocation={onSelectLocation} />
+      <LocationMarker />
     </MapContainer>
   );
 };
 
 export default MapSelector;
+
+
+
+
 
 

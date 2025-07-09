@@ -33,7 +33,7 @@ export const ReportFloatingButton = () => {
         >
          <div
           className="bg-white p-4 rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto relative"
-          onClick={(e) => e.stopPropagation()} // Evita cierre al hacer clic dentro
+          onClick={(e) => e.stopPropagation()} 
          >
          <IncidentReportForm />
          </div>

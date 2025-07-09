@@ -15,15 +15,18 @@ export interface Need {
   quarterId: number;
 }
 
+export type IncidentType = "incendio" | "accidente";
+
 export interface IncidentReport {
-  type: "incendio" | "accidente" | string;
+  type: IncidentType;
   location: {
     lat: number;
     lng: number;
   } | null;
-  description?: string; 
+  description?: string;
   comments?: string;
 }
+
 
 export interface ILoginProps {
   email: string;
