@@ -4,7 +4,7 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (
-    (pathname === "/dashboard" || pathname === "/donar") &&
+    (pathname === "/donar") &&
     !request.cookies.get("userSession")?.value
   ) {
     const url = request.nextUrl.clone();
