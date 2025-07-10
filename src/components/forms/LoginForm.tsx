@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import { validateLoginForm } from "@/helpers/validateLoginRegister";
 import { sendLogin } from "@/helpers/sendLogin";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { ILoginErrors, ILoginProps } from "@/interfaces/AuthInterfaces/login.interfaces";
 
 const LoginForm = () => {
@@ -18,6 +17,20 @@ const LoginForm = () => {
     password: "",
   });
   const [formErrors, setFormErrors] = useState<ILoginErrors>({});
+
+  // Capturar token de URL (login Google OAuth)
+  useEffect(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get("token");
+
+  if (token) {
+    localStorage.setItem("jwtToken", token);
+    // Limpiar URL sin recargar para que el token no quede visible
+    window.history.replaceState({}, document.title, window.location.pathname);
+    router.push("/");
+  }
+}, []);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -35,9 +48,9 @@ const LoginForm = () => {
       try {
         const response = await sendLogin(formValues);
 
-        if (response) {
-          console.log("Login exitoso:", response);
-          // TODO: Guardar token, etc.
+        if (response && response.token) {
+          // Guardar token cuando login es manual
+          localStorage.setItem("jwtToken", response.token);
           router.push("/");
         }
       } catch (error) {
@@ -49,16 +62,6 @@ const LoginForm = () => {
   const handleGoogleLogin = () => {
     window.location.href = "http://localhost:3000/auth/google";
   };
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");
-
-    if (token) {
-      localStorage.setItem("jwtToken", token);
-      window.location.href = "/";
-    }
-  }, []);
 
   return (
     <div className="bg-white bg-opacity-80 p-6 rounded-lg shadow-lg w-full max-w-md text-black mx-auto">
