@@ -4,7 +4,7 @@ import { Instagram, Facebook } from 'lucide-react';
 export default function Footer() {
 	return (
 		<footer className='bg-black text-white'>
-			<div className='max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8'>
+			<div className='max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row justify-between'>
 				<div>
 					<h1 className='text-2xl font-bold'>HÉROES CERCANOS</h1>
 					<p className='uppercase mt-1 text-sm'>Doná. Ayudá. Salvá.</p>
@@ -50,9 +50,9 @@ export default function Footer() {
 						<p>Teléfono: (03775) 422207</p>
 					</address>
 				</div>
-				<div>
-					<h2 className='font-semibold mb-4'>Síguenos</h2>
-					<div className='flex space-x-4'>
+				<div className='flex flex-col items-end space-y-2'>
+					<h2 className='font-semibold mb-4 text-right'>Síguenos</h2>
+					<div className='flex space-x-4 '>
 						<a
 							href='https://www.instagram.com/bomberosmontecaseros/'
 							aria-label='Instagram'
