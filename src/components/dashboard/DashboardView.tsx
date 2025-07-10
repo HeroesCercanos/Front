@@ -12,7 +12,6 @@ import {
 import DashboardCard from '@/components/dashboard/DashboardCard';
 import AlertBar from '@/components/dashboard/AlertBar';
 import { useDashboardData } from '@/helpers/useDashboardData';
-import DonateButton from '@/components/common/DonateButton';
 
 export default function DashboardView() {
 	const { data, isLoading } = useDashboardData();
@@ -36,15 +35,13 @@ export default function DashboardView() {
 			</header>
 
 			<div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-				<DonateButton>
-					<DashboardCard
-						icon={<Gift size={80} />}
-						title='Quiero hacer una donación'
-						description='Doná a nuestro cuartel'
-						buttonLabel='Donar ahora'
-						onClick={() => {}}
-					/>
-				</DonateButton>
+				<DashboardCard
+					icon={<Gift size={80} />}
+					title='Quiero hacer una donación'
+					description='Doná a nuestro cuartel'
+					buttonLabel='Donar ahora'
+					onClick={() => {}}
+				/>
 
 				<DashboardCard
 					icon={<ClipboardList size={80} />}
