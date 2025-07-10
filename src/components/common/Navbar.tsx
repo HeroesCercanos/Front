@@ -38,7 +38,7 @@ const Navbar = () => {
               aria-expanded={openMenu === "donaciones"}
               aria-controls="menu-donaciones"
             >
-              Donaciones y campañas <ChevronDown className="w-4 h-4" />
+              Campañas <ChevronDown className="w-4 h-4" />
             </button>
             <div
               id="menu-donaciones"
@@ -52,15 +52,7 @@ const Navbar = () => {
                 scroll={true}
                 className="block hover:underline cursor-pointer"
               >
-                Ver campañas
-              </Link>
-              <Link
-                role="menuitem"
-                href="/#campanias"
-                scroll={true}
-                className="block hover:underline cursor-pointer"
-              >
-                Recursos entregados - Testimonios
+                Campañas activas
               </Link>
             </div>
           </li>

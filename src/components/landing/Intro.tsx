@@ -10,8 +10,7 @@ const PresentationSection = () => {
           </h2>
           <p className="text-base md:text-lg leading-relaxed">
             Héroes Cercanos nace como una solución solidaria y accesible para
-            que cualquier ciudadano pueda colaborar con donaciones materiales o
-            monetarias, de forma sencilla, directa y transparente.
+            que cualquier ciudadano pueda colaborar con donaciones de forma sencilla, directa y transparente.
           </p>
         </div>
 
