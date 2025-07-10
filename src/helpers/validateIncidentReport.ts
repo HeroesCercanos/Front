@@ -1,4 +1,4 @@
-import { IncidentReport } from "@/interfaces";
+import { IncidentReport } from "@/interfaces/incident.interface";
 
 export const validateIncidentReport = (report: IncidentReport): string | null => {
   if (!report.type || (report.type !== "incendio" && report.type !== "accidente")) {

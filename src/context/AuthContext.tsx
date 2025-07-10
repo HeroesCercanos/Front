@@ -1,8 +1,8 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { IUserSession } from '@/interfaces';
 import Cookies from 'js-cookie';
+import { IUserSession } from '@/interfaces/AuthInterfaces/user.interface';
 
 interface IAuthContextProps {
   userData: IUserSession | null;

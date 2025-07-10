@@ -1,4 +1,4 @@
-import { ILoginProps, ILoginResponse } from "@/interfaces";
+import { ILoginProps, ILoginResponse } from "@/interfaces/AuthInterfaces/login.interfaces";
 
 export const sendLogin = async (
   credentials: ILoginProps

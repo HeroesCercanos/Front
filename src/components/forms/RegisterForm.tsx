@@ -3,10 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
-import { IRegisterErrors, IRegisterValues } from "@/interfaces/index"
 import { validateRegisterForm } from "@/helpers/validateLoginRegister";
 import { sendRegister } from "@/helpers/sendRegister";
 import { useRouter } from "next/navigation";
+import { IRegisterErrors, IRegisterValues } from "@/interfaces/AuthInterfaces/register.interfaces";
 
 
 

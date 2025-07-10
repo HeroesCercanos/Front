@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
-import { ILoginProps, ILoginErrors } from "@/interfaces";
 import { validateLoginForm } from "@/helpers/validateLoginRegister";
 import { sendLogin } from "@/helpers/sendLogin";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { ILoginErrors, ILoginProps } from "@/interfaces/AuthInterfaces/login.interfaces";
 
 const LoginForm = () => {
   const router = useRouter();
