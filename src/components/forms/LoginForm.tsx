@@ -47,7 +47,7 @@ const LoginForm = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:3000/auth/google/login";
+    window.location.href = "http://localhost:3000/auth/google";
   };
 
   useEffect(() => {
