@@ -1,7 +1,7 @@
 // src/components/campaigns/CampaignList.tsx
 import React from "react";
 import CampaignCard from "./CampaignCard";
-import { ICampaign } from "@/interfaces";
+import { ICampaign } from "@/interfaces/campaign.interface";
 
 interface Props {
   campaigns: ICampaign[];

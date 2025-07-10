@@ -1,5 +1,6 @@
+import { ILoginErrors, ILoginProps } from "@/interfaces/AuthInterfaces/login.interfaces";
+import { IRegisterErrors, IRegisterValues } from "@/interfaces/AuthInterfaces/register.interfaces";
 
-import { ILoginProps, ILoginErrors } from "@/interfaces/index";
 
 export function validateLoginForm(values: ILoginProps): ILoginErrors {
   const errors: ILoginErrors = {};
@@ -17,8 +18,6 @@ export function validateLoginForm(values: ILoginProps): ILoginErrors {
   return errors;
 }
 
-
-import { IRegisterValues, IRegisterErrors } from "@/interfaces";
 
 export function validateRegisterForm(values: IRegisterValues): IRegisterErrors {
   const errors: IRegisterErrors = {};

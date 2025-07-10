@@ -1,4 +1,4 @@
-import { ICampaign } from "@/interfaces";
+import { ICampaign } from "@/interfaces/campaign.interface";
 
 
 export const preLoadCampaigns: ICampaign[] = [

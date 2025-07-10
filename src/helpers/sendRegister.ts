@@ -1,4 +1,4 @@
-import { IRegisterProps, IRegisterResponse } from "@/interfaces";
+import { IRegisterProps, IRegisterResponse } from "@/interfaces/AuthInterfaces/register.interfaces";
 
 export const sendRegister = async (
   newUser: IRegisterProps
