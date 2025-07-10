@@ -90,14 +90,6 @@ const Navbar = () => {
               >
                 ¿Dónde estamos?
               </Link>
-              <Link
-                role="menuitem"
-                href="/#necesidades"
-                scroll={true}
-                className="block hover:underline cursor-pointer"
-              >
-                Necesidades actuales
-              </Link>
             </div>
           </li>
 
