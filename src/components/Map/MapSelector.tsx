@@ -29,7 +29,6 @@ const MapSelector = ({ onSelectLocation }: MapSelectorProps) => {
       },
       (err) => {
         console.error("No se pudo obtener la ubicación del usuario", err);
-        // ya queda Monte Caseros como fallback
         onSelectLocation(defaultPosition);
       }
     );
