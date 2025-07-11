@@ -47,7 +47,6 @@ export const IncidentReportForm = () => {
 
     alert("¡Reporte enviado con éxito!");
 
-    // 3. Resetear formulario
     setIncidentType("");
     setLocation(null);
     setDescription("");
@@ -105,8 +104,7 @@ export const IncidentReportForm = () => {
       <button
         type="submit"
         className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
-      >
-        Enviar Reporte
+      >Enviar Reporte
       </button>
     </form>
   );

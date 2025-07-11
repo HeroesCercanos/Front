@@ -125,8 +125,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         <button
           type="submit"
           className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition"
-        >
-          Registrarse
+        >Registrarse
         </button>
 
         <p className="text-center text-sm mt-2">
