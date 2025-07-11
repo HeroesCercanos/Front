@@ -9,8 +9,10 @@ import { sendIncidentEmail } from "@/helpers/sendEmail";
 import { IncidentReport, IncidentType } from "@/interfaces/incident.interface";
 
 const MapSelector = dynamic(() => import("../Map/MapSelector"), { ssr: false });
-
-export const IncidentReportForm = () => {
+interface Props {
+  onClose: () => void;
+}
+export const IncidentReportForm = ({ onClose }: Props) => {
   const { userData } = useAuth();
   const [incidentType, setIncidentType] = useState<IncidentType | "">("");
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
@@ -45,13 +47,12 @@ export const IncidentReportForm = () => {
       location: location ? `${location.lat}, ${location.lng}` : "No definida",
     });
 
-    alert("¡Reporte enviado con éxito!");
-
     setIncidentType("");
     setLocation(null);
     setDescription("");
     setComments("");
     setError("");
+    onClose();
   };
 
   return (

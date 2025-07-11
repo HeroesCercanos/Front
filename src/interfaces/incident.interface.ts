@@ -9,3 +9,16 @@ export interface IncidentReport {
   description?: string;
   comments?: string;
 }
+
+export interface Report {
+  id: number;
+  text: string;
+}
+
+export interface HistoryEntry {
+  id: number;
+  text: string;
+  action: "asistido" | "eliminado";
+  comment: string;
+  timestamp: string;
+}

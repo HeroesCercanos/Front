@@ -48,7 +48,8 @@ export const ReportFloatingButton = () => {
             className="bg-white p-4 rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto relative"
             onClick={(e) => e.stopPropagation()}
           >
-            <IncidentReportForm />
+            <IncidentReportForm onClose={handleClose} />
+
           </div>
         </div>
       )}

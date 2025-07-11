@@ -45,6 +45,38 @@ export const sendIncidentEmail = async (incidentData: {
   location: string;
 }) => {
   try {
+    // 🚧 Endpoint aún no implementado, esto es temporal
+    console.warn("🔧 El endpoint de email de incidente aún no está disponible.");
+    
+    // Simulamos éxito para que no se rompa la app
+    return true;
+
+    // Cuando esté listo, descomentá esto:
+    /*
+    const res = await fetch("/api/send-incident-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(incidentData),
+    });
+
+    if (!res.ok) throw new Error("Error al enviar el email de incidente");
+
+    return true;
+    */
+  } catch (error) {
+    console.error("Error enviando email de incidente:", error);
+    return false;
+  }
+};
+
+/*
+export const sendIncidentEmail = async (incidentData: {
+  name: string;
+  email: string;
+  type: string;
+  location: string;
+}) => {
+  try {
     const res = await fetch("/api/send-incident-email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -58,4 +90,4 @@ export const sendIncidentEmail = async (incidentData: {
     console.error("Error enviando email de incidente:", error);
     return false;
   }
-};
+};*/
