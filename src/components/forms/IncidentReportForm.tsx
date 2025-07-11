@@ -1,14 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
+import { useAuth } from "@/context/AuthContext";
 import { validateIncidentReport } from "@/helpers/validateIncidentReport";
 import { sendIncidentReport } from "@/helpers/sendIncidentReport";
+import { sendIncidentEmail } from "@/helpers/sendEmail";
 import { IncidentReport, IncidentType } from "@/interfaces/incident.interface";
-import dynamic from "next/dynamic";
 
 const MapSelector = dynamic(() => import("../Map/MapSelector"), { ssr: false });
 
 export const IncidentReportForm = () => {
+  const { userData } = useAuth();
   const [incidentType, setIncidentType] = useState<IncidentType | "">("");
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [description, setDescription] = useState("");
@@ -19,7 +22,7 @@ export const IncidentReportForm = () => {
     e.preventDefault();
 
     const report: IncidentReport = {
-      type: incidentType as IncidentType, 
+      type: incidentType as IncidentType,
       location,
       description: description.trim() || undefined,
       comments: comments.trim() || undefined,
@@ -31,9 +34,20 @@ export const IncidentReportForm = () => {
       return;
     }
 
+    // 1. Enviar el reporte al backend
     await sendIncidentReport(report);
+
+    // 2. Enviar el email
+    await sendIncidentEmail({
+      name: userData?.user.name || "Usuario Anónimo",
+      email: userData?.user.email || "anonimo@email.com",
+      type: incidentType,
+      location: location ? `${location.lat}, ${location.lng}` : "No definida",
+    });
+
     alert("¡Reporte enviado con éxito!");
 
+    // 3. Resetear formulario
     setIncidentType("");
     setLocation(null);
     setDescription("");
@@ -97,6 +111,3 @@ export const IncidentReportForm = () => {
     </form>
   );
 };
-
-
-

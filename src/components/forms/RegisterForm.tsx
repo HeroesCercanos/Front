@@ -7,8 +7,7 @@ import { validateRegisterForm } from "@/helpers/validateLoginRegister";
 import { sendRegister } from "@/helpers/sendRegister";
 import { useRouter } from "next/navigation";
 import { IRegisterErrors, IRegisterValues } from "@/interfaces/AuthInterfaces/register.interfaces";
-
-
+import { sendRegistrationEmail } from "@/helpers/sendEmail";
 
 
 const RegisterForm = () => {
@@ -41,6 +40,17 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       if (response) {
         console.log("Registro exitoso:", response);
         // TODO: Mostrar mensaje de éxito antes de redireccionar
+         // Enviar email de bienvenida
+        const emailSent = await sendRegistrationEmail({
+          name: formValues.name,
+          email: formValues.email,
+        });
+
+        if (emailSent) {
+          console.log("Email de registro enviado");
+        } else {
+          console.warn("Error al enviar email de registro");
+        }
        router.push("/login")
       }
     } catch (error) {
