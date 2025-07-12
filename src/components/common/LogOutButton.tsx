@@ -1,3 +1,5 @@
+"use client";
+
 import { useAuth } from "@/context/AuthContext";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -8,8 +10,16 @@ const LogOutButton = () => {
   const { setUserData } = useAuth();
 
   const handleLogout = () => {
+    // ✅ Limpiar token del localStorage
     localStorage.removeItem("jwtToken");
+
+    // ✅ Limpiar cookie manualmente (setearla con fecha expirada)
+  document.cookie = "jwtToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+
+    // ✅ Resetear el contexto
     setUserData(null);
+
+    // ✅ Redirigir a home o landing
     router.push("/");
   };
 

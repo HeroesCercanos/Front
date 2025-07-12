@@ -29,6 +29,8 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
     if (tokenParam) {
       localStorage.setItem("jwtToken", tokenParam);
       window.history.replaceState({}, "", window.location.pathname);
+       document.cookie = `jwtToken=${tokenParam}; path=/;`;
+       window.history.replaceState({}, "", window.location.pathname);
     }
 
     // 2) Leer el token y decodificarlo
