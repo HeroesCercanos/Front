@@ -6,20 +6,22 @@ import { Eye, EyeOff } from "lucide-react";
 import { validateRegisterForm } from "@/helpers/validateLoginRegister";
 import { sendRegister } from "@/helpers/sendRegister";
 import { useRouter } from "next/navigation";
-import { IRegisterErrors, IRegisterValues } from "@/interfaces/AuthInterfaces/register.interfaces";
+import {
+  IRegisterErrors,
+  IRegisterProps,
+  IRegisterValues,
+} from "@/interfaces/AuthInterfaces/register.interfaces";
 import { sendRegistrationEmail } from "@/helpers/sendEmail";
 
-
 const RegisterForm = () => {
-
   const router = useRouter();
-  
+
   const [formValues, setFormValues] = useState<IRegisterValues>({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+});
 
   const [formErrors, setFormErrors] = useState<IRegisterErrors>({});
   const [showPassword, setShowPassword] = useState(false);
@@ -28,36 +30,38 @@ const RegisterForm = () => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
   };
 
-const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  const errors = validateRegisterForm(formValues);
-  setFormErrors(errors);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const errors = validateRegisterForm(formValues);
+    setFormErrors(errors);
 
-  if (Object.keys(errors).length === 0) {
-    try {
-      const response = await sendRegister(formValues);
+    if (Object.keys(errors).length === 0) {
+      try {
+        const cleanedFormValues: IRegisterProps = formValues;
 
-      if (response) {
-        console.log("Registro exitoso:", response);
-        // TODO: Mostrar mensaje de éxito antes de redireccionar
-         // Enviar email de bienvenida
-        const emailSent = await sendRegistrationEmail({
-          name: formValues.name,
-          email: formValues.email,
-        });
+        const response = await sendRegister(cleanedFormValues);
 
-        if (emailSent) {
-          console.log("Email de registro enviado");
-        } else {
-          console.warn("Error al enviar email de registro");
+        if (response) {
+          console.log("Registro exitoso:", response);
+          // TODO: Mostrar mensaje de éxito antes de redireccionar
+          // Enviar email de bienvenida
+          const emailSent = await sendRegistrationEmail({
+            name: formValues.name,
+            email: formValues.email,
+          });
+
+          if (emailSent) {
+            console.log("Email de registro enviado");
+          } else {
+            console.warn("Error al enviar email de registro");
+          }
+          router.push("/login");
         }
-       router.push("/login")
+      } catch (error) {
+        console.error("Error en el registro:", error);
       }
-    } catch (error) {
-      console.error("Error en el registro:", error);
     }
-  }
-};
+  };
 
   return (
     <div className="bg-white bg-opacity-80 p-6 rounded-lg shadow-lg w-full max-w-md text-black">
@@ -73,7 +77,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             value={formValues.name}
             onChange={handleChange}
           />
-          {formErrors.name && <p className="text-red-500 text-sm">{formErrors.name}</p>}
+          {formErrors.name && (
+            <p className="text-red-500 text-sm">{formErrors.name}</p>
+          )}
         </div>
 
         <div>
@@ -85,7 +91,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             value={formValues.email}
             onChange={handleChange}
           />
-          {formErrors.email && <p className="text-red-500 text-sm">{formErrors.email}</p>}
+          {formErrors.email && (
+            <p className="text-red-500 text-sm">{formErrors.email}</p>
+          )}
         </div>
 
         <div className="relative">
@@ -105,7 +113,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           >
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
-          {formErrors.password && <p className="text-red-500 text-sm">{formErrors.password}</p>}
+          {formErrors.password && (
+            <p className="text-red-500 text-sm">{formErrors.password}</p>
+          )}
         </div>
 
         <div>
@@ -125,12 +135,16 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         <button
           type="submit"
           className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition"
-        >Registrarse
+        >
+          Registrarse
         </button>
 
         <p className="text-center text-sm mt-2">
-          Ya tienes cuenta? {" "}
-          <Link href="/login" className="text-red-500 font-semibold hover:underline">
+          Ya tienes cuenta?{" "}
+          <Link
+            href="/login"
+            className="text-red-500 font-semibold hover:underline"
+          >
             Iniciar sesión
           </Link>
         </p>

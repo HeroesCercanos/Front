@@ -4,7 +4,9 @@ export const sendRegister = async (
   newUser: IRegisterProps
 ): Promise<IRegisterResponse | null> => {
   try {
-    const response = await fetch("/api/register", {
+    console.log("Usuario que se enviará:", newUser);
+
+    const response = await fetch("http://localhost:3000/auth/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -12,14 +14,17 @@ export const sendRegister = async (
       body: JSON.stringify(newUser),
     });
 
+    const data = await response.json(); // <-- capturamos respuesta
+
     if (!response.ok) {
-      throw new Error("Error al registrar usuario");
+      throw new Error(data.message || "Error al registrar usuario"); // <-- mostramos error del backend
     }
 
-    return await response.json();
-  } catch (error) {
-    console.error(error);
-    alert("Ocurrió un error al registrar usuario.");
+    return data;
+  } catch (error: any) {
+    console.error("Error en sendRegister:", error.message);
+    alert(error.message); // <-- mostralo al usuario
     return null;
   }
 };
+
