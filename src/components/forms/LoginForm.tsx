@@ -6,10 +6,15 @@ import Image from "next/image";
 import { validateLoginForm } from "@/helpers/validateLoginRegister";
 import { sendLogin } from "@/helpers/sendLogin";
 import { useRouter } from "next/navigation";
-import { ILoginErrors, ILoginProps } from "@/interfaces/AuthInterfaces/login.interfaces";
+import {
+  ILoginErrors,
+  ILoginProps,
+} from "@/interfaces/AuthInterfaces/login.interfaces";
+import { useAuth } from "@/context/AuthContext";
 
 const LoginForm = () => {
   const router = useRouter();
+  const { setUserData } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
   const [formValues, setFormValues] = useState<ILoginProps>({
@@ -20,17 +25,16 @@ const LoginForm = () => {
 
   // Capturar token de URL (login Google OAuth)
   useEffect(() => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get("token");
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
 
-  if (token) {
-    localStorage.setItem("jwtToken", token);
-    // Limpiar URL sin recargar para que el token no quede visible
-    window.history.replaceState({}, document.title, window.location.pathname);
-    router.push("/");
-  }
-}, []);
-
+    if (token) {
+      localStorage.setItem("jwtToken", token);
+      // Limpiar URL sin recargar para que el token no quede visible
+      window.history.replaceState({}, document.title, window.location.pathname);
+      router.push("/");
+    }
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -49,8 +53,10 @@ const LoginForm = () => {
         const response = await sendLogin(formValues);
 
         if (response && response.token) {
-          // Guardar token cuando login es manual
-          localStorage.setItem("jwtToken", response.token);
+          setUserData({
+            token: response.token,
+            user: { id: "", name: "", email: formValues.email }, // opcional, o buscás luego los datos
+          });
           router.push("/");
         }
       } catch (error) {
@@ -123,6 +129,7 @@ const LoginForm = () => {
         </div>
 
         <button
+          onClick={handleSubmit}
           type="submit"
           className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition"
         >

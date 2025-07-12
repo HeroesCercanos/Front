@@ -19,8 +19,8 @@ export default function InfoSection() {
 						<div className='relative h-64 w-full'>
 							<Image
 								src='/infoSection.png'
-								alt='Preguntas frecuentes'
 								fill
+								alt='Preguntas frecuentes'
 								className='object-cover'
 							/>
 						</div>

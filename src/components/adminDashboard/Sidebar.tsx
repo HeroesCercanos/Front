@@ -1,21 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { LogOut, LayoutDashboard, Flag, FileText, PlayCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import {LayoutDashboard, Flag, FileText, PlayCircle } from "lucide-react";
+import LogOutButton from "../common/LogOutButton";
 
 const Sidebar = () => {
-  const router = useRouter();
-  const { setUserData } = useAuth();
-
-  /* TODO: Chequear con COOKIES */
-  const handleLogout = () => {
-    localStorage.removeItem("userSession");
-    setUserData(null);
-    router.push("/");
-  };
-
+ 
   return (
     <aside className="w-64 bg-black text-white h-screen flex flex-col justify-between">
       <nav className="px-6 py-8 space-y-6">
@@ -53,14 +43,8 @@ const Sidebar = () => {
         </Link>
 
         
-
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-3 text-white hover:text-red-400 transition"
-        >
-          <LogOut size={20} />
-          CERRAR SESIÓN
-        </button>
+      <LogOutButton/>
+        
       </nav>
     </aside>
   );

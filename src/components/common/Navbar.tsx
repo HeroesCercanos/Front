@@ -3,9 +3,12 @@
 import Link from "next/link";
 import { LogIn, ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import LogOutButton from "./LogOutButton";
 
 const Navbar = () => {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const { userData } = useAuth();
 
   const toggleMenu = (menu: string) => {
     setOpenMenu(openMenu === menu ? null : menu);
@@ -16,7 +19,11 @@ const Navbar = () => {
     return `
       absolute top-full mt-2 bg-white text-black shadow-lg rounded p-2 space-y-1 z-50 origin-top
       transform transition-all duration-300 ease-in-out
-      ${isOpen ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0 pointer-events-none"}
+      ${
+        isOpen
+          ? "scale-y-100 opacity-100"
+          : "scale-y-0 opacity-0 pointer-events-none"
+      }
     `;
   };
 
@@ -28,8 +35,6 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <ul className="flex gap-8 text-xs md:text-sm font-semibold relative ml-12">
-          
-          
           <li className="relative">
             <button
               onClick={() => toggleMenu("donaciones")}
@@ -57,7 +62,6 @@ const Navbar = () => {
             </div>
           </li>
 
-          
           <li className="relative">
             <button
               onClick={() => toggleMenu("cuartel")}
@@ -85,7 +89,6 @@ const Navbar = () => {
             </div>
           </li>
 
-          
           <li className="relative">
             <button
               onClick={() => toggleMenu("info")}
@@ -122,10 +125,13 @@ const Navbar = () => {
           </li>
         </ul>
 
-        
-        <Link href="/login" aria-label="Iniciar sesión" className="mr-12">
-          <LogIn className="w-5 h-5 cursor-pointer" />
-        </Link>
+        {userData ? (
+          <LogOutButton />
+        ) : (
+          <Link href="/login" aria-label="Iniciar sesión" className="mr-12">
+            <LogIn className="w-5 h-5 cursor-pointer" />
+          </Link>
+        )}
       </div>
     </nav>
   );

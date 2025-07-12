@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
         const decoded = jwtDecode(token) as Payload;
         const { sub, email, name, role, exp } = decoded;
 
-        // Verificar expiraciÃ³n
+        // Verificar expiración
         if (exp * 1000 > Date.now()) {
           setUserData({
             token,
@@ -54,7 +54,6 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
           localStorage.removeItem("jwtToken");
         }
       } catch (error) {
-        console.error("Error decodificando JWT:", error);
         localStorage.removeItem("jwtToken");
       }
     }
@@ -79,52 +78,3 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
 export const useAuth = () => useContext(AuthContext);
 
 export default AuthContext;
-
-/*'use client';
-
-import { createContext, useContext, useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
-import { IUserSession } from '@/interfaces/AuthInterfaces/user.interface';
-
-interface IAuthContextProps {
-  userData: IUserSession | null;
-  setUserData: (userData: IUserSession | null) => void;
-}
-
-const AuthContext = createContext<IAuthContextProps>({
-  userData: null,
-  setUserData: () => {},
-});
-
-interface IAuthProviderProps {
-  children: React.ReactNode;
-}
-
-export const AuthProvider = ({ children }: IAuthProviderProps) => {
-  const [userData, setUserData] = useState<IUserSession | null>(null);
-
-  useEffect(() => {
-    if (userData) {
-      localStorage.setItem('userSession', JSON.stringify(userData));
-      Cookies.set('userSession', JSON.stringify(userData)); 
-    } else {
-      localStorage.removeItem('userSession');
-      Cookies.remove('userSession'); 
-    }
-  }, [userData]);
-
-  useEffect(() => {
-    const stored = localStorage.getItem('userSession');
-    if (stored) {
-      setUserData(JSON.parse(stored));
-    }
-  }, []);
-
-  return (
-    <AuthContext.Provider value={{ userData, setUserData }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-export const useAuth = () => useContext(AuthContext);*/
