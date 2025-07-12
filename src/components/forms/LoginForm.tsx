@@ -5,7 +5,6 @@ import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
-
 import { validateLoginForm } from "@/helpers/validateLoginRegister";
 import { sendLogin } from "@/helpers/sendLogin";
 import { useAuth } from "@/context/AuthContext";
@@ -34,7 +33,6 @@ const LoginForm = () => {
       localStorage.setItem("jwtToken", token);
       document.cookie = `jwtToken=${token}; path=/;`;
 
-      // Decodificar y setear usuario
       try {
         type Payload = {
           sub: string;
@@ -88,10 +86,10 @@ const LoginForm = () => {
           type Payload = {
             sub: string;
             email: string;
-            name?: string;
-            role: string;
+            name?: string; // Asegurate de que el backend lo incluya
             exp: number;
           };
+
           const decoded = jwtDecode<Payload>(token);
 
           setUserData({
@@ -113,7 +111,8 @@ const LoginForm = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:3000/auth/google";
+    window.location.href =
+          window.location.href = "http://localhost:3000/auth/google";
   };
 
   return (
