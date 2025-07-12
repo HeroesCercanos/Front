@@ -2,17 +2,34 @@
 
 import Link from "next/link";
 import { LogIn, ChevronDown, User } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import LogOutButton from "./LogOutButton";
 
 const Navbar = () => {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const { userData } = useAuth();
+  const navbarRef = useRef<HTMLDivElement>(null);
 
   const toggleMenu = (menu: string) => {
     setOpenMenu(openMenu === menu ? null : menu);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        navbarRef.current &&
+        !navbarRef.current.contains(event.target as Node)
+      ) {
+        setOpenMenu(null); // Cierra todos los dropdowns
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const getDropdownClasses = (menu: string) => {
     const isOpen = openMenu === menu;
@@ -33,12 +50,16 @@ const Navbar = () => {
       role="navigation"
       aria-label="Menú principal"
     >
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
+      <div
+        ref={navbarRef}
+        className="max-w-7xl mx-auto flex justify-between items-center"
+      >
+        {" "}
         <ul className="flex gap-8 text-xs md:text-sm font-semibold relative ml-12">
           <li className="relative">
             <button
               onClick={() => toggleMenu("donaciones")}
-              className="flex items-center gap-1 hover:underline cursor-pointer"
+              className="flex items-center gap-1 hover:text-red-400 transition cursor-pointer"
               aria-haspopup="true"
               aria-expanded={openMenu === "donaciones"}
               aria-controls="menu-donaciones"
@@ -55,7 +76,7 @@ const Navbar = () => {
                 role="menuitem"
                 href="/#campañas"
                 scroll={true}
-                className="block hover:underline cursor-pointer"
+                className="block hover:text-red-400 transition cursor-pointer"
               >
                 Campañas activas
               </Link>
@@ -65,7 +86,7 @@ const Navbar = () => {
           <li className="relative">
             <button
               onClick={() => toggleMenu("cuartel")}
-              className="flex items-center gap-1 hover:underline cursor-pointer"
+              className="flex items-center gap-1 hover:text-red-400 transition cursor-pointer"
               aria-haspopup="true"
               aria-expanded={openMenu === "cuartel"}
               aria-controls="menu-cuartel"
@@ -82,7 +103,7 @@ const Navbar = () => {
                 role="menuitem"
                 href="/#cuartel"
                 scroll={true}
-                className="block hover:underline cursor-pointer"
+                className="block hover:text-red-400 transition cursor-pointer"
               >
                 ¿Dónde estamos?
               </Link>
@@ -92,7 +113,7 @@ const Navbar = () => {
           <li className="relative">
             <button
               onClick={() => toggleMenu("info")}
-              className="flex items-center gap-1 hover:underline cursor-pointer"
+              className="flex items-center gap-1 hover:text-red-400 transition cursor-pointer"
               aria-haspopup="true"
               aria-expanded={openMenu === "info"}
               aria-controls="menu-info"
@@ -109,7 +130,7 @@ const Navbar = () => {
                 role="menuitem"
                 href="/#FAQ"
                 scroll={true}
-                className="block hover:underline cursor-pointer"
+                className="block hover:text-red-400 transition cursor-pointer"
               >
                 Preguntas frecuentes
               </Link>
@@ -117,14 +138,13 @@ const Navbar = () => {
                 role="menuitem"
                 href="/#capacitaciones"
                 scroll={true}
-                className="block hover:underline cursor-pointer"
+                className="block hover:text-red-400 transition cursor-pointer"
               >
                 Capacitaciones
               </Link>
             </div>
           </li>
         </ul>
-
         {userData ? (
           <div className="flex items-center gap-4 mr-12">
             <Link
@@ -137,7 +157,11 @@ const Navbar = () => {
             <LogOutButton />
           </div>
         ) : (
-          <Link href="/login" aria-label="Iniciar sesión" className="mr-12">
+          <Link
+            href="/login"
+            aria-label="Iniciar sesión"
+            className="mr-12 hover:text-red-400 transition"
+          >
             <LogIn className="w-5 h-5 cursor-pointer" />
           </Link>
         )}
