@@ -3,14 +3,17 @@
 import { useState, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
+
 import { validateLoginForm } from "@/helpers/validateLoginRegister";
 import { sendLogin } from "@/helpers/sendLogin";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+
 import {
   ILoginErrors,
   ILoginProps,
 } from "@/interfaces/AuthInterfaces/login.interfaces";
-import { useAuth } from "@/context/AuthContext";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -23,15 +26,38 @@ const LoginForm = () => {
   });
   const [formErrors, setFormErrors] = useState<ILoginErrors>({});
 
-  // Capturar token de URL (login Google OAuth)
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
 
     if (token) {
       localStorage.setItem("jwtToken", token);
-      // Limpiar URL sin recargar para que el token no quede visible
-      window.history.replaceState({}, document.title, window.location.pathname);
+      document.cookie = `jwtToken=${token}; path=/;`;
+
+      // Decodificar y setear usuario
+      try {
+        type Payload = {
+          sub: string;
+          email: string;
+          name?: string;
+          role: string;
+          exp: number;
+        };
+        const decoded = jwtDecode<Payload>(token);
+        setUserData({
+          token,
+          user: {
+            id: Number(decoded.sub),
+            email: decoded.email,
+            name: decoded.name || "",
+            donations: [],
+          },
+        });
+      } catch (err) {
+        console.error("Token inválido", err);
+      }
+
+      window.history.replaceState({}, "", window.location.pathname);
       router.push("/");
     }
   }, []);
@@ -53,10 +79,31 @@ const LoginForm = () => {
         const response = await sendLogin(formValues);
 
         if (response && response.token) {
+          const token = response.token;
+
+          localStorage.setItem("jwtToken", token);
+          document.cookie = `jwtToken=${token}; path=/;`;
+
+          // Decodificar el token
+          type Payload = {
+            sub: string;
+            email: string;
+            name?: string;
+            role: string;
+            exp: number;
+          };
+          const decoded = jwtDecode<Payload>(token);
+
           setUserData({
-            token: response.token,
-            user: { id: "", name: "", email: formValues.email }, // opcional, o buscás luego los datos
+            token,
+            user: {
+              id: Number(decoded.sub),
+              email: decoded.email,
+              name: decoded.name || "",
+              donations: [],
+            },
           });
+
           router.push("/");
         }
       } catch (error) {
@@ -79,9 +126,6 @@ const LoginForm = () => {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="email" className="sr-only">
-            Email
-          </label>
           <input
             id="email"
             name="email"
@@ -97,9 +141,6 @@ const LoginForm = () => {
         </div>
 
         <div className="relative">
-          <label htmlFor="password" className="sr-only">
-            Contraseña
-          </label>
           <input
             id="password"
             name="password"
@@ -129,7 +170,6 @@ const LoginForm = () => {
         </div>
 
         <button
-          onClick={handleSubmit}
           type="submit"
           className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition"
         >

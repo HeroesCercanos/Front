@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LogIn, ChevronDown } from "lucide-react";
+import { LogIn, ChevronDown, User } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import LogOutButton from "./LogOutButton";
@@ -126,7 +126,16 @@ const Navbar = () => {
         </ul>
 
         {userData ? (
-          <LogOutButton />
+          <div className="flex items-center gap-4 mr-12">
+            <Link
+              href="/dashboard"
+              aria-label="Ir al dashboard"
+              className="hover:text-red-400 transition"
+            >
+              <User className="w-5 h-5 cursor-pointer" />
+            </Link>
+            <LogOutButton />
+          </div>
         ) : (
           <Link href="/login" aria-label="Iniciar sesión" className="mr-12">
             <LogIn className="w-5 h-5 cursor-pointer" />
