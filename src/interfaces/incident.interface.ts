@@ -21,4 +21,7 @@ export interface HistoryEntry {
   action: "asistido" | "eliminado";
   comment: string;
   timestamp: string;
+  edited?: boolean;
+  victimName?: string; 
+  reason?: string
 }

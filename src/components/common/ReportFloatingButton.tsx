@@ -12,12 +12,11 @@ export const ReportFloatingButton = () => {
   const { userData } = useAuth();
 
   const handleClick = () => {
-   // Protección desactivada temporalmente hasta conectar con el backend
-   // if (!userData) {
-   //  router.push("/login");
-   //   return;
-   // }
-    setShowForm((prev) => !prev); 
+    if (!userData) {
+      router.push("/login");
+      return;
+    }
+    setShowForm((prev) => !prev);
   };
 
   const handleClose = () => setShowForm(false);
@@ -44,13 +43,15 @@ export const ReportFloatingButton = () => {
           className="fixed inset-0 z-[9998] backdrop-blur-sm bg-black/10 flex justify-center items-center px-4"
           onClick={handleClose}
         >
-          <div
-            className="bg-white p-4 rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto relative"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <IncidentReportForm onClose={handleClose} />
+        <div
+          className="bg-white rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+         >
+         <div className="p-6 max-h-[90vh] overflow-y-auto overflow-x-hidden">
+         <IncidentReportForm onClose={handleClose} />
+         </div>
+        </div>
 
-          </div>
         </div>
       )}
     </>
