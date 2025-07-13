@@ -55,7 +55,7 @@ const Navbar = () => {
         className="max-w-7xl mx-auto flex justify-between items-center"
       >
         {" "}
-        <ul className="flex gap-8 text-xs md:text-sm font-semibold relative ml-12">
+        <ul className="flex gap-8 text-xs md:text-sm relative ml-12">
           <li className="relative">
             <button
               onClick={() => toggleMenu("donaciones")}
@@ -64,7 +64,7 @@ const Navbar = () => {
               aria-expanded={openMenu === "donaciones"}
               aria-controls="menu-donaciones"
             >
-              Campañas <ChevronDown className="w-4 h-4" />
+             <h2> Campañas </h2> <ChevronDown className="w-4 h-4" />
             </button>
             <div
               id="menu-donaciones"
@@ -78,7 +78,7 @@ const Navbar = () => {
                 scroll={true}
                 className="block hover:text-red-400 transition cursor-pointer"
               >
-                Campañas activas
+                <p>Campañas activas </p>
               </Link>
             </div>
           </li>
@@ -91,7 +91,7 @@ const Navbar = () => {
               aria-expanded={openMenu === "cuartel"}
               aria-controls="menu-cuartel"
             >
-              Cuartel <ChevronDown className="w-4 h-4" />
+              <p>Cuartel</p> <ChevronDown className="w-4 h-4" />
             </button>
             <div
               id="menu-cuartel"
@@ -105,7 +105,7 @@ const Navbar = () => {
                 scroll={true}
                 className="block hover:text-red-400 transition cursor-pointer"
               >
-                ¿Dónde estamos?
+                <p>¿Dónde estamos?</p>
               </Link>
             </div>
           </li>
@@ -118,7 +118,7 @@ const Navbar = () => {
               aria-expanded={openMenu === "info"}
               aria-controls="menu-info"
             >
-              Información <ChevronDown className="w-4 h-4" />
+              <p>Información</p><ChevronDown className="w-4 h-4" />
             </button>
             <div
               id="menu-info"
@@ -132,7 +132,7 @@ const Navbar = () => {
                 scroll={true}
                 className="block hover:text-red-400 transition cursor-pointer"
               >
-                Preguntas frecuentes
+                <p>Preguntas frecuentes</p>
               </Link>
               <Link
                 role="menuitem"
@@ -140,19 +140,20 @@ const Navbar = () => {
                 scroll={true}
                 className="block hover:text-red-400 transition cursor-pointer"
               >
-                Capacitaciones
+                <p>Capacitaciones</p>
               </Link>
             </div>
           </li>
         </ul>
         {userData ? (
-          <div className="flex items-center gap-4 mr-12">
+          <div className="flex items-center gap-4 mr-2">
             <Link
               href="/dashboard"
               aria-label="Ir al dashboard"
-              className="hover:text-red-400 transition"
+              className="cursor-pointer flex items-center gap-2 text-white hover:text-red-400 transition relative"
             >
-              <User className="w-5 h-5 cursor-pointer" />
+              <User size={18}/>
+              <h2 className="text-sm">Mi cuenta</h2>
             </Link>
             <LogOutButton />
           </div>
@@ -160,9 +161,10 @@ const Navbar = () => {
           <Link
             href="/login"
             aria-label="Iniciar sesión"
-            className="mr-12 hover:text-red-400 transition"
+            className="cursor-pointer flex items-center gap-2 mr-12 text-white hover:text-red-400 transition relative"
           >
-            <LogIn className="w-5 h-5 cursor-pointer" />
+            <LogIn size={18} />
+            <h2 className="text-sm">Iniciar sesión</h2>
           </Link>
         )}
       </div>
