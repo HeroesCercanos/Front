@@ -38,7 +38,7 @@ const LoginForm = () => {
           sub: string;
           email: string;
           name?: string;
-          role: string;
+          role: "admin" | "user";
           exp: number;
         };
         const decoded = jwtDecode<Payload>(token);
@@ -48,6 +48,7 @@ const LoginForm = () => {
             id: Number(decoded.sub),
             email: decoded.email,
             name: decoded.name || "",
+            role: decoded.role,
             donations: [],
           },
         });
@@ -86,7 +87,8 @@ const LoginForm = () => {
           type Payload = {
             sub: string;
             email: string;
-            name?: string; // Asegurate de que el backend lo incluya
+            name?: string;
+            role: "admin" | "user";
             exp: number;
           };
 
@@ -98,6 +100,7 @@ const LoginForm = () => {
               id: Number(decoded.sub),
               email: decoded.email,
               name: decoded.name || "",
+              role: decoded.role,
               donations: [],
             },
           });

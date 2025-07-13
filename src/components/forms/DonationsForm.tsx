@@ -9,24 +9,7 @@ const DonationForm = () => {
       aria-label="Formulario de donación"
     >
 
-      <div>
-        <label htmlFor="type" className="block font-semibold text-sm">
-          Tipo de donación
-        </label>
-        <select
-          id="type"
-          name="type"
-          className="mt-1 block w-full rounded border-gray-300 shadow-sm"
-          aria-required="true"
-          aria-label="Selecciona el tipo de donación"
-        >
-          <option value="money">Dinero</option>
-          <option value="supplies">Insumos</option>
-        </select>
-      </div>
-
- 
-      <div>
+       <div> {/* // TODO: Acá estará MP */}
         <label htmlFor="amount" className="block font-semibold text-sm">
           Monto
         </label>
