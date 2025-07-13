@@ -21,4 +21,19 @@ html {
 }
 
 
+/* Desactiva la selección de texto y el cursor en toda la app... */
+* {
+  user-select: none;
+  caret-color: transparent;
+}
+
+/* ...excepto en elementos de formulario */
+input,
+textarea,
+select,
+button,
+[contenteditable="true"] {
+  user-select: text;
+  caret-color: auto;
+}
 
