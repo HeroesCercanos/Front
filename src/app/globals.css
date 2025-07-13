@@ -20,14 +20,12 @@ html {
   scroll-behavior: smooth;
 }
 
-
-/* Desactiva la selección de texto y el cursor en toda la app... */
 * {
   user-select: none;
   caret-color: transparent;
 }
 
-/* ...excepto en elementos de formulario */
+
 input,
 textarea,
 select,
@@ -36,4 +34,14 @@ button,
   user-select: text;
   caret-color: auto;
 }
+
+.scrollbar-hide {
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; 
+}
+
 
