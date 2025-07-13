@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
-import { LogOut } from "lucide-react";
+import { CircleX, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -28,7 +28,8 @@ const LogOutButton = () => {
       onClick={handleLogout}
       className="cursor-pointer flex items-center gap-2 mr-12 text-white hover:text-red-400 transition relative"
     >
-      <LogOut size={20} />
+      <CircleX size={18} />
+      <h2 className="text-sm">Cerrar sesión</h2>
     </button>
   );
 };
