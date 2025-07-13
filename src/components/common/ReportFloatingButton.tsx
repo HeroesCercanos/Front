@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Flame, X } from "lucide-react";
 import { IncidentReportForm } from "../forms/IncidentReportForm";
 import { useAuth } from "@/context/AuthContext";
@@ -9,7 +9,12 @@ import { useAuth } from "@/context/AuthContext";
 export const ReportFloatingButton = () => {
   const [showForm, setShowForm] = useState(false);
   const router = useRouter();
+  const pathname = usePathname(); 
   const { userData } = useAuth();
+
+  
+  const isAdminRoute = pathname.startsWith("/admin");
+  if (isAdminRoute) return null;
 
   const handleClick = () => {
     if (!userData) {
