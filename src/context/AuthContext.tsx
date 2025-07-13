@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
     const token = localStorage.getItem("jwtToken");
     if (token) {
       try {
-        type Payload = { sub: string; email: string; name?: string; role: string; exp: number };
+        type Payload = { sub: string; email: string; name?: string; role: "admin" | "user"; exp: number };
         const decoded = jwtDecode(token) as Payload;
         const { sub, email, name, role, exp } = decoded;
 
@@ -50,6 +50,7 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
               email,
               name: name || "",
               donations: [],
+              role,
             },
           });
         } else {

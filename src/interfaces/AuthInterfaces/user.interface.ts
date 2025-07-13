@@ -5,5 +5,6 @@ export interface IUserSession {
         email: string,
         name: string,
         donations: []
+        role: "admin" | "user"
     }
 }
