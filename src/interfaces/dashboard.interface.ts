@@ -6,6 +6,7 @@ export interface ICardProps {
 	description: string;
 	buttonLabel: string;
 	onClick: () => void;
+	customButton?: React.ReactNode;
 }
 
 export interface IAlertBarProps {
