@@ -1,4 +1,4 @@
-"use client";
+/*"use client";
 
 import { useEffect, useState } from "react";
 import { CheckSquare, Trash2 } from "lucide-react";
@@ -227,11 +227,11 @@ export default function AdminReports() {
       </section>
     </div>
   );
-}
+}*/
 
 
 
-/*"use client";
+"use client";
 
 import { useState } from "react";
 import { CheckSquare, Trash2 } from "lucide-react";
@@ -340,13 +340,15 @@ export default function AdminReports() {
                 <li key={`${entry.id}-${index}`} className="border-b pb-3">
                   <p><strong>{entry.text}</strong></p>
                   <p>Acción: {entry.action === "asistido" ? "✅ Asistido" : "🗑️ Eliminado"}</p>
-                  <p>Comentario: {entry.comment}</p>
-                  {entry.edited && (
+                   {entry.edited && (
                     <p className="text-xs text-yellow-600 font-medium">🖊️ Editado</p>
                   )}
+                  <p>Comentario: {entry.comment}</p>
+                 
                   <p>Nombre del damnificado: {entry.victimName || "No especificado"}</p>
                   <p>Motivo: {entry.reason || "No especificado"}</p>
                   <p className="text-xs text-gray-500">{entry.timestamp}</p>
+                  
                   <button
                     className="mt-1 text-blue-600 hover:text-blue-800 text-sm focus:outline-none focus:ring-0"
                     onClick={() => {
@@ -429,4 +431,4 @@ export default function AdminReports() {
       </section>
     </div>
   );
-}*/
+}

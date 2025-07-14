@@ -1,4 +1,4 @@
-import { IncidentReport } from "@/interfaces/incident.interface";
+/*import { IncidentReport } from "@/interfaces/incident.interface";
 
 export const sendIncidentReport = async (
   report: IncidentReport,
@@ -15,6 +15,11 @@ export const sendIncidentReport = async (
     commentaries: report.comments || "",
     reporterId: reporterId,
   };
+
+  console.log("Enviando reporte:", body);
+console.log("Token:", token);
+console.log("URL:", `${baseUrl}/incidents`);
+
 
   try {
     
@@ -45,11 +50,11 @@ export const sendIncidentReport = async (
     console.error("Error al enviar el reporte:", error);
     alert("Ocurrió un error al enviar el reporte.");
   }
-};
+};*/
 
 
 
-/*import { IncidentReport } from "@/interfaces/incident.interface";
+import { IncidentReport } from "@/interfaces/incident.interface";
 
 export const sendIncidentReport = async (report: IncidentReport) => {
   console.log("Simulando envío del reporte:", report);
