@@ -5,6 +5,7 @@ import { CheckSquare, Trash2 } from "lucide-react";
 import Sidebar from "./Sidebar";
 import { Report, HistoryEntry } from "@/interfaces/incident.interface";
 import { Pencil } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 const initialReports: Report[] = [
   { id: 1, text: "Reporte 1 - 2025-07-10 - Av. Siempre Viva 123" },
@@ -28,37 +29,56 @@ export default function AdminReports() {
     setEditIndex(null);
   };
 
-  const confirmAction = () => {
-    if (!selectedReport || !actionType) return;
+   // Asegurate de tener esto importado
 
-    const newEntry: HistoryEntry = {
-      id: selectedReport.id,
-      text: selectedReport.text,
-      action: actionType,
-      comment,
-      timestamp: new Date().toLocaleString(),
-      edited: editIndex !== null,
-      victimName,
-      reason,
-    };
+const confirmAction = () => {
+  if (!selectedReport || !actionType) return;
 
-    if (editIndex !== null) {
-      const updated = [...history];
-      updated[editIndex] = newEntry;
-      setHistory(updated);
-    } else {
-      setHistory((prev) => [...prev, newEntry]);
-      setActiveReports((prev) => prev.filter((r) => r.id !== selectedReport.id));
-    }
-
-    // Limpiar estados
-    setSelectedReport(null);
-    setActionType(null);
-    setComment("");
-    setVictimName("");
-    setReason("");
-    setEditIndex(null);
+  const newEntry: HistoryEntry = {
+    id: selectedReport.id,
+    text: selectedReport.text,
+    action: actionType,
+    comment,
+    timestamp: new Date().toLocaleString(),
+    edited: editIndex !== null,
+    victimName,
+    reason,
   };
+
+  if (editIndex !== null) {
+    const updated = [...history];
+    updated[editIndex] = newEntry;
+    setHistory(updated);
+
+    toast.custom((t) => (
+      <div className={`bg-white border border-blue-300 rounded-xl shadow-lg p-4 w-[90%] max-w-md ${t.visible ? "animate-enter" : "animate-leave"}`}>
+        <h2 className="text-blue-700 font-semibold mb-2">Reporte actualizado</h2>
+        <p className="text-gray-700 text-sm">Los cambios fueron guardados correctamente.</p>
+      </div>
+    ));
+  } else {
+    setHistory((prev) => [...prev, newEntry]);
+    setActiveReports((prev) => prev.filter((r) => r.id !== selectedReport.id));
+
+    toast.custom((t) => (
+      <div className={`bg-white border border-green-300 rounded-xl shadow-lg p-4 w-[90%] max-w-md ${t.visible ? "animate-enter" : "animate-leave"}`}>
+        <h2 className="text-green-700 font-semibold mb-2">
+          {actionType === "asistido" ? "✅ Reporte asistido" : "🗑️ Reporte eliminado"}
+        </h2>
+        <p className="text-gray-700 text-sm">La acción fue registrada exitosamente.</p>
+      </div>
+    ));
+  }
+
+  // Limpiar estados
+  setSelectedReport(null);
+  setActionType(null);
+  setComment("");
+  setVictimName("");
+  setReason("");
+  setEditIndex(null);
+};
+
 
   return (
     <div className="flex h-screen">
@@ -148,16 +168,42 @@ export default function AdminReports() {
     aria-label="Formulario de acción sobre reporte"
   >
     <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md space-y-4 relative">
-      {/* Botón X de cierre */}
+      {/* Botón X de cierre con confirmación */}
       <button
         type="button"
         onClick={() => {
-          setSelectedReport(null);
-          setActionType(null);
-          setComment("");
-          setVictimName("");
-          setReason("");
-          setEditIndex(null);
+          toast.custom((t) => (
+            <div
+              className={`bg-white rounded-xl shadow-lg p-6 border border-gray-200 w-[90%] max-w-md ${
+                t.visible ? "animate-enter" : "animate-leave"
+              }`}
+            >
+              <h2 className="text-lg font-semibold text-gray-800 mb-2">¿Cerrar sin guardar?</h2>
+              <p className="text-gray-600 mb-4">Se perderán los datos ingresados.</p>
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={() => {
+                    toast.dismiss(t.id);
+                    setSelectedReport(null);
+                    setActionType(null);
+                    setComment("");
+                    setVictimName("");
+                    setReason("");
+                    setEditIndex(null);
+                  }}
+                  className="px-4 py-2 rounded-md bg-red-600 text-white font-semibold hover:bg-red-700 transition"
+                >
+                  Sí, cerrar
+                </button>
+                <button
+                  onClick={() => toast.dismiss(t.id)}
+                  className="px-4 py-2 rounded-md bg-gray-300 text-gray-800 font-medium hover:bg-gray-400 transition"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          ));
         }}
         className="absolute top-3 right-3 text-gray-500 hover:text-red-600 transition text-xl"
         aria-label="Cerrar formulario"
@@ -204,7 +250,37 @@ export default function AdminReports() {
 
       <button
         className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300"
-        onClick={confirmAction}
+        onClick={() => {
+          toast.custom((t) => (
+            <div
+              className={`bg-white rounded-xl shadow-lg p-6 border border-gray-200 w-[90%] max-w-md ${
+                t.visible ? "animate-enter" : "animate-leave"
+              }`}
+            >
+              <h2 className="text-lg font-semibold text-gray-800 mb-2">¿Estás segura?</h2>
+              <p className="text-gray-600 mb-4">
+                Vas a {editIndex !== null ? "guardar los cambios" : "confirmar esta acción"}.
+              </p>
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={() => {
+                    toast.dismiss(t.id);
+                    confirmAction(); // ✅ Ejecuta la acción
+                  }}
+                  className="px-4 py-2 rounded-md bg-red-600 text-white font-semibold hover:bg-red-700 transition"
+                >
+                  Sí, confirmar
+                </button>
+                <button
+                  onClick={() => toast.dismiss(t.id)}
+                  className="px-4 py-2 rounded-md bg-gray-300 text-gray-800 font-medium hover:bg-gray-400 transition"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          ));
+        }}
         disabled={!comment.trim()}
         aria-label={editIndex !== null ? "Guardar cambios del reporte" : "Confirmar acción sobre reporte"}
       >
@@ -213,6 +289,7 @@ export default function AdminReports() {
     </div>
   </div>
 )}
+
 
       </section>
     </div>

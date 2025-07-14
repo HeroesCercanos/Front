@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { Flame, X } from "lucide-react";
 import { IncidentReportForm } from "../forms/IncidentReportForm";
 import { useAuth } from "@/context/AuthContext";
+import { toast } from "react-hot-toast";
 
 export const ReportFloatingButton = () => {
   const [showForm, setShowForm] = useState(false);
@@ -19,13 +20,33 @@ export const ReportFloatingButton = () => {
 
   const handleClick = () => {
     if (!userData) {
+      toast.custom((t) => (
+        <div
+          className={`bg-white border border-yellow-300 rounded-xl shadow-lg p-4 w-[90%] max-w-md ${
+            t.visible ? "animate-enter" : "animate-leave"
+          }`}
+        >
+          <h2 className="text-yellow-700 font-semibold mb-2">¡Atención!</h2>
+          <p className="text-gray-700 text-sm">
+            Debés iniciar sesión para reportar un incidente.
+          </p>
+        </div>
+      ));
       router.push("/login");
       return;
     }
+
     setShowForm(true);
   };
 
-  const handleClose = () => setShowForm(false);
+  const handleClose = () => {
+    setShowForm(false);
+
+    // Si querés mostrar un aviso al cerrar, descomentá esto:
+    /*
+    toast("Formulario cerrado");
+    */
+  };
 
   return (
     <>
