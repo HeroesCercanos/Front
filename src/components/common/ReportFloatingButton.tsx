@@ -38,9 +38,9 @@ export const ReportFloatingButton = () => {
         ) : (
           <Flame className="w-6 h-6 text-red-500" />
         )}
-        <span className="hidden sm:inline font-semibold text-base">
+        <p className="hidden sm:inline font-semibold text-base">
           {showForm ? "Cerrar" : "Reportar"}
-        </span>
+        </p>
       </button>
 
       {showForm && (
