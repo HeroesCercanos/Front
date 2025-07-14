@@ -15,6 +15,94 @@ export const ReportFloatingButton = () => {
   const isAdminRoute = pathname.startsWith("/admin");
   const isAdminUser = userData?.user?.role === "admin";
 
+  if (isAdminRoute || isAdminUser) return null;
+
+  const handleClick = () => {
+    if (!userData) {
+      router.push("/login");
+      return;
+    }
+    setShowForm(true);
+  };
+
+  const handleClose = () => setShowForm(false);
+
+  return (
+    <>
+      <button
+        onClick={handleClick}
+        className="fixed bottom-6 right-6 z-[9999] flex items-center gap-2 bg-black text-white px-5 py-3 rounded-full shadow-[0_4px_20px_rgba(255,0,0,0.7)] border-2 border-red-600 hover:scale-110 transition-transform duration-200"
+        aria-label="Reportar incidente"
+      >
+        {showForm ? (
+          <X className="w-6 h-6 text-white" />
+        ) : (
+          <Flame className="w-6 h-6 text-red-500" />
+        )}
+        <span
+          className="hidden sm:inline font-semibold text-base"
+          aria-hidden="true"
+        >
+          {showForm ? "Cerrar" : "Reportar"}
+        </span>
+      </button>
+
+      {showForm && (
+        <div
+          className="fixed inset-0 z-[9998] backdrop-blur-sm bg-black/10 flex justify-center items-center px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+          aria-describedby="modal-desc"
+          onClick={handleClose}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6 max-h-[90vh] overflow-y-auto overflow-x-hidden scrollbar-hide">
+              <h2
+                id="modal-title"
+                className="text-xl font-bold text-center mb-2"
+              >
+                Reportar incidente
+              </h2>
+              <p
+                id="modal-desc"
+                className="text-sm text-center text-gray-600 mb-4"
+              >
+                Completá el siguiente formulario para reportar un incendio o accidente.
+              </p>
+              <IncidentReportForm onClose={handleClose} />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+
+
+/*"use client";
+
+import { useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { Flame, X } from "lucide-react";
+import { IncidentReportForm } from "../forms/IncidentReportForm";
+import { useAuth } from "@/context/AuthContext";
+
+
+
+export const ReportFloatingButton = () => {
+  const [showForm, setShowForm] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+  const { userData } = useAuth();
+
+  const isAdminRoute = pathname.startsWith("/admin");
+  const isAdminUser = userData?.user?.role === "admin";
+
   if (isAdminRoute || isAdminUser) return null; // 👈 condición combinada
 
   const handleClick = () => {
@@ -64,7 +152,7 @@ export const ReportFloatingButton = () => {
 };
 
 
-/*"use client";
+"use client";
 
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
