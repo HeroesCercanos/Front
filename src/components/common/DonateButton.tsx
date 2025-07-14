@@ -35,7 +35,7 @@ export default function DonateButton({ children }: Props) {
 					onClick={handleClick}
 					className='mt-10 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-full transition duration-300'
 				>
-					QUIERO DONAR
+					<p>QUIERO DONAR</p>
 				</button>
 			)}
 

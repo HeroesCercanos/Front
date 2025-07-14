@@ -8,6 +8,7 @@ import { jwtDecode } from "jwt-decode";
 import { validateLoginForm } from "@/helpers/validateLoginRegister";
 import { sendLogin } from "@/helpers/sendLogin";
 import { useAuth } from "@/context/AuthContext";
+import { toast } from "react-hot-toast";
 
 import {
   ILoginErrors,
@@ -41,8 +42,8 @@ const LoginForm = () => {
           role: "admin" | "user";
           exp: number;
         };
+
         const decoded = jwtDecode<Payload>(token);
-        console.log("TOKEN DECODIFICADO:", decoded);
 
         setUserData({
           token,
@@ -54,12 +55,13 @@ const LoginForm = () => {
             donations: [],
           },
         });
+
+        router.push(
+          `/?welcome=${encodeURIComponent(decoded.name || "usuario")}`
+        );
       } catch (err) {
         console.error("Token inválido", err);
       }
-
-      window.history.replaceState({}, "", window.location.pathname);
-      router.push("/");
     }
   }, []);
 
@@ -85,7 +87,6 @@ const LoginForm = () => {
           localStorage.setItem("jwtToken", token);
           document.cookie = `jwtToken=${token}; path=/;`;
 
-          // Decodificar el token
           type Payload = {
             sub: string;
             email: string;
@@ -107,6 +108,10 @@ const LoginForm = () => {
             },
           });
 
+          toast.success(`¡Bienvenido, ${decoded.name}!`, {
+            icon: "🔥",
+          });
+
           router.push("/");
         }
       } catch (error) {
@@ -116,8 +121,7 @@ const LoginForm = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href =
-          window.location.href = "http://localhost:3000/auth/google";
+    window.location.href = "http://localhost:3000/auth/google";
   };
 
   return (
@@ -169,7 +173,7 @@ const LoginForm = () => {
 
         <div className="text-right text-sm">
           <a href="#" className="text-red-500 hover:underline">
-            Olvidé mi contraseña
+            <p>Olvidé mi contraseña</p>
           </a>
         </div>
 

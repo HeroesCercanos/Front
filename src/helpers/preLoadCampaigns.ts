@@ -20,8 +20,8 @@ export const preLoadCampaigns: ICampaign[] = [
   },
   {
     id: 3,
-    title: "Capacitación en primeros auxilios",
-    description: "Queremos capacitar a todo el personal del cuartel.",
+    title: "Recaudación para primeros auxilios",
+    description: "Queremos capacitar a toda la comunidad.",
     startDate: "2025-07-10",
     endDate: "2025-08-10",
     isActive: true,

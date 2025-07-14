@@ -23,7 +23,6 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 1) Capturar token de la URL si existe
     const params = new URLSearchParams(window.location.search);
     const tokenParam = params.get("token");
     if (tokenParam) {
@@ -33,7 +32,6 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
        window.history.replaceState({}, "", window.location.pathname);
     }
 
-    // 2) Leer el token y decodificarlo
     const token = localStorage.getItem("jwtToken");
     if (token) {
       try {
@@ -41,7 +39,6 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
         const decoded = jwtDecode(token) as Payload;
         const { sub, email, name, role, exp } = decoded;
 
-        // Verificar expiración
         if (exp * 1000 > Date.now()) {
           setUserData({
             token,
@@ -65,11 +62,8 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
   }, []);
 
   if (loading) {
-    return null; // o un spinner mientras carga
+    return null; 
   }
-
-  console.log("userData:", userData);
-
 
   return (
     <AuthContext.Provider value={{ userData, setUserData }}>
