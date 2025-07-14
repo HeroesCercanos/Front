@@ -36,13 +36,13 @@ const LogOutButton = () => {
               toast.dismiss(t.id);
               handleLogout();
             }}
-            className="px-4 py-2 rounded-md bg-red-600 text-white font-semibold hover:bg-red-700 transition"
+            className="px-4 py-2 rounded-md bg-red-600 text-white font-semibold hover:bg-red-700 transition cursor-pointer"
           >
             Sí, cerrar sesión
           </button>
           <button
             onClick={() => toast.dismiss(t.id)}
-            className="px-4 py-2 rounded-md bg-gray-300 text-gray-800 font-medium hover:bg-gray-400 transition"
+            className="px-4 py-2 rounded-md bg-gray-300 text-gray-800 font-medium hover:bg-gray-400 transition cursor-pointer"
           >
             Cancelar
           </button>

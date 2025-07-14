@@ -27,7 +27,7 @@ export default function TrainingView() {
 						</div>
 						<button
 							onClick={() => setIsModalOpen(true)}
-							className='mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition'
+							className='mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition cursor-pointer'
 						>
 							Subir archivo
 						</button>
