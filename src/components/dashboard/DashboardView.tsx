@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
 	TvMinimalPlay,
@@ -7,17 +7,20 @@ import {
 	ClipboardList,
 	MapPin,
 	FlameKindling,
+	UserRoundPen,
 } from 'lucide-react';
 import DashboardCard from '@/components/dashboard/DashboardCard';
 import AlertBar from '@/components/dashboard/AlertBar';
 import { useDashboardData } from '@/helpers/useDashboardData';
 import { useAuth } from '@/context/AuthContext';
 import DonateButton from '../common/DonateButton';
+import UserInfoModal from './UserInfoModal';
 
 export default function DashboardView() {
 	const { data, isLoading } = useDashboardData();
 	const { userData } = useAuth();
 	const router = useRouter();
+	const [showModal, setShowModal] = useState(false);
 
 	if (isLoading || !data) {
 		return (
@@ -71,12 +74,25 @@ export default function DashboardView() {
 				/>
 			</div>
 
+			<div className='flex items-center bg-white rounded-full px-6 py-3 space-x-4 shadow-inner drop-shadow-lg'>
+				{<UserRoundPen />}
+				<div>
+					<p className='flex-1 font-medium'>Mis datos personales</p>
+				</div>
+				<button
+					onClick={() => setShowModal(true)}
+					className='font-semibold cursor-pointer underline hover:text-red-600 ml-auto'
+				>
+					Ver datos
+				</button>
+			</div>
+
 			{data.campaignsActive.length > 0 && (
 				<AlertBar
 					icon={<FlameKindling />}
 					message={`Campaña activa: ${data.campaignsActive[0].title}`}
 					actionLabel='Ver campaña'
-					onAction={() => router.push('#campañas')}
+					onAction={() => router.push('/#campañas')}
 				/>
 			)}
 
@@ -88,6 +104,13 @@ export default function DashboardView() {
 					window.open(data.nearestStationUrl, '_blank', 'noopener')
 				}
 			/>
+
+			{showModal && userData?.user && (
+				<UserInfoModal
+					user={userData.user}
+					onClose={() => setShowModal(false)}
+				/>
+			)}
 		</main>
 	);
 }

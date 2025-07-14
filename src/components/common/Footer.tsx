@@ -14,23 +14,23 @@ export default function Footer() {
 					<h2 className='font-semibold mb-4'>Links adicionales</h2>
 					<ul className='space-y-2'>
 						<li>
-							<Link href='#' className='hover:underline'>
-								Donaciones
+							<Link href='/#campañas' className='hover:underline'>
+								<p>Donaciones</p>
 							</Link>
 						</li>
 						<li>
-							<Link href='#' className='hover:underline'>
-								Campañas activas
+							<Link href='/#campañas' className='hover:underline'>
+								<p>Campañas activas </p>
 							</Link>
 						</li>
 						<li>
-							<Link href='#' className='hover:underline'>
-								Capacitaciones
+							<Link href='/trainings/videos' className='hover:underline'>
+								<p>Capacitaciones</p>
 							</Link>
 						</li>
 						<li>
-							<Link href='#' className='hover:underline'>
-								Contacto / Preguntas frecuentes
+							<Link href='/faqs' className='hover:underline'>
+								<p>Preguntas frecuentes</p>
 							</Link>
 						</li>
 					</ul>
@@ -55,13 +55,17 @@ export default function Footer() {
 					<div className='flex space-x-4 '>
 						<a
 							href='https://www.instagram.com/bomberosmontecaseros/'
-							aria-label='Instagram'
+							target='_blank'
+							rel='noopener noreferrer'
+							aria-label='Instagram (se abre en nueva pestaña)'
 						>
 							<Instagram size={24} />
 						</a>
 						<a
 							href='https://www.facebook.com/bomberos.voluntarios.18041/'
-							aria-label='Facebook'
+							target='_blank'
+							rel='noopener noreferrer'
+							aria-label='Facebook (se abre en nueva pestaña)'
 						>
 							<Facebook size={24} />
 						</a>
