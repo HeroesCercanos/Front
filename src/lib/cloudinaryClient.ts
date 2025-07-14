@@ -1,13 +1,41 @@
-// import { IVideo } from '@/interfaces/dashboard.interface';
+import { CloudinaryMedia } from '@/interfaces/cloudinary.interface';
 
-// const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-// const API_KEY = process.env.CLOUDINARY_API_KEY;
-// const API_SECRET = process.env.CLOUDINARY_API_SECRET;
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || '';
 
-// export async function listUserVideos(userId: string): Promise<IVideo[]> {
-// 	return [];
-// }
+export async function fetchTrainingMedia(): Promise<CloudinaryMedia[]> {
+	const res = await fetch(`${API_BASE}/cloudinary/trainings`, {
+		cache: 'no-store',
+	});
+	if (!res.ok) return [];
+	return res.json();
+}
 
-// export function getUploadSignature(params: Record<string, any>): string {
-// 	return '';
-// }
+export async function fetchSingleMedia(
+	publicId: string
+): Promise<CloudinaryMedia | null> {
+	const res = await fetch(
+		`${API_BASE}/cloudinary/trainings/${encodeURIComponent(publicId)}`,
+		{ cache: 'no-store' }
+	);
+	if (!res.ok) return null;
+	return res.json();
+}
+
+export function filterMediaByType(
+	media: CloudinaryMedia[],
+	type: 'video' | 'image' | 'pdf'
+): CloudinaryMedia[] {
+	switch (type) {
+		case 'video':
+			return media.filter((item) => item.resource_type === 'video');
+		case 'image':
+			return media.filter(
+				(item) =>
+					item.resource_type === 'image' && item.format.toLowerCase() !== 'pdf'
+			);
+		case 'pdf':
+			return media.filter((item) => item.format.toLowerCase() === 'pdf');
+		default:
+			return [];
+	}
+}

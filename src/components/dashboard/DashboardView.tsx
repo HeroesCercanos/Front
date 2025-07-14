@@ -1,5 +1,4 @@
 'use client';
-
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import {
@@ -12,9 +11,12 @@ import {
 import DashboardCard from '@/components/dashboard/DashboardCard';
 import AlertBar from '@/components/dashboard/AlertBar';
 import { useDashboardData } from '@/helpers/useDashboardData';
+import { useAuth } from '@/context/AuthContext';
+import DonateButton from '../common/DonateButton';
 
 export default function DashboardView() {
 	const { data, isLoading } = useDashboardData();
+	const { userData } = useAuth();
 	const router = useRouter();
 
 	if (isLoading || !data) {
@@ -28,7 +30,11 @@ export default function DashboardView() {
 	return (
 		<main className='max-w-7xl mx-auto px-6 py-12 space-y-8'>
 			<header className='space-y-2'>
-				<h1 className='text-3xl font-bold'>¡Hola, user!</h1>
+				<h1 className='text-3xl font-bold'>
+					{userData?.user.name
+						? `¡Hola, ${userData.user.name}!`
+						: '¡Hola, Bienvenido a Héroes Cercanos!'}
+				</h1>
 				<p className='text-gray-600'>
 					Gracias por formar parte de Héroes Cercanos
 				</p>
@@ -41,8 +47,14 @@ export default function DashboardView() {
 					description='Doná a nuestro cuartel'
 					buttonLabel='Donar ahora'
 					onClick={() => {}}
+					customButton={
+						<DonateButton>
+							<button className='bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg'>
+								Donar ahora
+							</button>
+						</DonateButton>
+					}
 				/>
-
 				<DashboardCard
 					icon={<ClipboardList size={80} />}
 					title='Ver mis donaciones'
@@ -55,7 +67,7 @@ export default function DashboardView() {
 					title='Capacitación disponible'
 					description='Mirá los vídeos de formación'
 					buttonLabel='Ver contenido'
-					onClick={() => router.push('/capacitaciones')}
+					onClick={() => router.push('/trainings')}
 				/>
 			</div>
 
@@ -76,8 +88,6 @@ export default function DashboardView() {
 					window.open(data.nearestStationUrl, '_blank', 'noopener')
 				}
 			/>
-
-			{/* mapear vídeos */}
 		</main>
 	);
 }
