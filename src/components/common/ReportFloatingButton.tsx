@@ -69,18 +69,31 @@ export const ReportFloatingButton = () => {
       </button>
 
       {showForm && (
-        <div
-          className="fixed inset-0 z-[9998] backdrop-blur-sm bg-black/10 flex justify-center items-center px-4"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="modal-title"
-          aria-describedby="modal-desc"
-          onClick={handleClose}
-        >
-          <div
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
+  <div
+    className="fixed inset-0 z-[9998] backdrop-blur-sm bg-black/10 flex justify-center items-center px-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-title"
+    aria-describedby="modal-desc"
+    onClick={handleClose}
+  >
+    <div
+      className="bg-white rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="p-6 max-h-[90vh] overflow-y-auto overflow-x-hidden scrollbar-hide">
+        {/* Título + botón X arriba */}
+        <div className="flex justify-between items-start mb-4">
+          <h2 id="modal-title" className="text-xl font-bold">
+            Reportar incidente
+          </h2>
+          <button
+            type="button"
+            onClick={handleClose}
+            className="text-gray-500 hover:text-red-600 text-xl cursor-pointer"
+            aria-label="Cerrar formulario"
           >
+<<<<<<< Updated upstream
             <div className="p-6 max-h-[90vh] overflow-y-auto overflow-x-hidden scrollbar-hide">
               <h2
                 id="modal-title"
@@ -97,8 +110,25 @@ export const ReportFloatingButton = () => {
               <IncidentReportForm onClose={handleClose} />
             </div>
           </div>
+=======
+            &times;
+          </button>
+>>>>>>> Stashed changes
         </div>
-      )}
+
+        <p
+          id="modal-desc"
+          className="text-sm text-gray-600 mb-4"
+        >
+          Completá el siguiente formulario para reportar un incendio o accidente.
+        </p>
+
+        <IncidentReportForm onClose={handleClose} />
+      </div>
+    </div>
+  </div>
+)}
+
     </>
   );
 };

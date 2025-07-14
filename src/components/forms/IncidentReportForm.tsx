@@ -127,16 +127,7 @@ export const IncidentReportForm = ({ onClose }: Props) => {
       className="relative space-y-4 p-4 w-full max-w-md"
       aria-label="Formulario de reporte"
     >
-      <button
-        type="button"
-        onClick={handleClose}
-        className="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl"
-        aria-label="Cerrar formulario"
-      >
-        &times;
-      </button>
-
-      <div>
+       <div>
         <label htmlFor="incidentType" className="block font-semibold text-sm">
           Tipo de incidente
         </label>
