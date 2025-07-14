@@ -1,5 +1,56 @@
 import { IncidentReport } from "@/interfaces/incident.interface";
 
+export const sendIncidentReport = async (
+  report: IncidentReport,
+  token: string,
+  reporterId: number
+) => {
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+  const body = {
+    incidentType: report.type,
+    latitude: report.location?.lat,
+    longitude: report.location?.lng,
+    locationDetail: report.description || "",
+    commentaries: report.comments || "",
+    reporterId: reporterId,
+  };
+
+  try {
+    
+
+    const response = await fetch(`${baseUrl}/incidents`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+  let errorMessage = "Error al enviar el reporte";
+  try {
+    const errorData = await response.json();
+    errorMessage = errorData?.message || errorMessage;
+  } catch (e) {
+    console.error("No se pudo parsear el error como JSON", e);
+  }
+  throw new Error(errorMessage);
+}
+
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error al enviar el reporte:", error);
+    alert("Ocurrió un error al enviar el reporte.");
+  }
+};
+
+
+
+/*import { IncidentReport } from "@/interfaces/incident.interface";
+
 export const sendIncidentReport = async (report: IncidentReport) => {
   console.log("Simulando envío del reporte:", report);
 
