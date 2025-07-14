@@ -161,7 +161,7 @@ const LoginForm = () => {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-2 top-2.5 text-gray-500 hover:text-red-500"
+            className="absolute right-2 top-2.5 text-gray-500 hover:text-red-500 cursor-pointer"
             aria-label="Mostrar u ocultar contraseña"
           >
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -172,14 +172,14 @@ const LoginForm = () => {
         </div>
 
         <div className="text-right text-sm">
-          <a href="#" className="text-red-500 hover:underline">
+          <a href="#" className="text-red-500 hover:underline cursor-pointer">
             <p>Olvidé mi contraseña</p>
           </a>
         </div>
 
         <button
           type="submit"
-          className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition"
+          className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition cursor-pointer"
         >
           Iniciar sesión
         </button>
@@ -187,7 +187,7 @@ const LoginForm = () => {
         <button
           onClick={handleGoogleLogin}
           type="button"
-          className="w-full border border-gray-300 hover:bg-gray-100 text-black font-medium py-2 px-4 rounded flex items-center justify-center gap-2"
+          className="cursor-pointer w-full border border-gray-300 hover:bg-gray-100 text-black font-medium py-2 px-4 rounded flex items-center justify-center gap-2"
         >
           <Image src="/google-icon.png" alt="Google" width={20} height={20} />
           Continuar con Google
@@ -197,7 +197,7 @@ const LoginForm = () => {
           No tienes cuenta?{" "}
           <a
             href="/register"
-            className="text-red-500 font-semibold hover:underline"
+            className="text-red-500 font-semibold hover:underline cursor-pointer"
           >
             Registrarse
           </a>

@@ -54,7 +54,7 @@ export default function InfoSection() {
 						<div className='text-right pt-2'>
 							<button
 								onClick={() => router.push('/faqs')}
-								className='px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-md transition'
+								className='px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-md transition cursor-pointer'
 								aria-label='Ver todas las preguntas frecuentes'
 							>
 								<p>VER MÁS</p>
