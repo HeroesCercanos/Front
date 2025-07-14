@@ -21,7 +21,7 @@ const Navbar = () => {
         navbarRef.current &&
         !navbarRef.current.contains(event.target as Node)
       ) {
-        setOpenMenu(null); // Cierra todos los dropdowns
+        setOpenMenu(null);
       }
     };
 
@@ -137,7 +137,7 @@ const Navbar = () => {
               </Link>
               <Link
                 role="menuitem"
-                href="/#capacitaciones"
+                href="/trainings"
                 scroll={true}
                 className="block hover:text-red-400 transition cursor-pointer"
               >

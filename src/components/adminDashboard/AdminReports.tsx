@@ -4,6 +4,7 @@ import { useState } from "react";
 import { CheckSquare, Trash2 } from "lucide-react";
 import Sidebar from "./Sidebar";
 import { Report, HistoryEntry } from "@/interfaces/incident.interface";
+import { Pencil } from "lucide-react";
 
 const initialReports: Report[] = [
   { id: 1, text: "Reporte 1 - 2025-07-10 - Av. Siempre Viva 123" },
@@ -107,92 +108,112 @@ export default function AdminReports() {
                 <li key={`${entry.id}-${index}`} className="border-b pb-3">
                   <p><strong>{entry.text}</strong></p>
                   <p>Acción: {entry.action === "asistido" ? "✅ Asistido" : "🗑️ Eliminado"}</p>
-                  <p>Comentario: {entry.comment}</p>
-                  {entry.edited && (
-                    <p className="text-xs text-yellow-600 font-medium">🖊️ Editado</p>
+                   {entry.edited && (
+                    <p className="text-xs text-gray-700 font-medium">🖊️ Editado</p>
                   )}
+                  <p>Comentario: {entry.comment}</p>
+                 
                   <p>Nombre del damnificado: {entry.victimName || "No especificado"}</p>
                   <p>Motivo: {entry.reason || "No especificado"}</p>
                   <p className="text-xs text-gray-500">{entry.timestamp}</p>
-                  <button
-                    className="mt-1 text-blue-600 hover:text-blue-800 text-sm focus:outline-none focus:ring-0"
-                    onClick={() => {
-                      setSelectedReport({ id: entry.id, text: entry.text });
-                      setActionType(entry.action);
-                      setComment(entry.comment);
-                      setVictimName(entry.victimName || "");
-                      setReason(entry.reason || "");
-                      setEditIndex(index);
-                    }}
-                  >✏️ Editar
-                  </button>
-                </li>
+                  
+         <button
+           type="button"
+           onClick={() => {
+           setSelectedReport({ id: entry.id, text: entry.text });
+           setActionType(entry.action);
+           setComment(entry.comment);
+           setVictimName(entry.victimName || "");
+           setReason(entry.reason || "");
+           setEditIndex(index);
+           }}
+          className="flex items-center gap-1 text-blue-600 hover:text-blue-800 cursor-pointer transition text-sm focus:outline-none focus:ring-0 select-none"
+          aria-label="Editar comentario"
+          >
+          <Pencil size={16} />
+         <span className="select-none">Editar</span>
+        </button>
+
+      </li>
               ))}
             </ul>
           )}
         </div>
 
          {selectedReport && actionType && (
-          <div className="fixed inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded shadow-lg w-full max-w-md space-y-4">
-              <h3 className="text-lg font-semibold">
-                {editIndex !== null ? "Editar información del reporte" : "Agregar información del reporte"}
-              </h3>
-              <p className="text-sm text-gray-700">
-                {editIndex !== null
-                  ? `Modificando el reporte "${selectedReport.text}"`
-                  : `¿Qué se hizo con el reporte "${selectedReport.text}"?`}
-              </p>
+  <div
+    className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Formulario de acción sobre reporte"
+  >
+    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md space-y-4 relative">
+      {/* Botón X de cierre */}
+      <button
+        type="button"
+        onClick={() => {
+          setSelectedReport(null);
+          setActionType(null);
+          setComment("");
+          setVictimName("");
+          setReason("");
+          setEditIndex(null);
+        }}
+        className="absolute top-3 right-3 text-gray-500 hover:text-red-600 transition text-xl"
+        aria-label="Cerrar formulario"
+      >
+        &times;
+      </button>
 
-              <input
-                className="w-full border p-2 rounded"
-                type="text"
-                placeholder="Nombre y Apellido del damnificado"
-                value={victimName}
-                onChange={(e) => setVictimName(e.target.value)}
-              />
+      <h3 className="text-lg font-bold text-center">
+        {editIndex !== null ? "Editar información del reporte" : "Agregar información del reporte"}
+      </h3>
 
-              <input
-                className="w-full border p-2 rounded"
-                type="text"
-                placeholder="Motivo"
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-              />
+      <p className="text-sm text-gray-700 text-center">
+        {editIndex !== null
+          ? `Modificando el reporte "${selectedReport.text}"`
+          : `¿Qué se hizo con el reporte "${selectedReport.text}"?`}
+      </p>
 
-              <textarea
-                className="w-full border p-2 rounded"
-                rows={3}
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder="Escribe un comentario..."
-              />
+      <input
+        className="w-full border border-gray-300 p-2 rounded"
+        type="text"
+        placeholder="Nombre y Apellido del damnificado"
+        value={victimName}
+        onChange={(e) => setVictimName(e.target.value)}
+        aria-label="Nombre del damnificado"
+      />
 
-              <div className="flex justify-end gap-2">
-                <button
-                  className="px-4 py-1 text-sm bg-gray-300 rounded"
-                  onClick={() => {
-                    setSelectedReport(null);
-                    setActionType(null);
-                    setComment("");
-                    setVictimName("");
-                    setReason("");
-                    setEditIndex(null);
-                  }}
-                >
-                  Cancelar
-                </button>
-                <button
-                  className="px-4 py-1 text-sm bg-blue-600 text-white rounded"
-                  onClick={confirmAction}
-                  disabled={!comment.trim()}
-                >
-                  {editIndex !== null ? "Guardar cambios" : "Confirmar"}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+      <input
+        className="w-full border border-gray-300 p-2 rounded"
+        type="text"
+        placeholder="Motivo"
+        value={reason}
+        onChange={(e) => setReason(e.target.value)}
+        aria-label="Motivo del reporte"
+      />
+
+      <textarea
+        className="w-full border border-gray-300 p-2 rounded"
+        rows={3}
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
+        placeholder="Escribe un comentario..."
+        aria-label="Comentario adicional"
+      />
+
+      <button
+        className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+        onClick={confirmAction}
+        disabled={!comment.trim()}
+        aria-label={editIndex !== null ? "Guardar cambios del reporte" : "Confirmar acción sobre reporte"}
+      >
+        {editIndex !== null ? "Guardar cambios" : "Confirmar"}
+      </button>
+    </div>
+  </div>
+)}
+
       </section>
     </div>
   );

@@ -15,12 +15,11 @@ export const sendLogin = async (
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message || "Credenciales inválidas");
+      throw new Error("Credenciales inválidas");
     }
 
-    return { token: data.access_token }; // 👈 adaptamos a lo que frontend espera
+    return { token: data.access_token };
   } catch (error) {
-    console.error("Login error:", error);
     alert("Credenciales inválidas");
   }
 };
