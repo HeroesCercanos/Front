@@ -42,6 +42,8 @@ const LoginForm = () => {
           exp: number;
         };
         const decoded = jwtDecode<Payload>(token);
+        console.log("TOKEN DECODIFICADO:", decoded);
+
         setUserData({
           token,
           user: {

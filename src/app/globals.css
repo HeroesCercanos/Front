@@ -12,7 +12,7 @@ h1 {
     font-family: var(--font-titulos);
 }
 
-h2, h3, p {
+h2, h3, p, span {
      font-family: var(--font-cuerpo);
 }
 
