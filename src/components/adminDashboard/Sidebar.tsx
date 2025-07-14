@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {LayoutDashboard, Flag, FileText, PlayCircle } from "lucide-react";
+import {LayoutDashboard, Flag, FileText, PlayCircle, ArrowBigLeft } from "lucide-react";
 
 const Sidebar = () => {
  
@@ -14,7 +14,7 @@ const Sidebar = () => {
           className="cursor-pointer flex items-center gap-2 mr-12 text-white hover:text-red-400 transition relative"
         >
           <LayoutDashboard size={18} />
-          <p className="text-sm">Incio</p>
+          <p className="text-sm">Inicio</p>
         </Link>
 
         <Link
@@ -39,6 +39,14 @@ const Sidebar = () => {
         >
           <PlayCircle  size={18} />
           <p className="text-sm">Capacitaciones</p>
+        </Link>
+
+        <Link
+          href="/"
+          className="cursor-pointer flex items-center gap-2 mr-12 text-white hover:text-red-400 transition relative"
+        >
+          <ArrowBigLeft size={18} />
+          <p className="text-sm">Volver</p>
         </Link>
         
       </nav>
