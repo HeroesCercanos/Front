@@ -37,11 +37,7 @@ export const IncidentReportForm = ({ onClose }: Props) => {
       setError(errorMessage);
       return;
     }
-console.log("Token:", userData?.token);
-console.log("Reporter ID:", userData?.user?.id);
-
     await sendIncidentReport(report);
-
 
     setIncidentType("");
     setLocation(null);
