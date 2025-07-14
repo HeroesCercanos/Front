@@ -1,5 +1,4 @@
 'use client';
-
 import { CloudinaryMedia } from '@/interfaces/cloudinary.interface';
 import ImageWithControls from './ImageWithControls';
 
@@ -36,8 +35,8 @@ export default function MediaCard({ item }: { item: CloudinaryMedia }) {
 	}
 
 	return (
-		<div className='block border rounded-2xl w-135 h-full transition transform hover:-translate-y-1 bg-gray-100 overflow-hidden'>
-			<div className='bg-black/5'>
+		<div className='block border rounded-2xl w-full h-full transition transform hover:-translate-y-1 bg-gray-100 overflow-hidden'>
+			<div className='bg-black/5 h-48 overflow-hidden'>
 				{isVideo ? (
 					<video
 						src={item.secure_url}

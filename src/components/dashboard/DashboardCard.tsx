@@ -1,5 +1,4 @@
 import { ICardProps } from '@/interfaces/dashboard.interface';
-import DonateButton from '../common/DonateButton';
 
 export default function DashboardCard({
 	icon,
@@ -7,20 +6,23 @@ export default function DashboardCard({
 	description,
 	buttonLabel,
 	onClick,
+	customButton,
 }: ICardProps) {
 	return (
-		<div className='bg-gray-100 p-6 rounded-lg flex flex-col items-center text-center space-y-4 shadow-inner drop-shadow-lg'>
-			<div className='text-4xl'>{icon}</div>
-			<h3 className='text-2xl font-semibold'>{title}</h3>
-			<p className='text-gray-700'>{description}</p>
-			<DonateButton>
+		<div className='z-0 bg-white p-6 rounded-2xl shadow-inner shadow-gray-200 drop-shadow-lg flex flex-col items-center text-center space-y-4'>
+			<div>{icon}</div>
+			<h3 className='text-xl font-semibold'>{title}</h3>
+			<p className='text-gray-600'>{description}</p>
+			{customButton ? (
+				customButton
+			) : (
 				<button
 					onClick={onClick}
-					className='mt-auto cursor-pointer bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition'
+					className='mt-4 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg'
 				>
 					{buttonLabel}
 				</button>
-			</DonateButton>
+			)}
 		</div>
 	);
 }
