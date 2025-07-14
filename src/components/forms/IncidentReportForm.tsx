@@ -7,6 +7,7 @@ import { validateIncidentReport } from "@/helpers/validateIncidentReport";
 import { sendIncidentReport } from "@/helpers/sendIncidentReport";
 import { IncidentReport, IncidentType } from "@/interfaces/incident.interface";
 
+
 const MapSelector = dynamic(() => import("../Map/MapSelector"), { ssr: false });
 
 interface Props {
@@ -36,8 +37,11 @@ export const IncidentReportForm = ({ onClose }: Props) => {
       setError(errorMessage);
       return;
     }
+console.log("Token:", userData?.token);
+console.log("Reporter ID:", userData?.user?.id);
 
     await sendIncidentReport(report);
+
 
     setIncidentType("");
     setLocation(null);
@@ -102,7 +106,7 @@ export const IncidentReportForm = ({ onClose }: Props) => {
       </button>
     </form>
   );
-};
+};/*
 
 /*"use client";
 
