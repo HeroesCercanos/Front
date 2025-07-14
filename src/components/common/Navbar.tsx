@@ -64,7 +64,7 @@ const Navbar = () => {
               aria-expanded={openMenu === "donaciones"}
               aria-controls="menu-donaciones"
             >
-             <h2> Campañas </h2> <ChevronDown className="w-4 h-4" />
+              <h2> Campañas </h2> <ChevronDown className="w-4 h-4" />
             </button>
             <div
               id="menu-donaciones"
@@ -118,7 +118,8 @@ const Navbar = () => {
               aria-expanded={openMenu === "info"}
               aria-controls="menu-info"
             >
-              <p>Información</p><ChevronDown className="w-4 h-4" />
+              <p>Información</p>
+              <ChevronDown className="w-4 h-4" />
             </button>
             <div
               id="menu-info"
@@ -147,14 +148,18 @@ const Navbar = () => {
         </ul>
         {userData ? (
           <div className="flex items-center gap-4 mr-2">
-            <Link
-              href="/dashboard"
-              aria-label="Ir al dashboard"
-              className="cursor-pointer flex items-center gap-2 text-white hover:text-red-400 transition relative"
-            >
-              <User size={18}/>
-              <h2 className="text-sm">Mi cuenta</h2>
-            </Link>
+            {userData && (
+              <Link
+                href={userData.user.role === "admin" ? "/admin" : "/dashboard"}
+                aria-label="Ir al panel"
+                className="cursor-pointer flex items-center gap-2 text-white hover:text-red-400 transition relative"
+              >
+                <User size={18} />
+                <h2 className="text-sm">
+                  {userData.user.role === "admin" ? "Panel" : "Mi cuenta"}
+                </h2>
+              </Link>
+            )}
             <LogOutButton />
           </div>
         ) : (
