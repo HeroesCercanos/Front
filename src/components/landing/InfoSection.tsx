@@ -10,9 +10,7 @@ export default function InfoSection() {
 	const handleClick = (id: string) => router.push(`/faqs#${id}`);
 
 	return (
-		<section 
-		id="FAQ"
-		className='w-full px-4 md:px-16 py-12 bg-gray-100'>
+		<section id='FAQ' className='w-full px-4 md:px-16 py-12 bg-gray-100'>
 			<div className='max-w-7xl mx-auto px-4 md:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start'>
 				<div className='w-full'>
 					<div className='w-full bg-white rounded-xl shadow-lg overflow-hidden'>
@@ -37,16 +35,32 @@ export default function InfoSection() {
 				</div>
 
 				<div className='w-full space-y-4'>
-					<h2 className='text-2xl font-bold mb-4 text-right'>INFORMACIÓN ÚTIL</h2>
-					{faqs.map((faq) => (
-						<button
-							key={faq.id}
-							onClick={() => handleClick(faq.id)}
-							className='w-full text-right p-4 cursor-pointer hover:bg-gray-50 transition'
-						>
-							<span className='text-lg font-medium'>{faq.question}</span>
-						</button>
-					))}
+					<h2 className='text-2xl font-bold mb-4 text-right'>
+						INFORMACIÓN ÚTIL
+					</h2>
+					<div className='space-y-2'>
+						{faqs.map((faq) => (
+							<button
+								key={faq.id}
+								onClick={() => handleClick(faq.id)}
+								className='w-full text-right p-4 cursor-pointer hover:bg-gray-50 transition'
+							>
+								<span className='text-lg font-medium text-gray-800'>
+									{faq.question}
+								</span>
+							</button>
+						))}
+
+						<div className='text-right pt-2'>
+							<button
+								onClick={() => router.push('/faqs')}
+								className='px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-md transition'
+								aria-label='Ver todas las preguntas frecuentes'
+							>
+								<p>VER MÁS</p>
+							</button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</section>
