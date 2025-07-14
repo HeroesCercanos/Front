@@ -1,5 +1,5 @@
 
-
+/*
 export const sendRegistrationEmail = async (userData: { name: string; email: string }) => {
   try {
     const res = await fetch("/api/send-registration-email", {
@@ -62,7 +62,7 @@ export const sendIncidentEmail = async (incidentData: {
     if (!res.ok) throw new Error("Error al enviar el email de incidente");
 
     return true;
-    */
+    
   } catch (error) {
     console.error("Error enviando email de incidente:", error);
     return false;
