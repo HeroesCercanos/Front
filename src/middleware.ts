@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
 
   if (!token) {
     // Si no hay token, redirigir a login si quiere acceder a rutas privadas
-    if (pathname === "/dashboard1" || pathname === "/admin1") {
+    if (pathname === "/dashboard" || pathname === "/admin") {
       const loginUrl = request.nextUrl.clone();
       loginUrl.pathname = "/login";
       return NextResponse.redirect(loginUrl);
@@ -22,14 +22,14 @@ export async function middleware(request: NextRequest) {
     const role = payload.role;
 
     // 🔒 Solo user puede ir al dashboard
-    if (pathname === "/dashboard1" && role !== "user1") {
+    if (pathname === "/dashboard" && role !== "user") {
       const homeUrl = request.nextUrl.clone();
       homeUrl.pathname = "/";
       return NextResponse.redirect(homeUrl);
     }
 
     // 🔒 Solo admin puede ir a /admin
-    if (pathname === "/admin1" && role !== "admin1") {
+    if (pathname === "/admin" && role !== "admin") {
       const homeUrl = request.nextUrl.clone();
       homeUrl.pathname = "/";
       return NextResponse.redirect(homeUrl);
@@ -46,5 +46,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard1", "/admin1"],
+  matcher: ["/dashboard", "/admin"],
 };
