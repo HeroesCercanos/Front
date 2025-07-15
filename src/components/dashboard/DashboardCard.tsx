@@ -18,7 +18,7 @@ export default function DashboardCard({
 			) : (
 				<button
 					onClick={onClick}
-					className='mt-4 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg'
+					className='mt-4 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg cursor-pointer'
 				>
 					{buttonLabel}
 				</button>
