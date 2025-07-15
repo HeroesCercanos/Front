@@ -36,7 +36,7 @@ export default function FAQContent({ items }: Props) {
 					<div className='w-full lg:w-2/3 space-y-4'>
 						<button
 							onClick={() => handleClick(faq.id)}
-							className='text-3xl lg:text-2xl font-semibold text-left hover:underline'
+							className='text-3xl lg:text-2xl font-semibold text-left hover:underline cursor-pointer'
 						>
 							{faq.question}
 						</button>

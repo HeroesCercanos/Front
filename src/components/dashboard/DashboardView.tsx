@@ -52,7 +52,7 @@ export default function DashboardView() {
 					onClick={() => {}}
 					customButton={
 						<DonateButton>
-							<button className='bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg'>
+							<button className='bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg cursor-pointer'>
 								Donar ahora
 							</button>
 						</DonateButton>

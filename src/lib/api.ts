@@ -8,7 +8,7 @@ export interface CloudinaryMedia {
 }
 
 export async function fetchTrainings(): Promise<CloudinaryMedia[]> {
-	const res = await fetch('/cloudinary/trainings', { cache: 'no-store' });
+	const res = await fetch('http://localhost:3000/cloudinary/trainings', { cache: 'no-store' });
 	if (!res.ok) throw new Error('Failed to load trainings');
 	return res.json();
 }
@@ -16,9 +16,16 @@ export async function fetchTrainings(): Promise<CloudinaryMedia[]> {
 export async function uploadMedia(
 	formData: FormData
 ): Promise<CloudinaryMedia> {
-	const res = await fetch('/cloudinary/upload', {
+	const token = localStorage.getItem('jwtToken');
+	console.log('TOKEN', token);
+	
+
+	const res = await fetch('http://localhost:3000/cloudinary/upload', {
 		method: 'POST',
 		body: formData,
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
 	});
 	if (!res.ok) throw new Error('Upload failed');
 	return res.json();

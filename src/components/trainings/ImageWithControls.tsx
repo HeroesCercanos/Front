@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { Maximize2, Download } from 'lucide-react';
+import { Maximize2 } from 'lucide-react';
 
 interface Props {
 	src: string;
@@ -27,12 +27,7 @@ export default function ImageWithControls({ src, alt }: Props) {
 
 	return (
 		<div className='relative w-full h-full'>
-			<img
-				ref={imgRef}
-				src={src}
-				alt={alt}
-				className='w-full h-full'
-			/>
+			<img ref={imgRef} src={src} alt={alt} className='w-full h-full' />
 			<div className='absolute bottom-4 right-4 flex flex-col space-y-2'>
 				<button
 					onClick={handleFullScreen}
@@ -46,9 +41,7 @@ export default function ImageWithControls({ src, alt }: Props) {
 					download
 					className='p-2 rounded-full hover:bg-gray-500 transition'
 					title='Descargar imagen'
-				>
-					<Download size={20} className='text-gray-200' />
-				</a>
+				></a>
 			</div>
 		</div>
 	);
