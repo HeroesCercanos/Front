@@ -24,12 +24,9 @@ export default function MediaPreview({ media }: Props) {
 						className='w-full h-full rounded-2xl shadow-lg'
 					/>
 					<a
-						href={media.secure_url.replace(
-							'/upload/',
-							'/upload/fl_attachment/'
-						)}
+						href={`${media.secure_url}?response-content-disposition=attachment`}
 						download
-						className='mt-4 inline-block bg-blue-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition'
+						className='inline-block bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition mt-4'
 					>
 						Descargar PDF
 					</a>
