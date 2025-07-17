@@ -48,7 +48,7 @@ http://localhost:3000
 --
 
 ## 👩‍💻 Autores
-Desarrollado con 💙 por Camila Ladner, Victoria Garay y Enzo Ibarra
+Desarrollado con 💙 por Camila Ladner, Victoria Garay y Enzo Ibarra  
 Full Stack Developers especializados en Frontend, enfocados en crear tecnología con propósito.
 
 
