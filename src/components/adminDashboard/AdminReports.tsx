@@ -25,7 +25,7 @@ export default function AdminReports() {
   const fetchReports = async () => {
     if (!userData?.token) return;
     try {
-      // Traer reportes activos
+      
       const incidents = await getIncidentReports(userData.token);
       const formatted = incidents.map((incident: any) => ({
         id: incident.id,
