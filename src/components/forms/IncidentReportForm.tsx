@@ -8,11 +8,10 @@ import { sendIncidentReport } from "@/helpers/sendIncidentReport";
 import { IncidentReport, IncidentType } from "@/interfaces/incident.interface";
 import { toast } from "react-hot-toast";
 
-
 const MapSelector = dynamic(() => import("../Map/MapSelector"), { ssr: false });
 
 interface Props {
-  onClose: () => void;
+  onClose: (showToast?: boolean) => void;
 }
 
 export const IncidentReportForm = ({ onClose }: Props) => {
@@ -20,17 +19,28 @@ export const IncidentReportForm = ({ onClose }: Props) => {
   const [incidentType, setIncidentType] = useState<IncidentType | "">("");
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [description, setDescription] = useState("");
-  const [comments, setComments] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!location) {
+      setError("Debés seleccionar una ubicación en el mapa.");
+      toast.custom((t) => (
+        <div className={`bg-white border border-red-300 rounded-xl shadow-lg p-4 w-[90%] max-w-md ${t.visible ? "animate-enter" : "animate-leave"}`}>
+          <h2 className="text-red-600 font-semibold mb-2">Error</h2>
+          <p className="text-gray-700 text-sm">
+            Debés seleccionar una ubicación en el mapa.
+          </p>
+        </div>
+      ));
+      return;
+    }
+
     const report: IncidentReport = {
       type: incidentType as IncidentType,
       location,
       description: description.trim() || undefined,
-      comments: comments.trim() || undefined,
     };
 
     const errorMessage = validateIncidentReport(report);
@@ -45,7 +55,6 @@ export const IncidentReportForm = ({ onClose }: Props) => {
       return;
     }
 
-    // Confirmación personalizada
     toast.custom((t) => (
       <div className={`bg-white rounded-xl shadow-lg p-6 border border-gray-200 w-[90%] max-w-md ${t.visible ? "animate-enter" : "animate-leave"}`}>
         <h2 className="text-lg font-semibold text-gray-800 mb-2">¿Estás seguro?</h2>
@@ -54,8 +63,14 @@ export const IncidentReportForm = ({ onClose }: Props) => {
           <button
             onClick={async () => {
               toast.dismiss(t.id);
+
+              if (!userData?.token) {
+                toast.error("Debés iniciar sesión para enviar un reporte.");
+                return;
+              }
+
               try {
-                await sendIncidentReport(report);
+                await sendIncidentReport(report, userData.token);
                 toast.custom((t) => (
                   <div className={`bg-white border border-green-300 rounded-xl shadow-lg p-4 w-[90%] max-w-md ${t.visible ? "animate-enter" : "animate-leave"}`}>
                     <h2 className="text-green-700 font-semibold mb-2">¡Reporte enviado!</h2>
@@ -66,9 +81,11 @@ export const IncidentReportForm = ({ onClose }: Props) => {
                 setIncidentType("");
                 setLocation(null);
                 setDescription("");
-                setComments("");
                 setError("");
-                onClose();
+
+                // ✅ Cierra sin mostrar "Formulario cerrado"
+                onClose(false);
+
               } catch (err) {
                 console.error(err);
                 toast.custom((t) => (
@@ -103,7 +120,7 @@ export const IncidentReportForm = ({ onClose }: Props) => {
           <button
             onClick={() => {
               toast.dismiss(t.id);
-              onClose();
+              onClose(); // acá sí se muestra el toast de cierre
               toast("Formulario cerrado");
             }}
             className="px-4 py-2 rounded-md bg-red-600 text-white font-semibold hover:bg-red-700 transition"
@@ -127,15 +144,6 @@ export const IncidentReportForm = ({ onClose }: Props) => {
       className="relative space-y-4 p-4 w-full max-w-md"
       aria-label="Formulario de reporte"
     >
-      <button
-        type="button"
-        onClick={handleClose}
-        className="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl"
-        aria-label="Cerrar formulario"
-      >
-        &times;
-      </button>
-
       <div>
         <label htmlFor="incidentType" className="block font-semibold text-sm">
           Tipo de incidente
@@ -176,21 +184,6 @@ export const IncidentReportForm = ({ onClose }: Props) => {
 
       {error && <p className="text-red-500 text-sm">{error}</p>}
 
-      <div>
-        <label htmlFor="comments" className="block font-semibold text-sm">
-          Comentarios
-        </label>
-        <textarea
-          id="comments"
-          placeholder="Comentá detalles del incidente (opcional)"
-          className="mt-1 block w-full rounded border-gray-300 shadow-sm px-3 py-2"
-          value={comments}
-          onChange={(e) => setComments(e.target.value)}
-          rows={4}
-          aria-label="Comentarios del incidente"
-        />
-      </div>
-
       <button
         type="submit"
         className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full"
@@ -202,156 +195,5 @@ export const IncidentReportForm = ({ onClose }: Props) => {
   );
 };
 
-
-/*"use client";
-
-import { useState } from "react";
-import dynamic from "next/dynamic";
-import { useAuth } from "@/context/AuthContext";
-import { validateIncidentReport } from "@/helpers/validateIncidentReport";
-import { sendIncidentReport } from "@/helpers/sendIncidentReport";
-import { IncidentReport, IncidentType } from "@/interfaces/incident.interface";
-import { X } from "lucide-react";
-import { toast } from "react-hot-toast";
-
-const MapSelector = dynamic(() => import("../Map/MapSelector"), { ssr: false });
-
-interface Props {
-  onClose: () => void;
-}
-
-export const IncidentReportForm = ({ onClose }: Props) => {
-  const { userData } = useAuth();
-  const [incidentType, setIncidentType] = useState<IncidentType | "">("");
-  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const [description, setDescription] = useState("");
-  const [comments, setComments] = useState("");
-  const [error, setError] = useState("");
-
- 
-
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-
-  const report: IncidentReport = {
-    type: incidentType as IncidentType,
-    location,
-    description: description.trim() || undefined,
-    comments: comments.trim() || undefined,
-  };
-
-  const errorMessage = validateIncidentReport(report);
-  if (errorMessage) {
-    setError(errorMessage);
-    toast.error(errorMessage); // ✅ mostramos error con toast
-    return;
-  }
-
-  // 🔒 Confirmación previa
-  const confirm = window.confirm("¿Estás seguro que querés enviar este reporte?");
-  if (!confirm) {
-    toast("Reporte cancelado");
-    return;
-  }
-
-  try {
-    await sendIncidentReport(report);
-    toast.success("¡Reporte enviado exitosamente!");
-
-    // Limpiar campos
-    setIncidentType("");
-    setLocation(null);
-    setDescription("");
-    setComments("");
-    setError("");
-    onClose();
-  } catch (err) {
-    toast.error("Ocurrió un error al enviar el reporte");
-    console.error(err);
-  }
-};
-
-
-  return (
-    <form
-      onSubmit={handleSubmit}
-      className="relative space-y-4 p-4 w-full max-w-md"
-      aria-label="Formulario de reporte"
-    >
-      
-      <button
-        type="button"
-        onClick={onClose}
-        className="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl"
-        aria-label="Cerrar formulario"
-      >
-        &times;
-      </button>
-
-      <div>
-        <label htmlFor="incidentType" className="block font-semibold text-sm">
-          Tipo de incidente
-        </label>
-        <select
-          id="incidentType"
-          value={incidentType}
-          onChange={(e) => setIncidentType(e.target.value as IncidentType)}
-          className="mt-1 block w-full rounded border-gray-300 shadow-sm"
-          aria-label="Tipo de incidente"
-          required
-        >
-          <option value="">Seleccionar</option>
-          <option value="incendio">Incendio</option>
-          <option value="accidente">Accidente</option>
-        </select>
-      </div>
-
-      <div>
-        <label className="block font-semibold text-sm">Ubicación</label>
-        <MapSelector onSelectLocation={setLocation} />
-
-        {location && (
-          <p className="text-sm text-gray-600 mt-2">
-            Lat: {location.lat.toFixed(4)} - Lng: {location.lng.toFixed(4)}
-          </p>
-        )}
-
-        <input
-          type="text"
-          placeholder="(Opcional) Describí la ubicación: calle, referencia, etc."
-          className="mt-3 block w-full rounded border-gray-300 shadow-sm px-3 py-2"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          aria-label="Descripción de la ubicación"
-        />
-      </div>
-
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-
-      <div>
-        <label htmlFor="comments" className="block font-semibold text-sm">
-          Comentarios
-        </label>
-        <textarea
-          id="comments"
-          placeholder="Comentá detalles del incidente (opcional)"
-          className="mt-1 block w-full rounded border-gray-300 shadow-sm px-3 py-2"
-          value={comments}
-          onChange={(e) => setComments(e.target.value)}
-          rows={4}
-          aria-label="Comentarios del incidente"
-        />
-      </div>
-
-      <button
-        type="submit"
-        className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full"
-        aria-label="Enviar reporte"
-      >
-        Enviar reporte
-      </button>
-    </form>
-  );
-};*/
 
 

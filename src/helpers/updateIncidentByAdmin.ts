@@ -1,22 +1,21 @@
-export const updateIncidentAction = async (
-  id: number,
-  action: "asistido" | "eliminado",
-  adminCommentary: string,
-  token: string,
-  adminId?: number
+export const updateIncidentByAdmin = async (
+  id: string | number,
+  data: {
+    status: "asistido" | "eliminado";
+    adminComment?: string;
+    victimName?: string;
+    reason?: string;
+  },
+  token: string
 ) => {
   try {
-    const res = await fetch(`https://api.heroescercanos.com/incidents/${id}`, {
+    const res = await fetch(`http://localhost:3000/incident/admin/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        action,
-        adminCommentary,
-        adminId, // opcional
-      }),
+      body: JSON.stringify(data),
     });
 
     if (!res.ok) {
