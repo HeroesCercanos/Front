@@ -1,20 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { CheckSquare, Trash2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { CheckSquare, Trash2, Pencil } from "lucide-react";
 import Sidebar from "./Sidebar";
 import { Report, HistoryEntry } from "@/interfaces/incident.interface";
-import { Pencil } from "lucide-react";
 import { toast } from "react-hot-toast";
-
-const initialReports: Report[] = [
-  { id: 1, text: "Reporte 1 - 2025-07-10 - Av. Siempre Viva 123" },
-  { id: 2, text: "Reporte 2 - 2025-07-09 - Calle Falsa 456" },
-  { id: 3, text: "Reporte 3 - 2025-07-08 - Rivadavia 789" },
-];
+import { useAuth } from "@/context/AuthContext";
+import { updateIncidentByAdmin } from "@/helpers/updateIncidentByAdmin";
+import { getIncidentReports } from "@/helpers/getIncidentReports";
 
 export default function AdminReports() {
-  const [activeReports, setActiveReports] = useState<Report[]>(initialReports);
+  const { userData } = useAuth();
+  const [activeReports, setActiveReports] = useState<Report[]>([]);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [actionType, setActionType] = useState<"asistido" | "eliminado" | null>(null);
@@ -23,61 +20,84 @@ export default function AdminReports() {
   const [reason, setReason] = useState("");
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
+  useEffect(() => {
+    const fetchReports = async () => {
+      if (!userData?.token) return;
+      try {
+        const incidents = await getIncidentReports(userData.token);
+        const formatted = incidents.map((incident: any) => ({
+          id: incident.id,
+          text: `Reporte - ${incident.createdAt.slice(0, 10)} - ${incident.description || "Sin descripción"}`,
+        }));
+        setActiveReports(formatted);
+      } catch (error) {
+        toast.error("No se pudieron cargar los reportes");
+      }
+    };
+
+    fetchReports();
+  }, [userData]);
+
   const handleAction = (report: Report, type: "asistido" | "eliminado") => {
     setSelectedReport(report);
     setActionType(type);
     setEditIndex(null);
   };
 
-const confirmAction = () => {
-  if (!selectedReport || !actionType) return;
+  const confirmAction = async () => {
+    if (!selectedReport || !actionType || !userData?.token) return;
 
-  const newEntry: HistoryEntry = {
-    id: selectedReport.id,
-    text: selectedReport.text,
-    action: actionType,
-    comment,
-    timestamp: new Date().toLocaleString(),
-    edited: editIndex !== null,
-    victimName,
-    reason,
+    try {
+      await updateIncidentByAdmin(
+        selectedReport.id,
+        {
+          status: actionType,
+          adminComment: comment || undefined,
+          victimName: victimName || undefined,
+          reason: reason || undefined,
+        },
+        userData.token
+      );
+
+      const newEntry: HistoryEntry = {
+        id: selectedReport.id,
+        text: selectedReport.text,
+        action: actionType,
+        comment,
+        timestamp: new Date().toLocaleString(),
+        edited: editIndex !== null,
+        victimName,
+        reason,
+      };
+
+      if (editIndex !== null) {
+        const updated = [...history];
+        updated[editIndex] = newEntry;
+        setHistory(updated);
+        toast.success("Reporte actualizado correctamente.");
+      } else {
+        setHistory((prev) => [...prev, newEntry]);
+        setActiveReports((prev) =>
+          prev.filter((r) => r.id !== selectedReport.id)
+        );
+        toast.success(
+          actionType === "asistido"
+            ? "✅ Reporte marcado como asistido"
+            : "🗑️ Reporte eliminado"
+        );
+      }
+
+      setSelectedReport(null);
+      setActionType(null);
+      setComment("");
+      setVictimName("");
+      setReason("");
+      setEditIndex(null);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error al actualizar el reporte");
+    }
   };
-
-  if (editIndex !== null) {
-    const updated = [...history];
-    updated[editIndex] = newEntry;
-    setHistory(updated);
-
-    toast.custom((t) => (
-      <div className={`bg-white border border-blue-300 rounded-xl shadow-lg p-4 w-[90%] max-w-md ${t.visible ? "animate-enter" : "animate-leave"}`}>
-        <h2 className="text-blue-700 font-semibold mb-2">Reporte actualizado</h2>
-        <p className="text-gray-700 text-sm">Los cambios fueron guardados correctamente.</p>
-      </div>
-    ));
-  } else {
-    setHistory((prev) => [...prev, newEntry]);
-    setActiveReports((prev) => prev.filter((r) => r.id !== selectedReport.id));
-
-    toast.custom((t) => (
-      <div className={`bg-white border border-green-300 rounded-xl shadow-lg p-4 w-[90%] max-w-md ${t.visible ? "animate-enter" : "animate-leave"}`}>
-        <h2 className="text-green-700 font-semibold mb-2">
-          {actionType === "asistido" ? "✅ Reporte asistido" : "🗑️ Reporte eliminado"}
-        </h2>
-        <p className="text-gray-700 text-sm">La acción fue registrada exitosamente.</p>
-      </div>
-    ));
-  }
-
-  // Limpiar estados
-  setSelectedReport(null);
-  setActionType(null);
-  setComment("");
-  setVictimName("");
-  setReason("");
-  setEditIndex(null);
-};
-
-
   return (
     <div className="flex h-screen">
       <Sidebar />
@@ -166,7 +186,7 @@ const confirmAction = () => {
     aria-label="Formulario de acción sobre reporte"
   >
     <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md space-y-4 relative">
-      {/* Botón X de cierre con confirmación */}
+      
       <button
         type="button"
         onClick={() => {
@@ -263,7 +283,7 @@ const confirmAction = () => {
                 <button
                   onClick={() => {
                     toast.dismiss(t.id);
-                    confirmAction(); // ✅ Ejecuta la acción
+                    confirmAction(); 
                   }}
                   className="px-4 py-2 rounded-md bg-red-600 text-white font-semibold hover:bg-red-700 transition"
                 >

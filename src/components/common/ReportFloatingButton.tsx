@@ -36,16 +36,15 @@ export const ReportFloatingButton = () => {
       return;
     }
 
-    setShowForm(true);
+    setShowForm((prev) => !prev);
   };
 
-  const handleClose = () => {
+  // Modificado: el parámetro indica si debe mostrar el toast o no
+  const handleClose = (showToast = true) => {
     setShowForm(false);
-
-    // Si querés mostrar un aviso al cerrar, descomentá esto:
-    /*
-    toast("Formulario cerrado");
-    */
+    if (showToast) {
+      toast("Formulario cerrado");
+    }
   };
 
   return (
@@ -53,146 +52,52 @@ export const ReportFloatingButton = () => {
       <button
         onClick={handleClick}
         className="cursor-pointer fixed bottom-6 right-6 z-[9999] flex items-center gap-2 bg-black text-white px-5 py-3 rounded-full shadow-[0_4px_20px_rgba(255,0,0,0.7)] border-2 border-red-600 hover:scale-110 transition-transform duration-200"
-        aria-label="Reportar incidente"
+        aria-label={showForm ? "Cerrar formulario de reporte" : "Reportar incidente"}
       >
         {showForm ? (
           <X className="w-6 h-6 text-white" />
         ) : (
           <Flame className="w-6 h-6 text-red-500 cursor-pointer" />
         )}
-        <span
-          className="hidden sm:inline font-semibold text-base "
-          aria-hidden="true"
-        >
+        <span className="hidden sm:inline font-semibold text-base" aria-hidden="true">
           {showForm ? "Cerrar" : "Reportar"}
         </span>
       </button>
 
       {showForm && (
-  <div
-    className="fixed inset-0 z-[9998] backdrop-blur-sm bg-black/10 flex justify-center items-center px-4"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="modal-title"
-    aria-describedby="modal-desc"
-    onClick={handleClose}
-  >
-    <div
-      className="bg-white rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <div className="p-6 max-h-[90vh] overflow-y-auto overflow-x-hidden scrollbar-hide">
-        {/* Título + botón X arriba */}
-        <div className="flex justify-between items-start mb-4">
-          <h2 id="modal-title" className="text-xl font-bold">
-            Reportar incidente
-          </h2>
-          <button
-            type="button"
-            onClick={handleClose}
-            className="text-gray-500 hover:text-red-600 text-xl cursor-pointer"
-            aria-label="Cerrar formulario"
+        <div
+          className="fixed inset-0 z-[9998] backdrop-blur-sm bg-black/10 flex justify-center items-center px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+          aria-describedby="modal-desc"
+          onClick={() => handleClose()} // cierre por click en fondo
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
           >
-<<<<<<< Updated upstream
             <div className="p-6 max-h-[90vh] overflow-y-auto overflow-x-hidden scrollbar-hide">
-              <h2
-                id="modal-title"
-                className="text-xl font-bold text-center mb-2 "
-              >
-                Reportar incidente
-              </h2>
-              <p
-                id="modal-desc"
-                className="text-sm text-center text-gray-600 mb-4"
-              >
+              {/* Título + botón X */}
+              <div className="flex justify-between items-start mb-4">
+                <h2 id="modal-title" className="text-xl font-bold">
+                  Reportar incidente
+                </h2>
+                <button
+                  type="button"
+                  onClick={() => handleClose()}
+                  className="text-gray-500 hover:text-red-600 text-xl cursor-pointer"
+                  aria-label="Cerrar formulario"
+                >
+                  &times;
+                </button>
+              </div>
+
+              <p id="modal-desc" className="text-sm text-gray-600 mb-4">
                 Completá el siguiente formulario para reportar un incendio o accidente.
               </p>
-              <IncidentReportForm onClose={handleClose} />
-            </div>
-          </div>
-=======
-            &times;
-          </button>
->>>>>>> Stashed changes
-        </div>
 
-        <p
-          id="modal-desc"
-          className="text-sm text-gray-600 mb-4"
-        >
-          Completá el siguiente formulario para reportar un incendio o accidente.
-        </p>
-
-        <IncidentReportForm onClose={handleClose} />
-      </div>
-    </div>
-  </div>
-)}
-
-    </>
-  );
-};
-
-
-
-/*"use client";
-
-import { useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import { Flame, X } from "lucide-react";
-import { IncidentReportForm } from "../forms/IncidentReportForm";
-import { useAuth } from "@/context/AuthContext";
-
-
-
-export const ReportFloatingButton = () => {
-  const [showForm, setShowForm] = useState(false);
-  const router = useRouter();
-  const pathname = usePathname();
-  const { userData } = useAuth();
-
-  const isAdminRoute = pathname.startsWith("/admin");
-  const isAdminUser = userData?.user?.role === "admin";
-
-  if (isAdminRoute || isAdminUser) return null; // 👈 condición combinada
-
-  const handleClick = () => {
-    if (!userData) {
-      router.push("/login");
-      return;
-    }
-    setShowForm((prev) => !prev);
-  };
-
-  const handleClose = () => setShowForm(false);
-
-  return (
-    <>
-      <button
-        onClick={handleClick}
-        className="fixed bottom-6 right-6 z-[9999] flex items-center gap-2 bg-black text-white px-5 py-3 rounded-full shadow-[0_4px_20px_rgba(255,0,0,0.7)] border-2 border-red-600 hover:scale-110 transition-transform duration-200"
-        aria-label="Reportar incidente"
-      >
-        {showForm ? (
-          <X className="w-6 h-6 text-white" />
-        ) : (
-          <Flame className="w-6 h-6 text-red-500" />
-        )}
-        <p className="hidden sm:inline font-semibold text-base">
-          {showForm ? "Cerrar" : "Reportar"}
-        </p>
-      </button>
-
-      {showForm && (
-        <div
-          className="fixed inset-0 z-[9998] backdrop-blur-sm bg-black/10 flex justify-center items-center px-4"
-          onClick={handleClose}
-        >
-          <div
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-6 max-h-[90vh] overflow-y-auto overflow-x-hidden scrollbar-hide">
+              
               <IncidentReportForm onClose={handleClose} />
             </div>
           </div>
@@ -203,66 +108,4 @@ export const ReportFloatingButton = () => {
 };
 
 
-"use client";
 
-import { useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import { Flame, X } from "lucide-react";
-import { IncidentReportForm } from "../forms/IncidentReportForm";
-import { useAuth } from "@/context/AuthContext";
-
-export const ReportFloatingButton = () => {
-  const [showForm, setShowForm] = useState(false);
-  const router = useRouter();
-  const pathname = usePathname(); 
-  const { userData } = useAuth();
-
-  
-  const isAdminRoute = pathname.startsWith("/admin");
-  if (isAdminRoute) return null;
-
-  const handleClick = () => {
-    if (!userData) {
-      router.push("/login");
-      return;
-    }
-    setShowForm((prev) => !prev);
-  };
-
-  const handleClose = () => setShowForm(false);
-
-  return (
-    <>
-      <button
-        onClick={handleClick}
-        className="fixed bottom-6 right-6 z-[9999] flex items-center gap-2 bg-black text-white px-5 py-3 rounded-full shadow-[0_4px_20px_rgba(255,0,0,0.7)] border-2 border-red-600 hover:scale-110 transition-transform duration-200"
-        aria-label="Reportar incidente"
-      >
-        {showForm ? (
-          <X className="w-6 h-6 text-white" />
-        ) : (
-          <Flame className="w-6 h-6 text-red-500" />
-        )}
-        <p className="hidden sm:inline font-semibold text-base">
-          {showForm ? "Cerrar" : "Reportar"}
-        </p>
-      </button>
-
-      {showForm && (
-        <div
-          className="fixed inset-0 z-[9998] backdrop-blur-sm bg-black/10 flex justify-center items-center px-4"
-          onClick={handleClose}
-        >
-          <div
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-6 max-h-[90vh] overflow-y-auto overflow-x-hidden scrollbar-hide">
-              <IncidentReportForm onClose={handleClose} />
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
-};*/
