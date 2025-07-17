@@ -6,8 +6,8 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get("jwtToken")?.value;
 
   if (!token) {
-    // Si no hay token, redirigir a login si quiere acceder a rutas privadas
-    if (pathname === "/dashboard" || pathname === "/admin") {
+    // Si no hay token, redirigir a login para rutas privadas
+    if (pathname === "/dashboard" || pathname.startsWith("/admin")) {
       const loginUrl = request.nextUrl.clone();
       loginUrl.pathname = "/login";
       return NextResponse.redirect(loginUrl);
@@ -18,18 +18,10 @@ export async function middleware(request: NextRequest) {
   try {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
     const { payload } = await jwtVerify(token, secret);
-
     const role = payload.role;
 
-    // 🔒 Solo user puede ir al dashboard
-    if (pathname === "/dashboard" && role !== "user") {
-      const homeUrl = request.nextUrl.clone();
-      homeUrl.pathname = "/";
-      return NextResponse.redirect(homeUrl);
-    }
-
-    // 🔒 Solo admin puede ir a /admin
-    if (pathname === "/admin" && role !== "admin") {
+    // 🔒 Solo admin puede acceder a /admin y subrutas
+    if (pathname.startsWith("/admin") && role !== "admin") {
       const homeUrl = request.nextUrl.clone();
       homeUrl.pathname = "/";
       return NextResponse.redirect(homeUrl);
@@ -38,7 +30,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   } catch (error) {
     console.error("Error verificando token:", error);
-    // Token inválido → redirigir al login
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/login";
     return NextResponse.redirect(loginUrl);
@@ -46,5 +37,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard", "/admin"],
+  matcher: ["/dashboard", "/admin/:path*"]
 };

@@ -1,37 +1,29 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
-import { useRouter } from "next/navigation";
 import Sidebar from "@/components/adminDashboard/Sidebar";
 import AdminStatsView from "./AdminStatsView";
 import DonationHistory from "./DonationHistory";
 
-
 const AdminDashboardView = () => {
   const { userData } = useAuth();
-  const router = useRouter();
-
-  // CUANDO TENGAMOS RESUELTA LA AUTH DEL ADMIN
-/*   if (!userData || userData.user?.role !== "admin") {
-    router.push("/");
-    return null;
-  } */
 
   return (
-    <div className="flex h-screen">
-        <Sidebar/>
+    <div className="flex flex-col md:flex-row min-h-screen">
+  
+      <aside className="w-full md:w-64 bg-gray-100">
+        <Sidebar />
+      </aside>
 
-      <div className="flex-1 flex flex-col bg-white">
-        
-        <main className="p-8">
-          <h2 className="text-3xl font-semibold mb-1">
-           ¡Hola, admin! {/* {userData.user.name} */}
+      <div className="flex-1 bg-white">
+        <main className="p-4 md:p-8">
+          <h2 className="text-2xl md:text-3xl font-semibold mb-1">
+            ¡Hola, {userData?.user.name}!
           </h2>
           <p className="text-gray-600 mb-6">GRACIAS POR TU SERVICIO</p>
 
-          <AdminStatsView/>
+          <AdminStatsView />
           <DonationHistory />
-          
         </main>
       </div>
     </div>
