@@ -43,7 +43,7 @@ export default function RootLayout({
           <Navbar />
 
           <Toaster
-            position="top-right"
+            position="top-center"
             toastOptions={{
               style: {
                 background: "#fff8e7",
