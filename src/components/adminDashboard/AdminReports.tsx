@@ -8,6 +8,7 @@ import { toast } from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 import { updateIncidentByAdmin } from "@/helpers/updateIncidentByAdmin";
 import { getIncidentReports } from "@/helpers/getIncidentReports";
+import { getIncidentHistory } from "@/helpers/getIncidentHistory";
 
 export default function AdminReports() {
   const { userData } = useAuth();
@@ -21,22 +22,38 @@ export default function AdminReports() {
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    const fetchReports = async () => {
-      if (!userData?.token) return;
-      try {
-        const incidents = await getIncidentReports(userData.token);
-        const formatted = incidents.map((incident: any) => ({
-          id: incident.id,
-          text: `Reporte - ${incident.createdAt.slice(0, 10)} - ${incident.description || "Sin descripción"}`,
-        }));
-        setActiveReports(formatted);
-      } catch (error) {
-        toast.error("No se pudieron cargar los reportes");
-      }
-    };
+  const fetchReports = async () => {
+    if (!userData?.token) return;
+    try {
+      // Traer reportes activos
+      const incidents = await getIncidentReports(userData.token);
+      const formatted = incidents.map((incident: any) => ({
+        id: incident.id,
+        text: `Reporte - ${incident.createdAt.slice(0, 10)} - ${incident.description || "Sin descripción"}`,
+      }));
+      setActiveReports(formatted);
 
-    fetchReports();
-  }, [userData]);
+      // Traer historial desde el backend
+      const backendHistory = await getIncidentHistory(userData.token);
+      const formattedHistory = backendHistory.map((entry: any) => ({
+        id: entry.incident.id,
+        text: `Reporte - ${entry.incident.createdAt.slice(0, 10)} - ${entry.incident.description || "Sin descripción"}`,
+        action: entry.action,
+        comment: entry.comment,
+        timestamp: new Date(entry.createdAt).toLocaleString(),
+        edited: false,
+        victimName: entry.victimName,
+        reason: entry.reason,
+      }));
+      setHistory(formattedHistory);
+    } catch (error) {
+      toast.error("No se pudieron cargar los reportes o el historial");
+    }
+  };
+
+  fetchReports();
+}, [userData]);
+
 
   const handleAction = (report: Report, type: "asistido" | "eliminado") => {
     setSelectedReport(report);
@@ -98,6 +115,7 @@ export default function AdminReports() {
       toast.error("Error al actualizar el reporte");
     }
   };
+
   return (
     <div className="flex h-screen">
       <Sidebar />
