@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { LogIn, ChevronDown, User } from "lucide-react";
+import { LogIn, ChevronDown, UserRound, ArrowBigLeft } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import LogOutButton from "./LogOutButton";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
@@ -14,6 +15,8 @@ const Navbar = () => {
   const toggleMenu = (menu: string) => {
     setOpenMenu(openMenu === menu ? null : menu);
   };
+
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -51,11 +54,22 @@ const Navbar = () => {
       aria-label="Menú principal"
     >
       <div
-        ref={navbarRef}
-        className="max-w-7xl mx-auto flex justify-between items-center"
-      >
+  ref={navbarRef}
+  className="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-y-2"
+>
         {" "}
-        <ul className="flex gap-8 text-xs md:text-sm relative ml-12">
+<ul className="flex flex-wrap gap-4 text-xs md:text-sm items-center">          {pathname === "/dashboard" && (
+  <li className="flex items-center text-xs md:text-sm">
+    <Link
+      href="/"
+      className="flex items-center gap-1 hover:text-red-400 transition cursor-pointer"
+      aria-label="Volver a la página principal"
+    >
+      <ArrowBigLeft size={18} />
+    </Link>
+  </li>
+)}
+
           <li className="relative">
             <button
               onClick={() => toggleMenu("donaciones")}
@@ -154,7 +168,7 @@ const Navbar = () => {
                 aria-label="Ir al panel"
                 className="cursor-pointer flex items-center gap-2 text-white hover:text-red-400 transition relative"
               >
-                <User size={18} />
+                <UserRound size={18} />
                 <h2 className="text-sm">
                   {userData.user.role === "admin" ? "Panel" : "Mi cuenta"}
                 </h2>
@@ -166,7 +180,7 @@ const Navbar = () => {
           <Link
             href="/login"
             aria-label="Iniciar sesión"
-            className="cursor-pointer flex items-center gap-2 mr-12 text-white hover:text-red-400 transition relative"
+            className="cursor-pointer flex items-center gap-2 text-white hover:text-red-400 transition relative"
           >
             <LogIn size={18} />
             <h2 className="text-sm">Iniciar sesión</h2>
