@@ -29,8 +29,6 @@ export default function AdminReports() {
     setEditIndex(null);
   };
 
-   // Asegurate de tener esto importado
-
 const confirmAction = () => {
   if (!selectedReport || !actionType) return;
 
