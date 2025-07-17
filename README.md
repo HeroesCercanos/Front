@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧑‍🚒 Héroes Cercanos
 
-## Getting Started
+**Héroes Cercanos** es una plataforma solidaria desarrollada con Next.js que conecta a la comunidad con los bomberos voluntarios mediante campañas de donación, capacitaciones e información útil.
 
-First, run the development server:
+---
 
-```bash
+## 🚀 Tecnologías
+
+- **Next.js 14**
+- **TypeScript**
+- **Tailwind CSS**
+- **Lucide React**
+- **OAuth 2.0** – Login con Google
+- **Context API** – Manejo de sesión
+- **JWT** – Autenticación segura
+- **PostgreSQL**
+- **Vercel** – Deploy
+
+---
+
+## 📸 Funcionalidades principales
+
+- 🔐 Autenticación con email y Google
+- 🧑‍💼 Roles diferenciados: admin / usuario
+- 🧾 Listado de campañas públicas
+- 📦 Gestión de donaciones
+- 🎓 Capacitaciones y contenido informativo
+- 🧭 Geolocalización con mapa (Leaflet)
+- 📱 Totalmente responsive
+- 💲 Pasarela de pagos / mercadoPago
+- 📧 Notificaciones por email 
+---
+
+## 🛠️ Instalación local
+
+# 1. Clonar el repositorio
+git clone [https://github.com/heroes-cercanos.git](https://github.com/HeroesCercanos/Front)
+
+# 2. Instalar dependencias
+npm install
+
+# 3. Ejecutar servidor de desarrollo
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Luego abrir en navegador:
+http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+--
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 👩‍💻 Autores
+Desarrollado con 💙 por Camila Ladner, Victoria Garay y Enzo Ibarra
+Full Stack Developers especializados en Frontend, enfocados en crear tecnología con propósito.
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
