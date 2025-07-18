@@ -7,6 +7,7 @@ export const sendLogin = async (
 	try {
 		const response = await fetch(`${API_BASE_URL}`, {
 			method: 'POST',
+			credentials: 'include',
 			headers: {
 				'Content-Type': 'application/json',
 			},
