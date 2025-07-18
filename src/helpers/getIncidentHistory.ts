@@ -1,6 +1,8 @@
+import { API_BASE_URL } from "@/config/api";
+
 export const getIncidentHistory = async (token: string) => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/incident/history`,
+    `${API_BASE_URL}/incident/history`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

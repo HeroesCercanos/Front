@@ -10,7 +10,16 @@ export default function InfoSection() {
 	const handleClick = (id: string) => router.push(`/faqs#${id}`);
 
 	return (
-		<section id='FAQ' className='w-full px-4 md:px-16 py-12 bg-gray-100'>
+		<section
+			id='FAQ'
+			role='region'
+			aria-labelledby='info-heading'
+			className='w-full px-4 md:px-16 py-12 bg-gray-100'
+		>
+			<h2 id='info-heading' className='sr-only'>
+				Información Útil y Preguntas Frecuentes
+			</h2>
+
 			<div className='max-w-7xl mx-auto px-4 md:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start'>
 				<div className='w-full'>
 					<div className='w-full bg-white rounded-xl shadow-lg overflow-hidden'>
@@ -18,7 +27,7 @@ export default function InfoSection() {
 							<Image
 								src='/infoSection.png'
 								fill
-								alt='Preguntas frecuentes'
+								alt='Ilustración de Preguntas Frecuentes'
 								className='object-cover'
 							/>
 						</div>
@@ -35,31 +44,35 @@ export default function InfoSection() {
 				</div>
 
 				<div className='w-full space-y-4'>
-					<h2 className='text-2xl font-bold mb-4 text-right'>
+					<h2 className='text-2xl font-bold mb-4 text-left md:text-right'>
 						INFORMACIÓN ÚTIL
 					</h2>
-					<div className='space-y-2'>
+					<nav
+						aria-label='Preguntas frecuentes recientes'
+						className='space-y-2'
+					>
 						{faqs.map((faq) => (
 							<button
 								key={faq.id}
 								onClick={() => handleClick(faq.id)}
-								className='w-full text-right p-4 cursor-pointer hover:bg-gray-50 transition'
+								className='w-full text-left md:text-right p-4 hover:bg-gray-50 transition'
+								aria-label={`Ir a la pregunta: ${faq.question}`}
 							>
 								<span className='text-lg font-medium text-gray-800'>
 									{faq.question}
 								</span>
 							</button>
 						))}
+					</nav>
 
-						<div className='text-right pt-2'>
-							<button
-								onClick={() => router.push('/faqs')}
-					className='mt-10 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-full transition duration-300 cursor-pointer'
-								aria-label='Ver todas las preguntas frecuentes'
-							>
-								<p>VER MÁS</p>
-							</button>
-						</div>
+					<div className=' text-left md:text-right pt-2'>
+						<button
+							onClick={() => router.push('/faqs')}
+							className='mt-10 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-full transition duration-300 cursor-pointer'
+							aria-label='Ver todas las preguntas frecuentes'
+						>
+							VER MÁS
+						</button>
 					</div>
 				</div>
 			</div>

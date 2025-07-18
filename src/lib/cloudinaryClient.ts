@@ -1,9 +1,10 @@
+import { API_BASE_URL } from '@/config/api';
 import { CloudinaryMedia } from '@/interfaces/cloudinary.interface';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+
 
 export async function fetchTrainingMedia(): Promise<CloudinaryMedia[]> {
-	const res = await fetch(`${API_BASE}/cloudinary/trainings`, {
+	const res = await fetch(`${API_BASE_URL}/cloudinary/trainings`, {
 		cache: 'no-store',
 	});
 	if (!res.ok) return [];
@@ -14,7 +15,7 @@ export async function fetchSingleMedia(
 	publicId: string
 ): Promise<CloudinaryMedia | null> {
 	const res = await fetch(
-		`${API_BASE}/cloudinary/trainings/${encodeURIComponent(publicId)}`,
+		`${API_BASE_URL}/cloudinary/trainings/${encodeURIComponent(publicId)}`,
 		{ cache: 'no-store' }
 	);
 	if (!res.ok) return null;

@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import DonationForm from '../forms/DonationsForm';
 import { createPortal } from 'react-dom';
 
-
 interface Props {
 	children?: ReactNode;
 }
@@ -40,29 +39,28 @@ export default function DonateButton({ children }: Props) {
 			)}
 
 			{isModalOpen &&
-	createPortal(
-		<div
-			className="fixed inset-0 z-[999] flex items-center justify-center backdrop-blur-sm bg-black/30"
-			role="dialog"
-			aria-modal="true"
-		>
-			<div className="bg-white rounded-lg p-8 max-w-md w-full relative shadow-lg">
-				<button
-					onClick={() => setIsModalOpen(false)}
-					className="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl"
-					aria-label="Cerrar modal"
-				>
-					&times;
-				</button>
-				<h3 className="text-xl font-bold mb-4 text-center">
-					Formulario de donación
-				</h3>
-				<DonationForm />
-			</div>
-		</div>,
-		document.body
-	)}
-
+				createPortal(
+					<div
+						className='fixed inset-0 z-[999] flex items-center justify-center backdrop-blur-sm bg-black/30'
+						role='dialog'
+						aria-modal='true'
+					>
+						<div className='bg-white rounded-lg p-8 max-w-md w-full relative shadow-lg'>
+							<button
+								onClick={() => setIsModalOpen(false)}
+								className='absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl'
+								aria-label='Cerrar modal'
+							>
+								&times;
+							</button>
+							<h3 className='text-xl font-bold mb-4 text-center'>
+								Formulario de donación
+							</h3>
+							<DonationForm />
+						</div>
+					</div>,
+					document.body
+				)}
 		</>
 	);
 }

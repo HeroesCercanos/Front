@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { IUserInfo } from '@/interfaces/AuthInterfaces/userInfo.interface';
 import { Pencil, X } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { API_BASE_URL } from '@/config/api';
 
 interface Props {
 	user: IUserInfo;
@@ -48,7 +49,7 @@ export default function UserInfoModal({ user, onClose }: Props) {
 			setFieldErrors({});
 
 			const res = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/users/${user.id}`,
+				`${API_BASE_URL}/users/${user.id}`,
 				{
 					method: 'PUT',
 					headers: {

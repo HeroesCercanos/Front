@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "@/config/api";
+
 export const updateIncidentByAdmin = async (
   id: string | number,
   data: {
@@ -9,7 +11,7 @@ export const updateIncidentByAdmin = async (
   token: string
 ) => {
   try {
-    const res = await fetch(`http://localhost:3000/incident/admin/${id}`, {
+    const res = await fetch(`${API_BASE_URL}/incident/admin/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

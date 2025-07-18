@@ -1,10 +1,11 @@
+import { API_BASE_URL } from "@/config/api";
 import { IRegisterProps, IRegisterResponse } from "@/interfaces/AuthInterfaces/register.interfaces";
 
 export const sendRegister = async (
   newUser: IRegisterProps
 ): Promise<IRegisterResponse | null> => {
   try {
-      const response = await fetch("http://localhost:3000/auth/signup", {
+      const response = await fetch(`${API_BASE_URL}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
