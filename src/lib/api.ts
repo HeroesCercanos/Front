@@ -26,7 +26,7 @@ export async function uploadMedia(
 	console.log('TOKEN', token);
 	
 
-	const res = await fetch('http://localhost:3000/cloudinary/upload', {
+	const res = await fetch(`${API_BASE_URL}cloudinary/upload`, {
 		method: 'POST',
 		body: formData,
 		headers: {
