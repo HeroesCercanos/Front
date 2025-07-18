@@ -1,5 +1,10 @@
 
 /*
+
+////////////
+${API_BASE_URL} esta es la llamda al fetch tenes que hacer el import
+//////////////
+
 export const sendRegistrationEmail = async (userData: { name: string; email: string }) => {
   try {
     const res = await fetch("/api/send-registration-email", {

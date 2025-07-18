@@ -21,7 +21,6 @@ export default function InfoSection() {
 			</h2>
 
 			<div className='max-w-7xl mx-auto px-4 md:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start'>
-				{/* Imagen y descripción */}
 				<div className='w-full'>
 					<div className='w-full bg-white rounded-xl shadow-lg overflow-hidden'>
 						<div className='relative h-64 w-full'>
@@ -44,7 +43,6 @@ export default function InfoSection() {
 					</div>
 				</div>
 
-				{/* Lista de preguntas */}
 				<div className='w-full space-y-4'>
 					<h2 className='text-2xl font-bold mb-4 text-left md:text-right'>
 						INFORMACIÓN ÚTIL

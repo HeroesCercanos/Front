@@ -14,26 +14,27 @@ import {
 	ILoginErrors,
 	ILoginProps,
 } from '@/interfaces/AuthInterfaces/login.interfaces';
+import { API_BASE_URL } from '@/config/api';
 
 const LoginForm = () => {
 	const router = useRouter();
 	const { setUserData } = useAuth();
-
+	
 	const [showPassword, setShowPassword] = useState(false);
 	const [formValues, setFormValues] = useState<ILoginProps>({
 		email: '',
 		password: '',
 	});
 	const [formErrors, setFormErrors] = useState<ILoginErrors>({});
-
+	
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
 		const token = urlParams.get('token');
-
+		
 		if (token) {
 			localStorage.setItem('jwtToken', token);
 			document.cookie = `jwtToken=${token}; path=/;`;
-
+			
 			try {
 				type Payload = {
 					sub: string;
@@ -44,7 +45,7 @@ const LoginForm = () => {
 				};
 
 				const decoded = jwtDecode<Payload>(token);
-
+				
 				setUserData({
 					token,
 					user: {
@@ -55,7 +56,7 @@ const LoginForm = () => {
 						donations: [],
 					},
 				});
-
+				
 				router.push(
 					`/?welcome=${encodeURIComponent(decoded.name || 'usuario')}`
 				);
@@ -64,7 +65,7 @@ const LoginForm = () => {
 			}
 		}
 	}, []);
-
+	
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setFormValues({ ...formValues, [name]: value });
@@ -73,7 +74,7 @@ const LoginForm = () => {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		const errors = validateLoginForm(formValues);
-
+		
 		if (Object.keys(errors).length > 0) {
 			setFormErrors(errors);
 		} else {
@@ -83,10 +84,10 @@ const LoginForm = () => {
 
 				if (response && response.token) {
 					const token = response.token;
-
+					
 					localStorage.setItem('jwtToken', token);
 					document.cookie = `jwtToken=${token}; path=/;`;
-
+					
 					type Payload = {
 						sub: string;
 						email: string;
@@ -94,9 +95,9 @@ const LoginForm = () => {
 						role: 'admin' | 'user';
 						exp: number;
 					};
-
+					
 					const decoded = jwtDecode<Payload>(token);
-
+					
 					setUserData({
 						token,
 						user: {
@@ -107,7 +108,7 @@ const LoginForm = () => {
 							donations: [],
 						},
 					});
-
+					
 					toast.success(`¡Bienvenido, ${decoded.name}!`, {
 						icon: '🔥',
 					});
@@ -119,9 +120,9 @@ const LoginForm = () => {
 			}
 		}
 	};
-
+	
 	const handleGoogleLogin = () => {
-		window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/google`;
+		window.location.href = `${API_BASE_URL}/auth/google`;
 	};
 
 	return (

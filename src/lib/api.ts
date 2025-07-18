@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "@/config/api";
+
 export interface CloudinaryMedia {
 	public_id: string;
 	secure_url: string;
@@ -7,8 +9,12 @@ export interface CloudinaryMedia {
     caption?: string;
 }
 
+const API_BASE = `${API_BASE_URL} || '';
+`
+
+
 export async function fetchTrainings(): Promise<CloudinaryMedia[]> {
-	const res = await fetch('http://localhost:3000/cloudinary/trainings', { cache: 'no-store' });
+	const res = await fetch(`${API_BASE}/cloudinary/trainings`, { cache: 'no-store' });
 	if (!res.ok) throw new Error('Failed to load trainings');
 	return res.json();
 }
