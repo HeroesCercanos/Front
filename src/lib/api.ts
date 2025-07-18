@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/config/api";
+import { API_BASE_URL } from '@/config/api';
 
 export interface CloudinaryMedia {
 	public_id: string;
@@ -6,15 +6,14 @@ export interface CloudinaryMedia {
 	resource_type: 'image' | 'video' | 'raw';
 	format: string;
 	duration?: number;
-    caption?: string;
+	caption?: string;
 }
 
-const API_BASE = `${API_BASE_URL} || '';
-`
-
-
 export async function fetchTrainings(): Promise<CloudinaryMedia[]> {
-	const res = await fetch(`${API_BASE}/cloudinary/trainings`, { cache: 'no-store' });
+	const res = await fetch(`${API_BASE_URL}/cloudinary/trainings`, {
+		cache: 'no-store',
+		credentials: 'include',
+	});
 	if (!res.ok) throw new Error('Failed to load trainings');
 	return res.json();
 }
@@ -24,14 +23,11 @@ export async function uploadMedia(
 ): Promise<CloudinaryMedia> {
 	const token = localStorage.getItem('jwtToken');
 	console.log('TOKEN', token);
-	
 
-	const res = await fetch(`${API_BASE_URL}cloudinary/upload`, {
+	const res = await fetch(`${API_BASE_URL}/cloudinary/upload`, {
 		method: 'POST',
 		body: formData,
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
+		credentials: 'include',
 	});
 	if (!res.ok) throw new Error('Upload failed');
 	return res.json();
