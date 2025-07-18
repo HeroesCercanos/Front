@@ -49,7 +49,7 @@ const LoginForm = () => {
 				setUserData({
 					token,
 					user: {
-						id: Number(decoded.sub),
+						id: decoded.sub,
 						email: decoded.email,
 						name: decoded.name || '',
 						role: decoded.role,
@@ -101,7 +101,7 @@ const LoginForm = () => {
 					setUserData({
 						token,
 						user: {
-							id: Number(decoded.sub),
+							id: decoded.sub,
 							email: decoded.email,
 							name: decoded.name || '',
 							role: decoded.role,
