@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { Flame, X } from "lucide-react";
+import { Flame, X, PhoneOutgoing } from "lucide-react";
 import { IncidentReportForm } from "../forms/IncidentReportForm";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "react-hot-toast";
@@ -39,7 +39,6 @@ export const ReportFloatingButton = () => {
     setShowForm((prev) => !prev);
   };
 
-  // Modificado: el parámetro indica si debe mostrar el toast o no
   const handleClose = (showToast = true) => {
     setShowForm(false);
     if (showToast) {
@@ -71,14 +70,13 @@ export const ReportFloatingButton = () => {
           aria-modal="true"
           aria-labelledby="modal-title"
           aria-describedby="modal-desc"
-          onClick={() => handleClose()} // cierre por click en fondo
+          onClick={() => handleClose()}
         >
           <div
             className="bg-white rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-6 max-h-[90vh] overflow-y-auto overflow-x-hidden scrollbar-hide">
-              {/* Título + botón X */}
               <div className="flex justify-between items-start mb-4">
                 <h2 id="modal-title" className="text-xl font-bold">
                   Reportar incidente
@@ -97,8 +95,27 @@ export const ReportFloatingButton = () => {
                 Completá el siguiente formulario para reportar un incendio o accidente.
               </p>
 
-              
               <IncidentReportForm onClose={handleClose} />
+
+              {/* Botón de llamada */}
+              <div className="mt-4">
+               <a
+                href="tel:100"
+                className="w-full flex items-center justify-center gap-2 bg-white 
+                text-red-600 font-semibold text-lg px-4 py-[10px] rounded-md
+                 hover:bg-red-300 transition-colors uppercase"
+                aria-label="Llamar al cuartel más cercano"
+                >
+               <PhoneOutgoing className="w-4 h-4" aria-hidden="true" />
+                Llamar al cuartel
+               </a>
+              </div>
+
+
+
+
+
+
             </div>
           </div>
         </div>
@@ -106,6 +123,4 @@ export const ReportFloatingButton = () => {
     </>
   );
 };
-
-
 
