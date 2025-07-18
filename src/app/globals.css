@@ -1,10 +1,10 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@600;700&family=Yaldevi:wght@400;500&display=swap');
-@import "leaflet/dist/leaflet.css";
+@import 'leaflet/dist/leaflet.css';
 
 :root {
-  --font-titulos: 'Libre Franklin', sans-serif;
-  --font-cuerpo: 'Yaldevi', sans-serif;
+	--font-titulos: 'Libre Franklin', sans-serif;
+	--font-cuerpo: 'Yaldevi', sans-serif;
 }
 
 body,
@@ -18,48 +18,56 @@ li,
 th,
 td,
 div,
-[contenteditable="true"] {
-  font-family: var(--font-cuerpo);
+[contenteditable='true'] {
+	font-family: var(--font-cuerpo);
 }
 
 h1 {
-  font-family: var(--font-titulos);
+	font-family: var(--font-titulos);
 }
 
-h2, h3, p, span {
-  font-family: var(--font-cuerpo);
+h2,
+h3,
+p,
+span {
+	font-family: var(--font-cuerpo);
 }
-
 
 html {
-  scroll-behavior: smooth;
+	scroll-behavior: smooth;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
 }
 
+body {
+	overflow-x: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+main {
+	flex: 1;
+}
 
 * {
-
-  caret-color: transparent;
+	caret-color: transparent;
 }
 
 input,
 textarea,
 select,
 button,
-[contenteditable="true"] {
-  user-select: text;
-  caret-color: auto;
+[contenteditable='true'] {
+	user-select: text;
+	caret-color: auto;
 }
 
-
 .scrollbar-hide {
-  scrollbar-width: none; 
-  -ms-overflow-style: none; 
+	scrollbar-width: none;
+	-ms-overflow-style: none;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none; 
-}
-
-body {
-  overflow-x: hidden;
+	display: none;
 }
