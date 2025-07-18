@@ -5,7 +5,9 @@ export const sendLogin = async (
 	credentials: ILoginProps
 ): Promise<{ token: string } | undefined> => {
 	try {
-		const response = await fetch(`${API_BASE_URL}`, {
+		console.log("API_BASE_URL:", API_BASE_URL);
+
+		const response = await fetch(`${API_BASE_URL}/auth/signin`, {
 			method: 'POST',
 			credentials: 'include',
 			headers: {
