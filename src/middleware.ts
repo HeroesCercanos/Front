@@ -1,3 +1,4 @@
+
 import { NextResponse, NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
 
@@ -49,6 +50,7 @@ export const config = {
 		'/admin/:path', // /admin/...
 	],
 };
+
 // import { NextResponse, NextRequest } from "next/server";
 // import { jwtVerify } from "jose";
 
