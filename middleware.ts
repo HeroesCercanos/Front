@@ -1,6 +1,15 @@
 import { jwtVerify } from "jose";
 import { NextRequest, NextResponse } from "next/server";
 
+
+export const config = {
+  matcher: [
+    '/dashboard/:path*',
+    '/admin/:path*'
+  ],
+}
+
+
 // middleware.ts
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
