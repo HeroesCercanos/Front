@@ -12,6 +12,8 @@ import {
   IRegisterProps,
   IRegisterValues,
 } from "@/interfaces/AuthInterfaces/register.interfaces";
+import { toast } from 'react-hot-toast';
+
 
 const RegisterForm = () => {
   const router = useRouter();
@@ -30,25 +32,27 @@ const RegisterForm = () => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const errors = validateRegisterForm(formValues);
-    setFormErrors(errors);
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  const errors = validateRegisterForm(formValues);
+  setFormErrors(errors);
 
-    if (Object.keys(errors).length === 0) {
-      try {
-        const cleanedFormValues: IRegisterProps = formValues;
-        const response = await sendRegister(cleanedFormValues);
+  if (Object.keys(errors).length === 0) {
+    try {
+      const cleanedFormValues: IRegisterProps = formValues;
+      const response = await sendRegister(cleanedFormValues);
 
-        if (response) {
-          // TODO: Mostrar mensaje de éxito antes de redireccionar
-          router.push("/login");
-        }
-      } catch (error) {
-        console.error("Error en el registro:", error);
+      if (response) {
+        toast.success("Cuenta creada con éxito 🎉");
+        router.refresh(); // actualiza AuthContext con la cookie
+        router.push("/"); // redirige a la página principal del usuario
       }
+    } catch (error) {
+      console.error("Error en el registro:", error);
+      toast.error("Hubo un error al registrar la cuenta");
     }
-  };
+  }
+};
 
   return (
     <div className="bg-white bg-opacity-80 p-6 rounded-lg shadow-lg w-full max-w-md text-black">

@@ -7,6 +7,7 @@ export const sendLogin = async (
 	try {
 		const res = await fetch(`${API_BASE_URL}/auth/signin`, {
 			method: 'POST',
+			credentials: 'include', 
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(credentials),
 		});
@@ -18,7 +19,6 @@ export const sendLogin = async (
 
 		}
 
-		localStorage.setItem('jwtToken', data.access_token);
 		document.cookie = `jwtToken=${data.access_token}; path=/; SameSite=Lax`;
 
 

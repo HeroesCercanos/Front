@@ -15,13 +15,13 @@ export default function DonateButton({ children }: Props) {
 	const router = useRouter();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
-	const handleClick = () => {
-		if (userData) {
+ 	const handleClick = () => {
+		if (!userData) {
 			setIsModalOpen(true);
 		} else {
 			router.push('/login');
 		}
-	};
+	}; 
 
 	return (
 		<>
