@@ -68,6 +68,7 @@ export default function UserInfoModal({ user, onClose }: Props) {
 					user: {
 						...userData.user,
 						...form,
+						id: form.id !== undefined ? form.id.toString() : userData.user.id,
 					},
 				});
 			}

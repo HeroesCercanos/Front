@@ -1,46 +1,66 @@
-
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // * CAMBIO AQUÍ: Leer del header Authorization *
+  // Leer token del header Authorization Bearer o de cookie "jwtToken"
   const authHeader = request.headers.get("authorization");
-  const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
+  let token: string | null = null;
 
-  if (!token) {
-    if (pathname === "/dashboard" || pathname.startsWith("/admin")) {
-      const loginUrl = request.nextUrl.clone();
-      loginUrl.pathname = "/login";
-      return NextResponse.redirect(loginUrl);
-    }
-    return NextResponse.next();
+  if (authHeader?.startsWith("Bearer ")) {
+    token = authHeader.slice(7);
+  } else {
+    token = request.cookies.get("jwtToken")?.value ?? null;
   }
 
-  try {
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
-    const { payload } = await jwtVerify(token, secret);
-    const role = payload.role;
+  // Definir rutas protegidas
+  const protectedPaths = ["/dashboard"];
+  const adminPathsPrefix = "/admin";
 
-    if (pathname.startsWith("/admin") && role !== "admin") {
-      const homeUrl = request.nextUrl.clone();
-      homeUrl.pathname = "/";
-      return NextResponse.redirect(homeUrl);
-    }
+  // Verificar si la ruta es protegida
+  const isProtected = protectedPaths.includes(pathname) || pathname.startsWith(adminPathsPrefix);
 
-    return NextResponse.next();
-  } catch (error) {
-    console.error("Error verificando token:", error);
+  // Si no hay token y la ruta es protegida, redirigir a login
+  if (!token && isProtected) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/login";
     return NextResponse.redirect(loginUrl);
   }
+
+  // Si hay token, intentar validar
+  if (token) {
+    try {
+      const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
+      const { payload } = await jwtVerify(token, secret);
+
+      const role = payload.role;
+
+      // Si ruta admin y rol no es admin, redirigir a "/"
+      if (pathname.startsWith(adminPathsPrefix) && role !== "admin") {
+        const homeUrl = request.nextUrl.clone();
+        homeUrl.pathname = "/";
+        return NextResponse.redirect(homeUrl);
+      }
+
+      // Token válido y permisos OK
+      return NextResponse.next();
+    } catch (error) {
+      console.error("Token inválido o expirado:", error);
+      const loginUrl = request.nextUrl.clone();
+      loginUrl.pathname = "/login";
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
+  // Rutas no protegidas o sin token
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard", "/admin/:path*"]
+  matcher: ["/dashboard", "/admin/:path*"],
 };
+
 
 // import { NextResponse, NextRequest } from "next/server";
 // import { jwtVerify } from "jose";

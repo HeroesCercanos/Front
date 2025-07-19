@@ -14,9 +14,13 @@ export const sendLogin = async (
 		const data = await res.json();
 		if (!res.ok) {
 			throw new Error(data.message || 'Credenciales inválidas');
+			
+
 		}
 
 		localStorage.setItem('jwtToken', data.access_token);
+		document.cookie = `jwtToken=${data.access_token}; path=/; SameSite=Lax`;
+
 
 		return { token: data.access_token };
 	} catch (err: any) {
