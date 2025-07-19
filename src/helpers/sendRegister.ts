@@ -10,16 +10,15 @@ export const sendRegister = async (
 	try {
 		const response = await fetch(`${API_BASE_URL}/auth/signup`, {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
+			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(newUser),
 		});
 
-		const data = await response.json();
+		const data: any = await response.json();
 
 		if (!response.ok) {
-			throw new Error(data.message || 'Error al registrar usuario');
+			const msg = data?.message || 'Error al registrar usuario';
+			throw new Error(msg);
 		}
 
 		if (data.access_token) {
@@ -27,9 +26,9 @@ export const sendRegister = async (
 			localStorage.setItem('jwtToken', data.access_token);
 		}
 
-		return data;
-	} catch (error: any) {
-		alert(error.message);
+		return data as IRegisterResponse;
+	} catch (err: any) {
+		alert(err.message || 'Error al registrar usuario');
 		return null;
 	}
 };

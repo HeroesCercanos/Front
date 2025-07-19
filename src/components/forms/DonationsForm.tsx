@@ -17,20 +17,15 @@ const DonationForm = () => {
 		setLoading(true);
 
 		try {
-			const res = await fetch(
-				`$${API_BASE_URL}/donations`,
-				{
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					credentials: 'include',
-					body: JSON.stringify({
-						amount: Number(amount),
-						description,
-					}),
-				}
-			);
+			const token = localStorage.getItem('jwtToken');
+			const res = await fetch(`${API_BASE_URL}/donations`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({ amount: Number(amount), description }),
+			});
 
 			if (!res.ok) {
 				const data = await res.json();
