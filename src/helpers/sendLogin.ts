@@ -19,9 +19,6 @@ export const sendLogin = async (
 
 		}
 
-		document.cookie = `jwtToken=${data.access_token}; path=/; SameSite=Lax`;
-
-
 		return { token: data.access_token };
 	} catch (err: any) {
 		alert(err.message);
