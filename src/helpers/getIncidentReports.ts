@@ -1,11 +1,13 @@
 import { API_BASE_URL } from "@/config/api";
-import { Report }       from "@/interfaces/incident.interface";
+import { Report } from "@/interfaces/incident.interface";
 
-export const getIncidentReports = async (/* REMOVED: token param */): Promise<Report[]> => {
+export const getIncidentReports = async (/* REMOVED: token param */): Promise<
+  Report[]
+> => {
   // ADDED: credentials so the HttpOnly jwtToken cookie is sent automatically
   const response = await fetch(`${API_BASE_URL}/incident`, {
-    method:      "GET",
-    credentials: "include",  // ← send the cookie to the backend
+    method: "GET",
+    credentials: "include", // ← send the cookie to the backend
     // REMOVED: Authorization header with Bearer token
     // headers: { Authorization: Bearer ${token} },
   });
@@ -16,7 +18,7 @@ export const getIncidentReports = async (/* REMOVED: token param */): Promise<Re
     throw new Error(payload.message || "Error al obtener los reportes");
   }
 
-  return payload as Report[];
+  return payload as Report[];
 };
 
 /*export const getIncidentReports = async (token: string) => {
@@ -37,5 +39,3 @@ export const getIncidentReports = async (/* REMOVED: token param */): Promise<Re
     throw error;
   }
 };*/
-
-
