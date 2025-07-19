@@ -24,11 +24,9 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
 
 	useEffect(() => {
 		const params = new URLSearchParams(window.location.search);
-		const tokenParam = params.get('token');
-		if (tokenParam) {
-			localStorage.setItem('jwtToken', tokenParam);
-			window.history.replaceState({}, '', window.location.pathname);
-			document.cookie = `jwtToken=${tokenParam}; path=/; SameSite=None; Secure`;
+		const tokenFromUrl = params.get('token');
+		if (tokenFromUrl) {
+			localStorage.setItem('jwtToken', tokenFromUrl);
 			window.history.replaceState({}, '', window.location.pathname);
 		}
 
@@ -42,7 +40,7 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
 					role: 'admin' | 'user';
 					exp: number;
 				};
-				const decoded = jwtDecode(token) as Payload;
+				const decoded = jwtDecode<Payload>(token);
 				const { sub, email, name, role, exp } = decoded;
 
 				if (exp * 1000 > Date.now()) {
@@ -58,10 +56,8 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
 					});
 				} else {
 					localStorage.removeItem('jwtToken');
-					console.log('Decoded user:', decoded);
 				}
-			} catch (error) {
-				console.error('Error decoding token:', error);
+			} catch {
 				localStorage.removeItem('jwtToken');
 			}
 		}
@@ -69,9 +65,7 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
 		setLoading(false);
 	}, []);
 
-	if (loading) {
-		return null;
-	}
+	if (loading) return null;
 
 	return (
 		<AuthContext.Provider value={{ userData, setUserData }}>

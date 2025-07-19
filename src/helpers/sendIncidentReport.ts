@@ -6,7 +6,7 @@ export const sendIncidentReport = async (
   token: string
 ) => {
   try {
-    const response = await fetch(`${API_BASE_URL}`, {
+    const response = await fetch(`${API_BASE_URL}/incident`, {
 
       method: "POST",
       headers: {
