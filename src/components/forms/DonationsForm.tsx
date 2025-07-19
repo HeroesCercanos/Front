@@ -6,37 +6,37 @@ import React, { useState } from 'react';
 const DonationForm = () => {
 	const [amount, setAmount] = useState('');
 	const [description, setDescription] = useState('');
-	const [success, setSuccess] = useState(false);
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		setSuccess(false);
 		setError('');
 		setLoading(true);
 
 		try {
-			const token = localStorage.getItem('jwtToken');
-			const res = await fetch(`${API_BASE_URL}/donations`, {
+			const res = await fetch(`${API_BASE_URL}/create_preference`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${token}`,
 				},
-				body: JSON.stringify({ amount: Number(amount), description }),
+				body: JSON.stringify({
+					amount: Number(amount),
+					description,
+				}),
 			});
 
-			if (!res.ok) {
-				const data = await res.json();
-				throw new Error(data.message || 'Error al enviar la donación');
+			const data = await res.json();
+			console.log(data)
+
+			if (!res.ok || !data.id) {
+				throw new Error(data.message || 'Error al crear preferencia de pago');
 			}
 
-			setSuccess(true);
-			setAmount('');
-			setDescription('');
+			// Redirigimos a MercadoPago Checkout Pro
+			window.location.href = `https://www.mercadopago.com.ar/checkout/v1/redirect?preference_id=${data.id}`;
 		} catch (err: any) {
-			setError(err.message || 'Ocurrió un error al enviar la donación');
+			setError(err.message || 'Ocurrió un error al iniciar el pago');
 		} finally {
 			setLoading(false);
 		}
@@ -45,61 +45,52 @@ const DonationForm = () => {
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className='space-y-4 p-4 w-full max-w-md'
-			aria-label='Formulario de donación'
+			className="space-y-4 p-4 w-full max-w-md"
 		>
+
+
 			<div>
-				{' '}
-				{/* // TODO: Acá estará MP */}
-				<label htmlFor='amount' className='block font-semibold text-sm'>
-					Monto
+				<label htmlFor="amount" className="block font-semibold text-sm">
+					Monto a donar
 				</label>
 				<input
-					type='number'
-					id='amount'
-					name='amount'
+					type="number"
+					id="amount"
+					name="amount"
 					value={amount}
 					onChange={(e) => setAmount(e.target.value)}
-					className='mt-1 block w-full rounded border-gray-300 shadow-sm'
-					placeholder='Ej: 5000'
-					aria-label='Monto de la donación'
-					aria-required='false'
+					className="mt-1 block w-full rounded border-gray-300 shadow-sm"
+					placeholder="Ej: 500"
+					required
+					min={1}
 				/>
 			</div>
 
 			<div>
-				<label htmlFor='description' className='block font-semibold text-sm'>
-					Descripción
+				<label htmlFor="description" className="block font-semibold text-sm">
+					Mensaje (opcional)
 				</label>
 				<textarea
-					id='description'
-					name='description'
+					id="description"
+					name="description"
 					value={description}
 					onChange={(e) => setDescription(e.target.value)}
-					className='mt-1 block w-full rounded border-gray-300 shadow-sm'
+					className="mt-1 block w-full rounded border-gray-300 shadow-sm"
 					rows={3}
-					placeholder='Describe brevemente la donación'
-					aria-label='Descripción de la donación'
+					placeholder="Ej: Gracias por su trabajo 🧑‍🚒"
 				/>
 			</div>
 
 			<button
-				type='submit'
-				className='bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full cursor-pointer disabled:opacity-50'
-				aria-label='Enviar donación'
+				type="submit"
+				className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full disabled:opacity-50"
 				disabled={loading}
 			>
-				{loading ? 'Enviando...' : 'Enviar donación'}
+				{loading ? 'Redirigiendo...' : 'Donar con MercadoPago'}
 			</button>
 
-			{success && (
-				<p className='text-green-600 text-sm text-center font-medium'>
-					¡Donación enviada con éxito!
-				</p>
-			)}
-
 			{error && (
-				<p className='text-red-600 text-sm text-center font-medium'>{error}</p>
+				<p className="text-red-600 text-sm text-center font-medium">{error}</p>
 			)}
 		</form>
 	);

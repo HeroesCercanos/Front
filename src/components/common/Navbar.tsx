@@ -54,22 +54,23 @@ const Navbar = () => {
       aria-label="Menú principal"
     >
       <div
-  ref={navbarRef}
-  className="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-y-2"
->
+        ref={navbarRef}
+        className="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-y-2"
+      >
         {" "}
-<ul className="flex flex-wrap gap-4 text-xs md:text-sm items-center">          {pathname === "/dashboard" && (
-  <li className="flex items-center text-xs md:text-sm">
-    <Link
-      href="/"
-      className="flex items-center gap-1 hover:text-red-400 transition cursor-pointer"
-      aria-label="Volver a la página principal"
-    >
-      <ArrowBigLeft size={18} />
-    </Link>
-  </li>
-)}
-
+        <ul className="flex flex-wrap gap-4 text-xs md:text-sm items-center">
+          {" "}
+          {pathname === "/dashboard" && (
+            <li className="flex items-center text-xs md:text-sm">
+              <Link
+                href="/"
+                className="flex items-center gap-1 hover:text-red-400 transition cursor-pointer"
+                aria-label="Volver a la página principal"
+              >
+                <ArrowBigLeft size={18} />
+              </Link>
+            </li>
+          )}
           <li className="relative">
             <button
               onClick={() => toggleMenu("donaciones")}
@@ -96,7 +97,6 @@ const Navbar = () => {
               </Link>
             </div>
           </li>
-
           <li className="relative">
             <button
               onClick={() => toggleMenu("cuartel")}
@@ -123,7 +123,6 @@ const Navbar = () => {
               </Link>
             </div>
           </li>
-
           <li className="relative">
             <button
               onClick={() => toggleMenu("info")}
