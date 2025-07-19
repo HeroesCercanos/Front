@@ -13,6 +13,8 @@ export interface IncidentReport {
 
 
 export interface Report {
+  description: string;
+  createdAt: string;
   id: number;
   text: string;
 }

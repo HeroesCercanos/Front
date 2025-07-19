@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
-import { createContext, useContext, useEffect, useState } from 'react';
-import { IUserSession } from '@/interfaces/AuthInterfaces/user.interface';
+import { createContext, useContext, useEffect, useState } from "react";
+import { IUserSession } from "@/interfaces/AuthInterfaces/user.interface";
+import { API_BASE_URL } from "@/config/api";
 
 interface IAuthContextProps {
   userData: IUserSession | null;
@@ -19,30 +20,27 @@ interface IAuthProviderProps {
 
 export const AuthProvider = ({ children }: IAuthProviderProps) => {
   const [userData, setUserData] = useState<IUserSession | null>(null);
-  const [loading, setLoading]   = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // — REMOVED: lectura de token de URL y de localStorage, jwtDecode, etc.
-
-    // — ADDED: fetch a /auth/me para que la cookie HttpOnly enviada en login sea válida
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
-      method:      'GET',
-      credentials: 'include',        // ← para enviar la cookie jwtToken
+    fetch(`${API_BASE_URL}/auth/me`, {
+      credentials: "include",
     })
       .then((res) => {
-        if (!res.ok) throw new Error('No autenticado');
+        if (!res.ok) throw new Error("No autenticado");
         return res.json();
       })
-      .then((user) => {
-        // user ya viene del backend: { id, email, name, role, donations }
+      .then((data) => {
+        // Extraemos el usuario que viene dentro de `data.user`
+        const u = data.user;
         setUserData({
-          token: '',                  // ← en cookie-based no tenemos token en JS
+          token: "", // seguimos sin exponer token en el cliente
           user: {
-            id:         user.id,
-            email:      user.email,
-            name:       user.name,
-            role:       user.role,
-            donations:  user.donations ?? [],
+            id: u.id,
+            email: u.email,
+            name: u.name, // ahora sí
+            role: u.role,
+            donations: u.donations ?? [],
           },
         });
       })
@@ -65,10 +63,7 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
 
 export const useAuth = () => useContext(AuthContext);
 
-export default AuthContext;
-
-
-
+export default AuthContext;
 
 /* 'use client';
 

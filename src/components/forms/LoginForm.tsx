@@ -33,6 +33,43 @@ const LoginForm = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  // validaciones…
+  try {
+    await sendLogin(formValues);    // deja la cookie
+
+    // 1) Llamo a /auth/me para actualizar userData inmediatamente
+    const res = await fetch(`${API_BASE_URL}/auth/me`, {
+      credentials: 'include',
+    });
+    if (!res.ok) throw new Error('No autenticado tras login');
+    const data = await res.json(); // { user: { … } }
+
+    // 2) Actualizo el contexto manualmente
+    setUserData({
+      token: '',
+      user: {
+        id:        data.user.id,
+        email:     data.user.email,
+        name:      data.user.name,
+        role:      data.user.role,
+        donations: data.user.donations ?? [],
+      },
+    });
+
+    // 3) Ahora sí tengo userData.user.name
+    toast.success(`¡Bienvenido ${data.user.name}! 🔥`);
+
+    // 4) Redirijo a la home o dashboard
+    router.push('/');
+
+  } catch (error: any) {
+    console.error('Error en login:', error);
+    toast.error(error.message || 'Error de autenticación');
+  }
+};
+
+  /* const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const errors = validateLoginForm(formValues);
 
@@ -54,7 +91,7 @@ const LoginForm = () => {
       console.error('Error en login:', error);
       toast.error(error.message || 'Error de autenticación');
     }
-  };
+  }; */
 
   const handleGoogleLogin = () => {
     window.location.href = `${API_BASE_URL}/auth/google`;

@@ -10,6 +10,7 @@ import { toast } from "react-hot-toast";
 
 const MapSelector = dynamic(() => import("../Map/MapSelector"), { ssr: false });
 
+
 interface Props {
   onClose: (showToast?: boolean) => void;
 }
@@ -17,7 +18,9 @@ interface Props {
 export const IncidentReportForm = ({ onClose }: Props) => {
   const { userData } = useAuth();
   const [incidentType, setIncidentType] = useState<IncidentType | "">("");
-  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
+    null
+  );
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
 
@@ -26,14 +29,7 @@ export const IncidentReportForm = ({ onClose }: Props) => {
 
     if (!location) {
       setError("Debés seleccionar una ubicación en el mapa.");
-      toast.custom((t) => (
-        <div className={`bg-white border border-red-300 rounded-xl shadow-lg p-4 w-[90%] max-w-md ${t.visible ? "animate-enter" : "animate-leave"}`}>
-          <h2 className="text-red-600 font-semibold mb-2">Error</h2>
-          <p className="text-gray-700 text-sm">
-            Debés seleccionar una ubicación en el mapa.
-          </p>
-        </div>
-      ));
+      toast.error("Debés seleccionar una ubicación en el mapa.");
       return;
     }
 
@@ -46,54 +42,40 @@ export const IncidentReportForm = ({ onClose }: Props) => {
     const errorMessage = validateIncidentReport(report);
     if (errorMessage) {
       setError(errorMessage);
-      toast.custom((t) => (
-        <div className={`bg-white border border-red-300 rounded-xl shadow-lg p-4 w-[90%] max-w-md ${t.visible ? "animate-enter" : "animate-leave"}`}>
-          <h2 className="text-red-600 font-semibold mb-2">Error</h2>
-          <p className="text-gray-700 text-sm">{errorMessage}</p>
-        </div>
-      ));
+      toast.error(errorMessage);
       return;
     }
 
     toast.custom((t) => (
-      <div className={`bg-white rounded-xl shadow-lg p-6 border border-gray-200 w-[90%] max-w-md ${t.visible ? "animate-enter" : "animate-leave"}`}>
-        <h2 className="text-lg font-semibold text-gray-800 mb-2">¿Estás seguro?</h2>
-        <p className="text-gray-600 mb-4">Vas a enviar un reporte de incidente.</p>
+      <div
+        className={`bg-white rounded-xl shadow-lg p-6 border border-gray-200 w-[90%] max-w-md ${
+          t.visible ? "animate-enter" : "animate-leave"
+        }`}
+      >
+        <h2 className="text-lg font-semibold text-gray-800 mb-2">
+          ¿Estás seguro?
+        </h2>
+        <p className="text-gray-600 mb-4">
+          Vas a enviar un reporte de incidente.
+        </p>
         <div className="flex justify-center gap-4">
           <button
             onClick={async () => {
               toast.dismiss(t.id);
-
-              if (!userData?.token) {
+              if (!userData) {
                 toast.error("Debés iniciar sesión para enviar un reporte.");
                 return;
               }
-
               try {
-                await sendIncidentReport(report, userData.token);
-                toast.custom((t) => (
-                  <div className={`bg-white border border-green-300 rounded-xl shadow-lg p-4 w-[90%] max-w-md ${t.visible ? "animate-enter" : "animate-leave"}`}>
-                    <h2 className="text-green-700 font-semibold mb-2">¡Reporte enviado!</h2>
-                    <p className="text-gray-700 text-sm">Gracias por tu colaboración.</p>
-                  </div>
-                ));
-
+                await sendIncidentReport(report);
+                toast.success("¡Reporte enviado! Gracias por tu colaboración.");
                 setIncidentType("");
                 setLocation(null);
                 setDescription("");
                 setError("");
-
-                // ✅ Cierra sin mostrar "Formulario cerrado"
                 onClose(false);
-
-              } catch (err) {
-                console.error(err);
-                toast.custom((t) => (
-                  <div className={`bg-white border border-red-300 rounded-xl shadow-lg p-4 w-[90%] max-w-md ${t.visible ? "animate-enter" : "animate-leave"}`}>
-                    <h2 className="text-red-600 font-semibold mb-2">Error</h2>
-                    <p className="text-gray-700 text-sm">No se pudo enviar el reporte.</p>
-                  </div>
-                ));
+              } catch {
+                toast.error("No se pudo enviar el reporte.");
               }
             }}
             className="px-4 py-2 rounded-md bg-red-600 text-white font-semibold hover:bg-red-700 transition"
@@ -102,7 +84,7 @@ export const IncidentReportForm = ({ onClose }: Props) => {
           </button>
           <button
             onClick={() => toast.dismiss(t.id)}
-            className="px-4 py-2 rounded-md bg-gray-300 text-gray-800 font-medium hover:bg-gray-400 transition"
+            className="px-4 py-2 rounded-md bg-gray-300 text-gray-800 hover:bg-gray-400 transition"
           >
             Cancelar
           </button>
@@ -113,14 +95,20 @@ export const IncidentReportForm = ({ onClose }: Props) => {
 
   const handleClose = () => {
     toast.custom((t) => (
-      <div className={`bg-white rounded-xl shadow-lg p-6 border border-gray-200 w-[90%] max-w-md ${t.visible ? "animate-enter" : "animate-leave"}`}>
-        <h2 className="text-lg font-semibold text-gray-800 mb-2">¿Cerrar formulario?</h2>
+      <div
+        className={`bg-white rounded-xl shadow-lg p-6 border border-gray-200 w-[90%] max-w-md ${
+          t.visible ? "animate-enter" : "animate-leave"
+        }`}
+      >
+        <h2 className="text-lg font-semibold text-gray-800 mb-2">
+          ¿Cerrar formulario?
+        </h2>
         <p className="text-gray-600 mb-4">Perderás los datos ingresados.</p>
         <div className="flex justify-center gap-4">
           <button
             onClick={() => {
               toast.dismiss(t.id);
-              onClose(); // acá sí se muestra el toast de cierre
+              onClose();
               toast("Formulario cerrado");
             }}
             className="px-4 py-2 rounded-md bg-red-600 text-white font-semibold hover:bg-red-700 transition"
@@ -129,7 +117,7 @@ export const IncidentReportForm = ({ onClose }: Props) => {
           </button>
           <button
             onClick={() => toast.dismiss(t.id)}
-            className="px-4 py-2 rounded-md bg-gray-300 text-gray-800 font-medium hover:bg-gray-400 transition"
+            className="px-4 py-2 rounded-md bg-gray-300 text-gray-800 hover:bg-gray-400 transition"
           >
             Cancelar
           </button>
@@ -194,6 +182,3 @@ export const IncidentReportForm = ({ onClose }: Props) => {
     </form>
   );
 };
-
-
-
