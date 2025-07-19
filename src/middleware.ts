@@ -1,52 +1,55 @@
+
 import { NextResponse, NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+	const { pathname } = request.nextUrl;
 
-  // Solo protegemos /dashboard y /admin
-  if (
-    pathname === '/dashboard' ||
-    pathname.startsWith('/dashboard/') ||
-    pathname.startsWith('/admin')
-  ) {
-    // 1) Intento cookie
-    const cookieToken = request.cookies.get('jwtToken')?.value;
+	// 1) Defino qué prefijos quiero proteger
+	const protectedPrefixes = ['/dashboard', '/admin'];
+	const isProtected = protectedPrefixes.some(
+		(prefix) => pathname === prefix || pathname.startsWith(prefix + '/')
+	);
+	if (!isProtected) {
+		// rutas públicas
+		return NextResponse.next();
+	}
 
-    // 2) Intento header
-    const authHeader = request.headers.get('authorization') ?? '';
-    const headerToken =
-      authHeader.startsWith('Bearer ')
-        ? authHeader.split(' ')[1]
-        : undefined;
+	// 2) Extraigo el token (cookie o header)
+	const cookieToken = request.cookies.get('jwtToken')?.value;
+	const authHeader = request.headers.get('authorization') ?? '';
+	const headerToken = authHeader.startsWith('Bearer ')
+		? authHeader.split(' ')[1]
+		: undefined;
+	const token = cookieToken || headerToken;
 
-    const token = cookieToken || headerToken;
-    if (!token) {
-      const loginUrl = request.nextUrl.clone();
-      loginUrl.pathname = '/login';
-      return NextResponse.redirect(loginUrl);
-    }
+	// 3) Si no hay token, voy a login
+	if (!token) {
+		const loginUrl = request.nextUrl.clone();
+		loginUrl.pathname = '/login';
+		return NextResponse.redirect(loginUrl);
+	}
 
-    try {
-      const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
-      await jwtVerify(token, secret); // lanza si inválido/expirado
-      return NextResponse.next();
-    } catch {
-      const loginUrl = request.nextUrl.clone();
-      loginUrl.pathname = '/login';
-      return NextResponse.redirect(loginUrl);
-    }
-  }
-
-  return NextResponse.next();
+	// 4) Verifico JWT
+	try {
+		const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
+		await jwtVerify(token, secret);
+		return NextResponse.next();
+	} catch {
+		const loginUrl = request.nextUrl.clone();
+		loginUrl.pathname = '/login';
+		return NextResponse.redirect(loginUrl);
+	}
 }
 
 export const config = {
-  matcher: ['/dashboard', '/dashboard/:path', '/admin/:path'],
+	matcher: [
+		'/dashboard', // /dashboard exacto
+		'/dashboard/:path', // /dashboard/...
+		'/admin', // /admin exacto
+		'/admin/:path', // /admin/...
+	],
 };
-
-
-
 
 // import { NextResponse, NextRequest } from "next/server";
 // import { jwtVerify } from "jose";
