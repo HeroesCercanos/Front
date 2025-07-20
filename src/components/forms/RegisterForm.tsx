@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { API_BASE_URL } from "@/config/api";
 import { toast } from "react-hot-toast";
+import { IRegisterErrors } from "@/interfaces/AuthInterfaces/register.interfaces";
 
 /* import { useState } from "react";
 import Link from "next/link";
@@ -73,7 +74,7 @@ const RegisterForm = () => {
     password: "",
     confirmPassword: "",
   });
-  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [formErrors, setFormErrors] = useState<IRegisterErrors>({});
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -113,12 +114,13 @@ const RegisterForm = () => {
         },
       });
 
-      // 4) Mostramos el toast con el nombre
-      toast.success(`¡Bienvenido ${data.user.name}! 🎉`);
+      // 4) Mostramos el toast
+      toast.success('¡Registro exitoso! 🎉');
 
       // 5) Redirigimos al dashboard/admin
-      router.push(data.user.role === "admin" ? "/admin" : "/dashboard");
+      router.push('/login');
     } catch (err: any) {
+    
       console.error("Error en el registro:", err);
       toast.error(err.message || "Hubo un error al registrar la cuenta");
     }

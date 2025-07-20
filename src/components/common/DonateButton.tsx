@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import DonationForm from "../forms/DonationsForm";
 import { createPortal } from "react-dom";
+import toast from "react-hot-toast";
 
 interface Props {
   children?: ReactNode;
@@ -17,12 +18,27 @@ export default function DonateButton({ children }: Props) {
 
   const handleClick = () => {
     if (!userData) {
-      // 1) Si no hay sesión, redirigir al login
-      router.push("/login");
-    } else {
-      // 2) Si ya está autenticado, muestro el formulario
-      setIsModalOpen(true);
+      toast.custom((t) => (
+        <div
+          className={`bg-white border border-yellow-300 rounded-xl shadow-lg p-4 w-[90%] max-w-md ${
+            t.visible ? "animate-enter" : "animate-leave"
+          }`}
+        >
+          <h2 className="text-yellow-700 font-semibold mb-2">¡Atención!</h2>
+          <p className="text-gray-700 text-sm">
+            Debés iniciar sesión para hacer una donación.
+          </p>
+        </div>
+      ));
+
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
+
+      return;
     }
+
+    setIsModalOpen(true);
   };
 
   return (
