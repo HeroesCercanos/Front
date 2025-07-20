@@ -11,59 +11,6 @@ import { API_BASE_URL } from "@/config/api";
 import { toast } from "react-hot-toast";
 import { IRegisterErrors } from "@/interfaces/AuthInterfaces/register.interfaces";
 
-/* import { useState } from "react";
-import Link from "next/link";
-import { Eye, EyeOff } from "lucide-react";
-import { validateRegisterForm } from "@/helpers/validateLoginRegister";
-import { sendRegister } from "@/helpers/sendRegister";
-import { useRouter } from "next/navigation";
-import {
-  IRegisterErrors,
-  IRegisterProps,
-  IRegisterValues,
-} from "@/interfaces/AuthInterfaces/register.interfaces";
-import { toast } from "react-hot-toast";
- */
-
-/* const RegisterForm = () => {
-  const router = useRouter();
-
-  const [formValues, setFormValues] = useState<IRegisterValues>({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-
-  const [formErrors, setFormErrors] = useState<IRegisterErrors>({});
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormValues({ ...formValues, [e.target.name]: e.target.value });
-  };
-
-const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  const errors = validateRegisterForm(formValues);
-  setFormErrors(errors);
-
-  if (Object.keys(errors).length === 0) {
-    try {
-      const cleanedFormValues: IRegisterProps = formValues;
-      const response = await sendRegister(cleanedFormValues);
-
-      if (response) {
-        toast.success("Cuenta creada con éxito 🎉");
-        router.refresh(); // actualiza AuthContext con la cookie
-        router.push("/"); // redirige a la página principal del usuario
-      }
-    } catch (error) {
-      console.error("Error en el registro:", error);
-      toast.error("Hubo un error al registrar la cuenta");
-    }
-  }
-}; */
-
 const RegisterForm = () => {
   const router = useRouter();
   const { setUserData } = useAuth();

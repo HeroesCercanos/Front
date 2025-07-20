@@ -1,10 +1,10 @@
 export interface ICampaign {
+  id: string;
   title: string;
-  description: string;
+  description?: string; // <--- opcional
   startDate: string;
-  id: number;
   endDate: string;
-  isActive: boolean;
+  status: string;
+  isActive?: boolean;
 }
-
 

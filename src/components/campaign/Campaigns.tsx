@@ -1,11 +1,35 @@
 "use client";
 
-import React from "react";
-import CampaignList from "@/components/campaign/CampaignList";
-import { preLoadCampaigns } from "@/helpers/preLoadCampaigns";
+import React, { useEffect, useState } from "react";
 import DonateButton from "@/components/common/DonateButton";
+import { getCampaigns } from "@/helpers/getCampaigns";
+import CampaignList from "@/components/campaign/CampaignList"; // asegurate que este sea el componente correcto
+
+type Campaign = {
+  id: string;
+  title: string;
+  description?: string;
+  startDate: string;
+  endDate: string;
+  status: string;
+};
 
 const Campaigns = () => {
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getCampaigns();
+        setCampaigns(data);
+      } catch (error) {
+        console.error("Error al cargar campañas:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <section
       id="campañas"
@@ -16,7 +40,7 @@ const Campaigns = () => {
           Campañas y donaciones
         </h2>
 
-        <CampaignList campaigns={preLoadCampaigns} />
+        <CampaignList campaigns={campaigns} />
 
         <DonateButton />
       </div>

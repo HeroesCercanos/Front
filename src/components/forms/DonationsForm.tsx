@@ -15,7 +15,7 @@ const DonationForm = () => {
 		setLoading(true);
 
 		try {
-			const res = await fetch(`${API_BASE_URL}/create_preference`, {
+			const res = await fetch(`http://localhost:3000/donations/create_preference`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -27,7 +27,6 @@ const DonationForm = () => {
 			});
 
 			const data = await res.json();
-			console.log(data)
 
 			if (!res.ok || !data.id) {
 				throw new Error(data.message || 'Error al crear preferencia de pago');
