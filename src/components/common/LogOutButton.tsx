@@ -22,9 +22,8 @@ const LogOutButton = () => {
   const showConfirmLogout = () => {
     toast.custom((t) => (
       <div
-        className={`bg-white rounded-xl shadow-lg p-6 border border-gray-200 w-[90%] max-w-md ${
-          t.visible ? "animate-enter" : "animate-leave"
-        }`}
+        className={`bg-white rounded-xl shadow-lg p-6 border border-gray-200 w-[90%] max-w-md ${t.visible ? "animate-enter" : "animate-leave"
+          }`}
       >
         <h2 className="text-lg font-semibold text-gray-800 mb-2">
           ¿Estás seguro?

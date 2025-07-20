@@ -11,34 +11,43 @@ import { getIncidentReports } from "@/helpers/getIncidentReports";
 import { getIncidentHistory } from "@/helpers/getIncidentHistory";
 
 export default function AdminReports() {
-  const { userData } = useAuth();
+  const { userData /* contains { token: '', user: {...} } */ } = useAuth();
 
   const [activeReports, setActiveReports] = useState<Report[]>([]);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
-  const [actionType, setActionType] = useState<"asistido" | "eliminado" | null>(null);
+  const [actionType, setActionType] = useState<"asistido" | "eliminado" | null>(
+    null
+  );
   const [comment, setComment] = useState("");
   const [victimName, setVictimName] = useState("");
   const [reason, setReason] = useState("");
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
   const fetchReports = async () => {
-    if (!userData?.token) return;
+    // ADDED: sólo si hay un usuario logueado y es admin
+    if (!userData?.user || userData.user.role !== "admin") return;
 
     try {
-      const incidents = await getIncidentReports(userData.token);
+      // REMOVED: passing token
+      const incidents = await getIncidentReports();
       const activos = incidents
-        .filter((i: any) => i.status === "activo")
-        .map((incident: any) => ({
-          id: incident.id,
-          text: `Reporte - ${incident.createdAt.slice(0, 10)} - ${incident.description || "Sin descripción"}`,
+        .filter((i) => i.status === "activo")
+        .map((i) => ({
+          id: i.id,
+          text: `Reporte - ${i.createdAt.slice(0, 10)} - ${
+            i.description || "Sin descripción"
+          }`,
         }));
       setActiveReports(activos);
 
-      const backendHistory = await getIncidentHistory(userData.token);
+      // REMOVED: passing token
+      const backendHistory = await getIncidentHistory();
       const formattedHistory = backendHistory.map((entry: any) => ({
         id: entry.incident.id,
-        text: `Reporte - ${entry.incident.createdAt.slice(0, 10)} - ${entry.incident.description || "Sin descripción"}`,
+        text: `Reporte - ${entry.incident.createdAt.slice(0, 10)} - ${
+          entry.incident.description || "Sin descripción"
+        }`,
         action: entry.action,
         comment: entry.comment,
         timestamp: new Date(entry.createdAt).toLocaleString(),
@@ -54,26 +63,28 @@ export default function AdminReports() {
   };
 
   useEffect(() => {
+    // ADDED: dispara fetch cuando cambia userData
     fetchReports();
-  }, [userData?.token]);
+  }, [userData]);
 
   const confirmAction = async () => {
-    if (!selectedReport || !actionType || !userData?.token) return;
+    if (!selectedReport || !actionType /* REMOVED: token check */) return;
 
     try {
-      await updateIncidentByAdmin(
-        selectedReport.id,
-        {
-          status: actionType,
-          adminComment: comment || undefined,
-          victimName: victimName || undefined,
-          reason: reason || undefined,
-        },
-        userData.token
-      );
+      // REMOVED: token argument
+      await updateIncidentByAdmin(selectedReport.id, {
+        status: actionType,
+        adminComment: comment || undefined,
+        victimName: victimName || undefined,
+        reason: reason || undefined,
+      });
 
       await fetchReports();
-      toast.success(actionType === "asistido" ? "✅ Reporte marcado como asistido" : "🗑 Reporte eliminado");
+      toast.success(
+        actionType === "asistido"
+          ? "✅ Reporte marcado como asistido"
+          : "🗑 Reporte eliminado"
+      );
 
       setSelectedReport(null);
       setActionType(null);
@@ -102,12 +113,17 @@ export default function AdminReports() {
 
         {/* REPORTES ACTIVOS */}
         <div className="bg-gray-200 p-4 rounded shadow-inner space-y-4">
-          <h3 className="text-lg font-semibold mb-2 text-gray-800">REPORTES ACTIVOS</h3>
+          <h3 className="text-lg font-semibold mb-2 text-gray-800">
+            REPORTES ACTIVOS
+          </h3>
           {activeReports.length === 0 ? (
             <p className="text-sm text-gray-600">No hay reportes activos.</p>
           ) : (
             activeReports.map((report) => (
-              <div key={report.id} className="bg-white p-3 rounded flex justify-between items-center shadow">
+              <div
+                key={report.id}
+                className="bg-white p-3 rounded flex justify-between items-center shadow"
+              >
                 <p className="text-sm">{report.text}</p>
                 <div className="flex gap-2">
                   <CheckSquare
@@ -128,18 +144,36 @@ export default function AdminReports() {
 
         {/* HISTORIAL DE ACCIONES */}
         <div className="bg-gray-200 p-4 rounded shadow-inner">
-          <h3 className="text-lg font-semibold mb-2 text-gray-800">HISTORIAL DE ACCIONES</h3>
+          <h3 className="text-lg font-semibold mb-2 text-gray-800">
+            HISTORIAL DE ACCIONES
+          </h3>
           {history.length === 0 ? (
-            <p className="text-sm text-gray-600">Todavía no hay acciones registradas.</p>
+            <p className="text-sm text-gray-600">
+              Todavía no hay acciones registradas.
+            </p>
           ) : (
             <ul className="text-sm text-gray-700 space-y-4">
               {history.map((entry, index) => (
                 <li key={`${entry.id}-${index}`} className="border-b pb-3">
-                  <p><strong>{entry.text}</strong></p>
-                  <p>Acción: {entry.action === "asistido" ? "✅ Asistido" : "🗑 Eliminado"}</p>
-                  {entry.edited && <p className="text-xs text-gray-700 font-medium">🖊 Editado</p>}
+                  <p>
+                    <strong>{entry.text}</strong>
+                  </p>
+                  <p>
+                    Acción:{" "}
+                    {entry.action === "asistido"
+                      ? "✅ Asistido"
+                      : "🗑 Eliminado"}
+                  </p>
+                  {entry.edited && (
+                    <p className="text-xs text-gray-700 font-medium">
+                      🖊 Editado
+                    </p>
+                  )}
                   <p>Comentario: {entry.comment}</p>
-                  <p>Nombre del damnificado: {entry.victimName || "No especificado"}</p>
+                  <p>
+                    Nombre del damnificado:{" "}
+                    {entry.victimName || "No especificado"}
+                  </p>
                   <p>Motivo: {entry.reason || "No especificado"}</p>
                   <p className="text-xs text-gray-500">{entry.timestamp}</p>
 

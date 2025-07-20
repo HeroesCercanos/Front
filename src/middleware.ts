@@ -1,41 +1,90 @@
-import { NextResponse, NextRequest } from "next/server";
-import { jwtVerify } from "jose";
 
+import { jwtVerify } from "jose";
+import { NextRequest, NextResponse } from "next/server";
+
+console.log("🚦 middleware cargado");
+export const config = {
+  matcher: ["/dashboard/:path*", "/admin/:path*"],
+};
+
+// middleware.ts
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const token = request.cookies.get("jwtToken")?.value;
+
+  // lee primero del header, y si no, de la cookie "jwtToken"
+  const authHeader = request.headers.get("authorization");
+  const token = authHeader?.startsWith("Bearer ")
+    ? authHeader.slice(7)
+    : request.cookies.get("jwtToken")?.value;
 
   if (!token) {
-    // Si no hay token, redirigir a login para rutas privadas
-    if (pathname === "/dashboard" || pathname.startsWith("/admin")) {
-      const loginUrl = request.nextUrl.clone();
-      loginUrl.pathname = "/login";
-      return NextResponse.redirect(loginUrl);
-    }
-    return NextResponse.next();
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = "/login";
+    return NextResponse.redirect(loginUrl);
   }
 
   try {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
     const { payload } = await jwtVerify(token, secret);
-    const role = payload.role;
 
-    // 🔒 Solo admin puede acceder a /admin y subrutas
-    if (pathname.startsWith("/admin") && role !== "admin") {
+    if (pathname.startsWith("/admin") && payload.role !== "admin") {
       const homeUrl = request.nextUrl.clone();
       homeUrl.pathname = "/";
       return NextResponse.redirect(homeUrl);
     }
 
     return NextResponse.next();
-  } catch (error) {
-    console.error("Error verificando token:", error);
+  } catch {
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = "/login";
+    return NextResponse.redirect(loginUrl);
+  }
+}
+
+/* import { jwtVerify } from "jose";
+import { NextRequest, NextResponse } from "next/server";
+
+
+export const config = {
+  matcher: [
+    '/dashboard/:path*',
+    '/admin/:path*'
+  ],
+}
+
+
+// middleware.ts
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // lee primero del header, y si no, de la cookie "jwtToken"
+  const authHeader = request.headers.get("authorization");
+  const token = authHeader?.startsWith("Bearer ")
+    ? authHeader.slice(7)
+    : request.cookies.get("jwtToken")?.value;
+
+  if (!token) {
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = "/login";
+    return NextResponse.redirect(loginUrl);
+  }
+
+  try {
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
+    const { payload } = await jwtVerify(token, secret);
+
+    if (pathname.startsWith("/admin") && payload.role !== "admin") {
+      const homeUrl = request.nextUrl.clone();
+      homeUrl.pathname = "/";
+      return NextResponse.redirect(homeUrl);
+    }
+
+    return NextResponse.next();
+  } catch {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/login";
     return NextResponse.redirect(loginUrl);
   }
 }
 
-export const config = {
-  matcher: ["/dashboard", "/admin/:path*"]
-};
+ */

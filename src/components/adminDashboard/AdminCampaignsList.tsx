@@ -1,14 +1,44 @@
 "use client";
 
-import { useState } from "react";
-import { preLoadCampaigns } from "@/helpers/preLoadCampaigns";
+import { useEffect, useState } from "react";
+import { getCampaigns } from "@/helpers/getCampaigns";
 import { Pencil, PlusCircle, BookmarkCheck } from "lucide-react";
 import Sidebar from "./Sidebar";
 import CreateCampaignForm from "../forms/CampaignForm";
 import Modal from "../campaign/CampaignModal";
 
+type Campaign = {
+  id: string;
+  title: string;
+  description?: string;
+  startDate: string;
+  endDate: string;
+  status: string;
+  isActive: boolean;
+};
+
 const AdminCampaignList = () => {
   const [showModal, setShowModal] = useState(false);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+
+  useEffect(() => {
+const fetchData = async () => {
+  try {
+    const res = await fetch("https://heroes-cercanos-back.onrender.com/campaigns");
+    const data = await res.json();
+
+    const campaignsWithActiveFlag = data.map((c: any) => ({
+      ...c,
+      isActive: c.status === "ACTIVE",
+    }));
+
+    setCampaigns(campaignsWithActiveFlag);
+  } catch (err) {
+    console.error(err);
+  }
+};
+fetchData();
+  }, []);
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -16,7 +46,6 @@ const AdminCampaignList = () => {
 
       <main className="flex-1 flex flex-col w-full px-6 py-10 md:px-12 lg:px-16 bg-white pb-42">
         <section className="max-w-7xl w-full mx-auto flex flex-col gap-12">
-          
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 uppercase">
               Campañas activas
@@ -30,9 +59,8 @@ const AdminCampaignList = () => {
             </button>
           </div>
 
-          
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {preLoadCampaigns.map((campaign) => (
+            {campaigns.map((campaign) => (
               <div
                 key={campaign.id}
                 className="bg-gray-100 p-6 rounded-lg shadow-inner drop-shadow-lg"
@@ -67,7 +95,6 @@ const AdminCampaignList = () => {
         </section>
       </main>
 
-      
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         <CreateCampaignForm />
       </Modal>

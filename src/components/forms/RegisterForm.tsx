@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -7,46 +6,70 @@ import { Eye, EyeOff } from "lucide-react";
 import { validateRegisterForm } from "@/helpers/validateLoginRegister";
 import { sendRegister } from "@/helpers/sendRegister";
 import { useRouter } from "next/navigation";
-import {
-  IRegisterErrors,
-  IRegisterProps,
-  IRegisterValues,
-} from "@/interfaces/AuthInterfaces/register.interfaces";
+import { useAuth } from "@/context/AuthContext";
+import { API_BASE_URL } from "@/config/api";
+import { toast } from "react-hot-toast";
+import { IRegisterErrors } from "@/interfaces/AuthInterfaces/register.interfaces";
 
 const RegisterForm = () => {
   const router = useRouter();
+  const { setUserData } = useAuth();
 
-  const [formValues, setFormValues] = useState<IRegisterValues>({
+  const [formValues, setFormValues] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
-
   const [formErrors, setFormErrors] = useState<IRegisterErrors>({});
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormValues({ ...formValues, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setFormValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const errors = validateRegisterForm(formValues);
     setFormErrors(errors);
+    if (Object.keys(errors).length > 0) return;
 
-    if (Object.keys(errors).length === 0) {
-      try {
-        const cleanedFormValues: IRegisterProps = formValues;
-        const response = await sendRegister(cleanedFormValues);
+    try {
+      // 1) Registramos y el backend deja la cookie
+      await sendRegister({
+        name: formValues.name,
+        email: formValues.email,
+        password: formValues.password,
+        confirmPassword: formValues.confirmPassword,
+      });
 
-        if (response) {
-          // TODO: Mostrar mensaje de éxito antes de redireccionar
-          router.push("/login");
-        }
-      } catch (error) {
-        console.error("Error en el registro:", error);
-      }
+      // 2) Recuperamos el perfil del user
+      const res = await fetch(`${API_BASE_URL}/auth/me`, {
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("No autenticado tras registro");
+      const data = await res.json(); // { user: { id, email, name, role, ... } }
+
+      // 3) Inyectamos el usuario al contexto
+      setUserData({
+        token: "",
+        user: {
+          id: data.user.id,
+          email: data.user.email,
+          name: data.user.name,
+          role: data.user.role,
+          donations: data.user.donations ?? [],
+        },
+      });
+
+      // 4) Mostramos el toast
+      toast.success('¡Registro exitoso! 🎉');
+
+      // 5) Redirigimos al dashboard/admin
+      router.push('/login');
+    } catch (err: any) {
+    
+      console.error("Error en el registro:", err);
+      toast.error(err.message || "Hubo un error al registrar la cuenta");
     }
   };
 
@@ -145,4 +168,3 @@ const RegisterForm = () => {
 };
 
 export default RegisterForm;
-

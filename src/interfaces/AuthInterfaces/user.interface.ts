@@ -1,7 +1,7 @@
 export interface IUserSession {
     token: string,
     user: {
-        id: number,
+        id: string,
         email: string,
         name: string,
         donations: []

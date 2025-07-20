@@ -1,25 +1,27 @@
-import { ILoginProps } from "@/interfaces/AuthInterfaces/login.interfaces";
+import { API_BASE_URL } from '@/config/api';
+import { ILoginProps } from '@/interfaces/AuthInterfaces/login.interfaces';
 
 export const sendLogin = async (
-  credentials: ILoginProps
-): Promise<{ token: string } | undefined> => {
-  try {
-    const response = await fetch("http://localhost:3000/auth/signin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(credentials),
-    });
+	credentials: ILoginProps
+): Promise<{ token: string } | null> => {
+	try {
+		const res = await fetch(`${API_BASE_URL}/auth/signin`, {
+			method: 'POST',
+			credentials: 'include', 
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(credentials),
+		});
 
-    const data = await response.json();
+		const data = await res.json();
+		if (!res.ok) {
+			throw new Error(data.message || 'Credenciales inválidas');
+			
 
-    if (!response.ok) {
-      throw new Error("Credenciales inválidas");
-    }
+		}
 
-    return { token: data.access_token };
-  } catch (error) {
-    alert("Credenciales inválidas");
-  }
+		return { token: data.access_token };
+	} catch (err: any) {
+		alert(err.message);
+		return null;
+	}
 };

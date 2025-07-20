@@ -14,7 +14,7 @@
 - **Context API** – Manejo de sesión
 - **JWT** – Autenticación segura
 - **PostgreSQL**
-- **Vercel** – Deploy
+- **Render** – Deploy
 
 ---
 
@@ -44,6 +44,10 @@ npm run dev
 
 # Luego abrir en navegador:
 http://localhost:3000
+
+# Deploy:
+https://heroes-cercanos-front.onrender.com/
+
 
 --
 
