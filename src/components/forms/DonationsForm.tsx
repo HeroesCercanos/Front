@@ -2,8 +2,12 @@
 
 import { API_BASE_URL } from '@/config/api';
 import React, { useState } from 'react';
+import { notifyOnDonation } from '@/helpers/sendEmailNotification';
+import { useAuth } from '@/context/AuthContext';
 
 const DonationForm = () => {
+	const { userData } = useAuth();
+
 	const [amount, setAmount] = useState('');
 	const [description, setDescription] = useState('');
 	const [error, setError] = useState('');
@@ -30,6 +34,14 @@ const DonationForm = () => {
 
 			if (!res.ok || !data.id) {
 				throw new Error(data.message || 'Error al crear preferencia de pago');
+			}
+			// ✅ Enviar email de donación
+			if (userData?.user) {
+			await notifyOnDonation(
+			userData.user.name,
+			userData.user.email,
+			Number(amount)
+			);
 			}
 
 			// Redirigimos a MercadoPago Checkout Pro

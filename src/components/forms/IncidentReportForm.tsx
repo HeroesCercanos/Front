@@ -7,6 +7,7 @@ import { validateIncidentReport } from "@/helpers/validateIncidentReport";
 import { sendIncidentReport } from "@/helpers/sendIncidentReport";
 import { IncidentReport, IncidentType } from "@/interfaces/incident.interface";
 import { toast } from "react-hot-toast";
+import { notifyOnIncident } from "@/helpers/sendEmailNotification";
 
 const MapSelector = dynamic(() => import("../Map/MapSelector"), { ssr: false });
 
@@ -68,6 +69,12 @@ export const IncidentReportForm = ({ onClose }: Props) => {
               }
               try {
                 await sendIncidentReport(report);
+                await notifyOnIncident(
+                 userData.user.name,
+                 userData.user.email,
+                 incidentType,
+                 `${location.lat}, ${location.lng}`
+                );
                 toast.success("¡Reporte enviado! Gracias por tu colaboración.");
                 setIncidentType("");
                 setLocation(null);
@@ -162,11 +169,11 @@ export const IncidentReportForm = ({ onClose }: Props) => {
 
         <textarea
           placeholder="(Opcional) Describí el incidente, agrega detalles de la ubicación o cualquier dato que creas necesario."
-          className="mt-3 block w-full rounded border-gray-300 shadow-sm px-3 py-2 resize-y min-h-[100px]"
+          className="mt-3 block w-full rounded border-gray-300 shadow-sm px-3 py-2 resize-y min-h-[150px]"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           aria-label="Descripción de la ubicación"
-        />
+          />
 
       </div>
 
