@@ -14,6 +14,10 @@ const MapaLanding = () => {
             <strong>(03775) 422207</strong><br />
             Desde 1979 al servicio de la comunidad.
           </p>
+
+          <p className="mt-6 text-lg md:text-xl font-bold uppercase text-white">
+            ¡Ante una emergencia llamá al 100!
+          </p>
         </div>
 
         

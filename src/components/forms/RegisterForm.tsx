@@ -10,6 +10,7 @@ import { useAuth } from "@/context/AuthContext";
 import { API_BASE_URL } from "@/config/api";
 import { toast } from "react-hot-toast";
 import { IRegisterErrors } from "@/interfaces/AuthInterfaces/register.interfaces";
+import { notifyOnRegister } from "@/helpers/sendEmailNotification";
 
 const RegisterForm = () => {
   const router = useRouter();
@@ -60,6 +61,9 @@ const RegisterForm = () => {
           donations: data.user.donations ?? [],
         },
       });
+      // 4) Enviar email de bienvenida
+      await notifyOnRegister(data.user.name, data.user.email);
+
 
       // 4) Mostramos el toast
       toast.success('¡Registro exitoso! 🎉');
