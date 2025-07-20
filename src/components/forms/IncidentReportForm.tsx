@@ -160,14 +160,14 @@ export const IncidentReportForm = ({ onClose }: Props) => {
           </p>
         )}
 
-        <input
-          type="text"
-          placeholder="(Opcional) Describí la ubicación: calle, referencia, etc."
-          className="mt-3 block w-full rounded border-gray-300 shadow-sm px-3 py-2"
+        <textarea
+          placeholder="(Opcional) Describí el incidente, agrega detalles de la ubicación o cualquier dato que creas necesario."
+          className="mt-3 block w-full rounded border-gray-300 shadow-sm px-3 py-2 resize-y min-h-[100px]"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           aria-label="Descripción de la ubicación"
         />
+
       </div>
 
       {error && <p className="text-red-500 text-sm">{error}</p>}

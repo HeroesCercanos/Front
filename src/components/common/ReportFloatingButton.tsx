@@ -97,7 +97,7 @@ export const ReportFloatingButton = () => {
 
               <IncidentReportForm onClose={handleClose} />
 
-              {/* Botón de llamada */}
+             
               <div className="mt-4">
                <a
                 href="tel:100"

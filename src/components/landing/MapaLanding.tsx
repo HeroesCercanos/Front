@@ -16,8 +16,8 @@ const MapaLanding = () => {
           </p>
 
           <p className="mt-6 text-lg md:text-xl font-bold uppercase text-white">
-    ¡Ante una emergencia llamá al 100!
-  </p>
+            ¡Ante una emergencia llamá al 100!
+          </p>
         </div>
 
         
