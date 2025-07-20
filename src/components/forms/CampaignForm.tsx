@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { createCampaign } from "@/helpers/createCampaign";
+
 import toast from "react-hot-toast";
 
 const CreateCampaignForm = () => {
@@ -23,21 +25,11 @@ const CreateCampaignForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
-      // Simulación de envío
-      console.log("Formulario enviado:", formData);
-
-      toast.success("¡Campaña creada exitosamente!");
-
-      setFormData({
-        title: "",
-        description: "",
-        startDate: "",
-        endDate: "",
-      });
-    } catch (error) {
-      toast.error("Ocurrió un error al crear la campaña");
+      await createCampaign(formData); // ✅ acá usamos el state
+      toast.success("¡Campaña creada!");
+    } catch (err: any) {
+      toast.error(err.message || "Error al crear campaña");
     }
   };
 
@@ -56,10 +48,7 @@ const CreateCampaignForm = () => {
       </h2>
 
       <div className="flex flex-col gap-4">
-        <label
-          htmlFor="title"
-          className="text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="title" className="text-sm font-medium text-gray-700">
           Título
         </label>
         <input

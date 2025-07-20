@@ -7,7 +7,6 @@ import DonationHistory from './DonationHistory';
 
 const AdminDashboardView = () => {
 	const { userData } = useAuth();
-	console.log('AuthContext userData:', userData);
 	return (
 		<div className='flex flex-col md:flex-row min-h-screen'>
 			<aside className='w-full md:w-64 bg-gray-100'>

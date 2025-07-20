@@ -69,31 +69,7 @@ const LoginForm = () => {
       toast.error(error.message || "Error de autenticación");
     }
   };
-
-  /* const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const errors = validateLoginForm(formValues);
-
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
-      return;
-    }
-
-    setFormErrors({});
-
-    try {
-      await sendLogin(formValues); // backend emite cookie HttpOnly
-
-  		toast.success(`¡Bienvenido ${userData?.user.name}! 🔥`);
-
-      router.refresh(); // recarga layout/context para tomar datos de /auth/me
-      router.push('/');
-    } catch (error: any) {
-      console.error('Error en login:', error);
-      toast.error(error.message || 'Error de autenticación');
-    }
-  }; */
-
+  
   const handleGoogleLogin = () => {
     window.location.href = `${API_BASE_URL}/auth/google`;
   };
