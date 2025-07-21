@@ -17,7 +17,7 @@ export default function DonateButton({ children }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleClick = () => {
-    if (userData) {
+    if (!userData) {
       toast.custom((t) => (
         <div
           className={`bg-white border border-yellow-300 rounded-xl shadow-lg p-4 w-[90%] max-w-md ${
