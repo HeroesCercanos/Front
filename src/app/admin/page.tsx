@@ -1,3 +1,4 @@
+'use client';
 import AdminDashboardView from '@/components/adminDashboard/AdminDashboardView';
 import AuthProtected from '@/components/authProtected/authProtected';
 import React from 'react';
