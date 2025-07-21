@@ -11,24 +11,14 @@ import {
 } from 'lucide-react';
 import DashboardCard from '@/components/dashboard/DashboardCard';
 import AlertBar from '@/components/dashboard/AlertBar';
-import { useDashboardData } from '@/helpers/useDashboardData';
 import { useAuth } from '@/context/AuthContext';
 import DonateButton from '../common/DonateButton';
 import UserInfoModal from './UserInfoModal';
 
 export default function DashboardView() {
-	const { data, isLoading } = useDashboardData();
 	const { userData } = useAuth();
 	const router = useRouter();
 	const [showModal, setShowModal] = useState(false);
-
-	if (isLoading || !data) {
-		return (
-			<div className='flex items-center justify-center h-64'>
-				<p className='text-gray-500'>Cargando dashboard...</p>
-			</div>
-		);
-	}
 
 	return (
 		<main className='max-w-7xl mx-auto px-6 py-12 space-y-8'>
@@ -87,21 +77,23 @@ export default function DashboardView() {
 				</button>
 			</div>
 
-			{data.campaignsActive.length > 0 && (
-				<AlertBar
-					icon={<FlameKindling />}
-					message={`Campaña activa: ${data.campaignsActive[0].title}`}
-					actionLabel='Ver campaña'
-					onAction={() => router.push('/#campañas')}
-				/>
-			)}
+			<AlertBar
+				icon={<FlameKindling />}
+				message='Campañas activas'
+				actionLabel='Ver campaña'
+				onAction={() => router.push('/#campañas')}
+			/>
 
 			<AlertBar
 				icon={<MapPin />}
 				message='Nuestro cuartel: Colón 643, Monte Caseros'
 				actionLabel='Ver en Maps'
 				onAction={() =>
-					window.open(data.nearestStationUrl, '_blank', 'noopener')
+					window.open(
+						'https://www.google.com/maps/place/Colón+643,+Monte+Caseros',
+						'_blank',
+						'noopener'
+					)
 				}
 			/>
 
