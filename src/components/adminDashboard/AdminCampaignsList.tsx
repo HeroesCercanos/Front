@@ -29,7 +29,7 @@ const fetchData = async () => {
 
     const campaignsWithActiveFlag = data.map((c: any) => ({
       ...c,
-      isActive: c.status === "ACTIVE",
+      isActive: c.status === true,
     }));
 
     setCampaigns(campaignsWithActiveFlag);
