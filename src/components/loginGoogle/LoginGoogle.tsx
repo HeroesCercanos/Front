@@ -28,8 +28,6 @@ const LoginGoogle = () => {
 				router.push('/login');
 			});
 	}, [router, setUserData]);
-
-	return <div>Cargando sesión...</div>;
 };
 
 export default LoginGoogle;
