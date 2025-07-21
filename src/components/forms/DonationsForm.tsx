@@ -15,7 +15,7 @@ const DonationForm = () => {
 		setLoading(true);
 
 		try {
-			const res = await fetch(`http://localhost:3000/donations/create_preference`, {
+			const res = await fetch(`${API_BASE_URL}/donations/create_preference`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
