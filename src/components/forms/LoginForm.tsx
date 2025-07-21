@@ -18,7 +18,6 @@ import { API_BASE_URL } from "@/config/api";
 const LoginForm = () => {
   const router = useRouter();
   const { setUserData } = useAuth();
-  const { userData } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
   const [formValues, setFormValues] = useState<ILoginProps>({
