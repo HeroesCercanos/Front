@@ -69,6 +69,13 @@ export const IncidentReportForm = ({ onClose }: Props) => {
               }
               try {
                 await sendIncidentReport(report);
+                console.log("Datos para enviar mail:", {
+  name: userData.user.name,
+  email: userData.user.email,
+  type: incidentType,
+  location: `${location.lat}, ${location.lng}`,
+});
+
                 await notifyOnIncident(
                  userData.user.name,
                  userData.user.email,
