@@ -1,16 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createCampaign } from "@/helpers/createCampaign";
-
+import { ICampaign } from "@/interfaces/campaign.interface";
 import toast from "react-hot-toast";
+import { API_BASE_URL } from "@/config/api";
 
 const CreateCampaignForm = ({
   onClose,
   refreshCampaigns,
+  campaignToEdit,
 }: {
   onClose: () => void;
   refreshCampaigns: () => void;
+  campaignToEdit?: ICampaign | null;
 }) => {
   const [formData, setFormData] = useState({
     title: "",
@@ -30,16 +33,61 @@ const CreateCampaignForm = ({
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
+  e.preventDefault();
+
+    // Validación: título no vacío
+  if (!formData.title.trim()) {
+    toast.error("El título no puede estar vacío.");
+    return;
+  }
+
+  // ✅ Validación de fechas
+  const start = new Date(formData.startDate);
+  const end = new Date(formData.endDate);
+
+  if (end < start) {
+    toast.error("La fecha de finalización no puede ser anterior a la de inicio.");
+    return;
+  }
+
+  try {
+    if (campaignToEdit) {
+      // PATCH
+      const res = await fetch(`${API_BASE_URL}/campaigns/${campaignToEdit.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) throw new Error("No se pudo actualizar la campaña");
+      toast.success("¡Campaña actualizada!");
+    } else {
+      // POST
       await createCampaign(formData);
-      refreshCampaigns(); // ✅ actualiza la lista
       toast.success("¡Campaña creada!");
-      onClose(); // ✅ cierra el modal
-    } catch (err: any) {
-      toast.error(err.message || "Error al crear campaña");
     }
-  };
+
+    refreshCampaigns();
+    onClose();
+  } catch (err: any) {
+    toast.error(err.message || "Error al guardar la campaña");
+  }
+};
+
+
+
+useEffect(() => {
+  if (campaignToEdit) {
+    setFormData({
+      title: campaignToEdit.title,
+      description: campaignToEdit.description || "",
+      startDate: campaignToEdit.startDate,
+      endDate: campaignToEdit.endDate,
+    });
+  }
+}, [campaignToEdit]);
 
   return (
     <form
@@ -49,11 +97,11 @@ const CreateCampaignForm = ({
       role="form"
     >
       <h2
-        id="form-title"
-        className="text-2xl md:text-3xl font-bold text-center text-black uppercase"
-      >
-        Crear nueva campaña
-      </h2>
+  id="form-title"
+  className="text-2xl md:text-3xl font-bold text-center text-black uppercase"
+>
+  {campaignToEdit ? "Editar campaña" : "Crear nueva campaña"}
+</h2>
 
       <div className="flex flex-col gap-4">
         <label htmlFor="title" className="text-sm font-medium text-gray-700">
@@ -148,13 +196,13 @@ const CreateCampaignForm = ({
         </div>
       </div>
 
-      <button
-        type="submit"
-        className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md transition"
-        aria-label="Crear campaña"
-      >
-        Crear campaña
-      </button>
+     <button
+  type="submit"
+  className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md transition"
+  aria-label={campaignToEdit ? "Guardar cambios" : "Crear campaña"}
+>
+  {campaignToEdit ? "Guardar cambios" : "Crear campaña"}
+</button>
     </form>
   );
 };
