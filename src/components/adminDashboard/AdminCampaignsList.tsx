@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getCampaigns } from "@/helpers/getCampaigns";
 import { Pencil, PlusCircle, BookmarkCheck } from "lucide-react";
 import Sidebar from "./Sidebar";
 import CreateCampaignForm from "../forms/CampaignForm";
 import Modal from "../campaign/CampaignModal";
+import { API_BASE_URL } from "@/config/api";
 
 type Campaign = {
   id: string;
@@ -22,22 +22,22 @@ const AdminCampaignList = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
 
   useEffect(() => {
-const fetchData = async () => {
-  try {
-    const res = await fetch("https://heroes-cercanos-back.onrender.com/campaigns");
-    const data = await res.json();
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/campaigns`);
+        const data = await res.json();
 
-    const campaignsWithActiveFlag = data.map((c: any) => ({
-      ...c,
-      isActive: c.status === true,
-    }));
+        const campaignsWithActiveFlag = data.map((c: any) => ({
+          ...c,
+          isActive: c.status === true,
+        }));
 
-    setCampaigns(campaignsWithActiveFlag);
-  } catch (err) {
-    console.error(err);
-  }
-};
-fetchData();
+        setCampaigns(campaignsWithActiveFlag);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchData();
   }, []);
 
   return (
@@ -48,7 +48,7 @@ fetchData();
         <section className="max-w-7xl w-full mx-auto flex flex-col gap-12">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 uppercase">
-              Campañas activas
+              Campañas
             </h2>
             <button
               onClick={() => setShowModal(true)}
@@ -74,7 +74,14 @@ fetchData();
                   {campaign.description}
                 </p>
                 <p className="text-xs text-gray-500">
-                  Fecha: {campaign.startDate}
+                  Desde {campaign.startDate} hasta {campaign.endDate}
+                </p>
+                <p
+                  className={`text-xs font-semibold mt-2 ${
+                    campaign.isActive ? "text-green-600" : "text-red-600"
+                  }`}
+                >
+                  {campaign.isActive ? "Activa" : "Finalizada"}
                 </p>
 
                 <div className="flex gap-4 mt-4 justify-end">
@@ -96,7 +103,7 @@ fetchData();
       </main>
 
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-        <CreateCampaignForm />
+        <CreateCampaignForm onClose={() => setShowModal(false)} />
       </Modal>
     </div>
   );

@@ -5,7 +5,7 @@ import { createCampaign } from "@/helpers/createCampaign";
 
 import toast from "react-hot-toast";
 
-const CreateCampaignForm = () => {
+const CreateCampaignForm = ({ onClose }: { onClose: () => void }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -26,8 +26,9 @@ const CreateCampaignForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await createCampaign(formData); // ✅ acá usamos el state
+      await createCampaign(formData);
       toast.success("¡Campaña creada!");
+      onClose(); 
     } catch (err: any) {
       toast.error(err.message || "Error al crear campaña");
     }
