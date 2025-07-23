@@ -6,5 +6,5 @@ export interface ICampaign {
   endDate: string;
   status: string;
   isActive?: boolean;
+  campaignToEdit?: ICampaign | null;
 }
-

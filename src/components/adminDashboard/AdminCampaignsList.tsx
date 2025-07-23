@@ -20,6 +20,7 @@ type Campaign = {
 const AdminCampaignList = () => {
   const [showModal, setShowModal] = useState(false);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [editingCampaign, setEditingCampaign] = useState<Campaign | null>(null);
 
   const fetchCampaigns = async () => {
     try {
@@ -44,6 +45,27 @@ const AdminCampaignList = () => {
   useEffect(() => {
     fetchCampaigns();
   }, []);
+
+  const handleFinishCampaign = async (id: string) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/campaigns/${id}/finish`, {
+        method: "PATCH",
+      });
+
+      if (!res.ok) {
+        throw new Error("No se pudo finalizar la campaña.");
+      }
+
+      fetchCampaigns();
+    } catch (error) {
+      console.error("Error al finalizar campaña:", error);
+    }
+  };
+
+  const handleEditClick = (campaign: Campaign) => {
+    setEditingCampaign(campaign);
+    setShowModal(true);
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -94,11 +116,13 @@ const AdminCampaignList = () => {
                     size={20}
                     className="text-blue-600 hover:text-blue-800 cursor-pointer transition"
                     aria-label="Editar campaña"
+                    onClick={() => handleEditClick(campaign)}
                   />
                   <BookmarkCheck
                     size={20}
                     className="text-green-600 hover:text-red-800 cursor-pointer transition"
                     aria-label="Finalizar campaña"
+                    onClick={() => handleFinishCampaign(campaign.id)}
                   />
                 </div>
               </div>
