@@ -5,7 +5,13 @@ import { createCampaign } from "@/helpers/createCampaign";
 
 import toast from "react-hot-toast";
 
-const CreateCampaignForm = ({ onClose }: { onClose: () => void }) => {
+const CreateCampaignForm = ({
+  onClose,
+  refreshCampaigns,
+}: {
+  onClose: () => void;
+  refreshCampaigns: () => void;
+}) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -27,8 +33,9 @@ const CreateCampaignForm = ({ onClose }: { onClose: () => void }) => {
     e.preventDefault();
     try {
       await createCampaign(formData);
+      refreshCampaigns(); // ✅ actualiza la lista
       toast.success("¡Campaña creada!");
-      onClose(); 
+      onClose(); // ✅ cierra el modal
     } catch (err: any) {
       toast.error(err.message || "Error al crear campaña");
     }
