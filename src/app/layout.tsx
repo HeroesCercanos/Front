@@ -7,6 +7,8 @@ import Footer from '@/components/common/Footer';
 import { ReportFloatingButton } from '@/components/common/ReportFloatingButton';
 import { AuthProvider } from '@/context/AuthContext';
 import { Toaster } from 'react-hot-toast';
+import ScrollToTopButton from '@/components/common/ScrollToTopButton';
+
 
 const libreFranklin = Libre_Franklin({
 	subsets: ['latin'],
@@ -58,6 +60,7 @@ export default function RootLayout({
 						{children}
 						<ReportFloatingButton />
 					</main>
+					<ScrollToTopButton />
 					<Footer />
 				</AuthProvider>
 			</body>

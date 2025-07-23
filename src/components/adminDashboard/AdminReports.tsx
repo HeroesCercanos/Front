@@ -105,7 +105,7 @@ export default function AdminReports() {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen">
       <Sidebar />
       <section className="w-full p-6 text-black space-y-8">
         <h2 className="text-2xl font-bold">REPORTES</h2>

@@ -17,6 +17,7 @@ export interface Report {
   createdAt: string;
   id: number;
   text: string;
+  status: string;
 }
 
 
