@@ -6,15 +6,13 @@ import { ICampaign } from "@/interfaces/campaign.interface";
 import toast from "react-hot-toast";
 import { API_BASE_URL } from "@/config/api";
 
-const CreateCampaignForm = ({
-  onClose,
-  refreshCampaigns,
-  campaignToEdit,
-}: {
+interface Props {
   onClose: () => void;
   refreshCampaigns: () => void;
   campaignToEdit?: ICampaign | null;
-}) => {
+}
+
+const CreateCampaignForm = ({ onClose, refreshCampaigns, campaignToEdit }: Props) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -22,6 +20,19 @@ const CreateCampaignForm = ({
     endDate: "",
   });
 
+  // 🚀 Precargar datos si estamos en modo edición
+  useEffect(() => {
+    if (campaignToEdit) {
+      setFormData({
+        title: campaignToEdit.title,
+        description: campaignToEdit.description || "",
+        startDate: campaignToEdit.startDate,
+        endDate: campaignToEdit.endDate,
+      });
+    }
+  }, [campaignToEdit]);
+
+  // 🔄 Manejar cambios en los inputs
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -32,62 +43,51 @@ const CreateCampaignForm = ({
     }));
   };
 
+  // ✅ Validar y enviar el formulario
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
     // Validación: título no vacío
-  if (!formData.title.trim()) {
-    toast.error("El título no puede estar vacío.");
-    return;
-  }
-
-  // ✅ Validación de fechas
-  const start = new Date(formData.startDate);
-  const end = new Date(formData.endDate);
-
-  if (end < start) {
-    toast.error("La fecha de finalización no puede ser anterior a la de inicio.");
-    return;
-  }
-
-  try {
-    if (campaignToEdit) {
-      // PATCH
-      const res = await fetch(`${API_BASE_URL}/campaigns/${campaignToEdit.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!res.ok) throw new Error("No se pudo actualizar la campaña");
-      toast.success("¡Campaña actualizada!");
-    } else {
-      // POST
-      await createCampaign(formData);
-      toast.success("¡Campaña creada!");
+    if (!formData.title.trim()) {
+      toast.error("El título no puede estar vacío.");
+      return;
     }
 
-    refreshCampaigns();
-    onClose();
-  } catch (err: any) {
-    toast.error(err.message || "Error al guardar la campaña");
-  }
-};
+    // Validación: fechas
+    const start = new Date(formData.startDate);
+    const end = new Date(formData.endDate);
 
+    if (end < start) {
+      toast.error("La fecha de finalización no puede ser anterior a la de inicio.");
+      return;
+    }
 
+    try {
+      if (campaignToEdit) {
+        // PATCH para editar campaña existente
+        const res = await fetch(`${API_BASE_URL}/campaigns/${campaignToEdit.id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // si usás cookies
+          body: JSON.stringify(formData),
+        });
 
-useEffect(() => {
-  if (campaignToEdit) {
-    setFormData({
-      title: campaignToEdit.title,
-      description: campaignToEdit.description || "",
-      startDate: campaignToEdit.startDate,
-      endDate: campaignToEdit.endDate,
-    });
-  }
-}, [campaignToEdit]);
+        if (!res.ok) throw new Error("No se pudo actualizar la campaña");
+        toast.success("¡Campaña actualizada!");
+      } else {
+        // POST para crear nueva campaña
+        await createCampaign(formData);
+        toast.success("¡Campaña creada!");
+      }
+
+      refreshCampaigns();
+      onClose();
+    } catch (err: any) {
+      toast.error(err.message || "Error al guardar la campaña");
+    }
+  };
 
   return (
     <form
@@ -97,13 +97,14 @@ useEffect(() => {
       role="form"
     >
       <h2
-  id="form-title"
-  className="text-2xl md:text-3xl font-bold text-center text-black uppercase"
->
-  {campaignToEdit ? "Editar campaña" : "Crear nueva campaña"}
-</h2>
+        id="form-title"
+        className="text-2xl md:text-3xl font-bold text-center text-black uppercase"
+      >
+        {campaignToEdit ? "Editar campaña" : "Crear nueva campaña"}
+      </h2>
 
       <div className="flex flex-col gap-4">
+        
         <label htmlFor="title" className="text-sm font-medium text-gray-700">
           Título
         </label>
@@ -115,18 +116,11 @@ useEffect(() => {
           onChange={handleChange}
           required
           className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-red-500 bg-white"
-          aria-required="true"
           aria-label="Título de la campaña"
-          aria-describedby="title-desc"
         />
-        <small id="title-desc" className="sr-only">
-          Ingresá el título de la campaña
-        </small>
 
-        <label
-          htmlFor="description"
-          className="text-sm font-medium text-gray-700"
-        >
+      
+        <label htmlFor="description" className="text-sm font-medium text-gray-700">
           Descripción
         </label>
         <textarea
@@ -137,20 +131,13 @@ useEffect(() => {
           required
           rows={2}
           className="w-full border bg-white border-gray-300 rounded-md p-2 resize-none focus:outline-none focus:ring-2 focus:ring-red-500"
-          aria-required="true"
           aria-label="Descripción de la campaña"
-          aria-describedby="description-desc"
         />
-        <small id="description-desc" className="sr-only">
-          Ingresá una descripción detallada de la campaña
-        </small>
 
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label
-              htmlFor="startDate"
-              className="text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="startDate" className="text-sm font-medium text-gray-700">
               Fecha de inicio
             </label>
             <input
@@ -161,20 +148,12 @@ useEffect(() => {
               onChange={handleChange}
               required
               className="w-full border bg-white border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-              aria-required="true"
               aria-label="Fecha de inicio"
-              aria-describedby="start-desc"
             />
-            <small id="start-desc" className="sr-only">
-              Seleccioná la fecha en la que comenzará la campaña
-            </small>
           </div>
 
           <div>
-            <label
-              htmlFor="endDate"
-              className="text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="endDate" className="text-sm font-medium text-gray-700">
               Fecha de finalización
             </label>
             <input
@@ -185,24 +164,19 @@ useEffect(() => {
               onChange={handleChange}
               required
               className="w-full border bg-white border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-              aria-required="true"
               aria-label="Fecha de finalización"
-              aria-describedby="end-desc"
             />
-            <small id="end-desc" className="sr-only">
-              Seleccioná la fecha en la que finalizará la campaña
-            </small>
           </div>
         </div>
       </div>
 
-     <button
-  type="submit"
-  className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md transition"
-  aria-label={campaignToEdit ? "Guardar cambios" : "Crear campaña"}
->
-  {campaignToEdit ? "Guardar cambios" : "Crear campaña"}
-</button>
+      <button
+        type="submit"
+        className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md transition"
+        aria-label={campaignToEdit ? "Guardar cambios" : "Crear campaña"}
+      >
+        {campaignToEdit ? "Guardar cambios" : "Crear campaña"}
+      </button>
     </form>
   );
 };
