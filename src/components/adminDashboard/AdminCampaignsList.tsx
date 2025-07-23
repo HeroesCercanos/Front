@@ -22,6 +22,7 @@ const AdminCampaignList = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [editingCampaign, setEditingCampaign] = useState<Campaign | null>(null);
 
+  // 🚀 Obtener todas las campañas
   const fetchCampaigns = async () => {
     try {
       const res = await fetch(`${API_BASE_URL}/campaigns`);
@@ -46,26 +47,25 @@ const AdminCampaignList = () => {
     fetchCampaigns();
   }, []);
 
+  // ✅ Finalizar campaña (envía cookies)
   const handleFinishCampaign = async (id: string) => {
     try {
-      const token = localStorage.getItem("token");
       const res = await fetch(`${API_BASE_URL}/campaigns/${id}/finish`, {
         method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        credentials: "include", 
       });
 
       if (!res.ok) {
         throw new Error("No se pudo finalizar la campaña.");
       }
 
-      fetchCampaigns();
+      fetchCampaigns(); 
     } catch (error) {
       console.error("Error al finalizar campaña:", error);
     }
   };
 
+  // ✏️ Abrir modal para editar
   const handleEditClick = (campaign: Campaign) => {
     setEditingCampaign(campaign);
     setShowModal(true);
@@ -77,12 +77,16 @@ const AdminCampaignList = () => {
 
       <main className="flex-1 flex flex-col w-full px-6 py-10 md:px-12 lg:px-16 bg-white pb-28">
         <section className="max-w-7xl w-full mx-auto flex flex-col gap-12">
+          
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 uppercase">
               Campañas
             </h2>
             <button
-              onClick={() => setShowModal(true)}
+              onClick={() => {
+                setEditingCampaign(null);
+                setShowModal(true);
+              }}
               className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md transition"
             >
               <PlusCircle size={18} />
@@ -90,6 +94,7 @@ const AdminCampaignList = () => {
             </button>
           </div>
 
+         
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {campaigns.map((campaign) => (
               <div
@@ -101,12 +106,15 @@ const AdminCampaignList = () => {
                     {campaign.title}
                   </h3>
                 </div>
+
                 <p className="text-gray-700 text-sm mb-2">
                   {campaign.description}
                 </p>
+
                 <p className="text-xs text-gray-500">
                   Desde {campaign.startDate} hasta {campaign.endDate}
                 </p>
+
                 <p
                   className={`text-xs font-semibold mt-2 ${
                     campaign.isActive ? "text-green-600" : "text-red-600"
@@ -135,6 +143,7 @@ const AdminCampaignList = () => {
         </section>
       </main>
 
+     
       <Modal
         isOpen={showModal}
         onClose={() => {
