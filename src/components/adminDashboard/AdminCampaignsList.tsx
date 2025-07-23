@@ -48,8 +48,12 @@ const AdminCampaignList = () => {
 
   const handleFinishCampaign = async (id: string) => {
     try {
+      const token = localStorage.getItem("token");
       const res = await fetch(`${API_BASE_URL}/campaigns/${id}/finish`, {
         method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (!res.ok) {
@@ -131,10 +135,20 @@ const AdminCampaignList = () => {
         </section>
       </main>
 
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+      <Modal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false);
+          setEditingCampaign(null);
+        }}
+      >
         <CreateCampaignForm
-          onClose={() => setShowModal(false)}
+          onClose={() => {
+            setShowModal(false);
+            setEditingCampaign(null);
+          }}
           refreshCampaigns={fetchCampaigns}
+          campaignToEdit={editingCampaign}
         />
       </Modal>
     </div>
