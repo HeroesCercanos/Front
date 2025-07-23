@@ -1,5 +1,7 @@
 
 export type IncidentType = "incendio" | "accidente";
+export type IncidentStatus = "activo" | "asistido" | "eliminado";
+
 
 
 export interface IncidentReport {
@@ -17,6 +19,7 @@ export interface Report {
   createdAt: string;
   id: number;
   text: string;
+  status?: IncidentStatus;
 }
 
 
