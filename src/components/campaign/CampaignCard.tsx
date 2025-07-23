@@ -1,4 +1,3 @@
-// src/components/campaigns/CampaignCard.tsx
 import { ICampaign } from "@/interfaces/campaign.interface";
 import React from "react";
 

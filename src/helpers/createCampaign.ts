@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/config/api"; // si lo tenés separado
+import { API_BASE_URL } from "@/config/api"; 
 
 
 export const createCampaign = async (campaignData: {

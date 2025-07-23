@@ -7,7 +7,7 @@ import { API_BASE_URL } from '@/config/api';
 
 export default function GoogleCallbackPage() {
   const router = useRouter();
-  const { setUserData } = useAuth();   // ← aquí
+  const { setUserData } = useAuth();   
 
   useEffect(() => {
     (async () => {
@@ -18,7 +18,7 @@ export default function GoogleCallbackPage() {
         if (!res.ok) throw new Error();
         const { user } = await res.json();
 
-        setUserData(user);             // ← y aquí
+        setUserData(user);            
         router.replace('/dashboard');
       } catch {
         router.replace('/login');

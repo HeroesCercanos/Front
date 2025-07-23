@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import DonateButton from "@/components/common/DonateButton";
 import { getCampaigns } from "@/helpers/getCampaigns";
-import CampaignList from "@/components/campaign/CampaignList"; // asegurate que este sea el componente correcto
+import CampaignList from "@/components/campaign/CampaignList";
 
 type Campaign = {
   id: string;
