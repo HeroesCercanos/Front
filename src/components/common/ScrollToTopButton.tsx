@@ -20,13 +20,14 @@ export default function ScrollToTopButton() {
 
   return (
     isVisible && (
-      <button
-        onClick={scrollToTop}
-        className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg z-50"
-        aria-label="Volver arriba"
-      >
-        <ArrowUp className="w-5 h-5" />
-      </button>
+    <button
+  onClick={scrollToTop}
+  className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg shadow-black/50 ring-1 ring-white z-50 transition-all"
+  aria-label="Volver arriba"
+>
+  <ArrowUp className="w-5 h-5" />
+</button>
+
     )
   );
 }
