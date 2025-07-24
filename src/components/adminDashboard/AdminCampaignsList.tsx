@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Pencil, PlusCircle, BookmarkCheck } from "lucide-react";
+import { Pencil, PlusCircle, BookmarkCheck, Trash2 } from "lucide-react";
 import Sidebar from "./Sidebar";
 import CreateCampaignForm from "../forms/CampaignForm";
 import Modal from "../campaign/CampaignModal";
 import { API_BASE_URL } from "@/config/api";
+import toast from "react-hot-toast";
 
 type Campaign = {
   id: string;
@@ -28,14 +29,10 @@ const AdminCampaignList = () => {
       const res = await fetch(`${API_BASE_URL}/campaigns`);
       const data = await res.json();
 
-      const campaignsWithActiveFlag = data.map((c: any) => {
-        const now = new Date();
-        const end = new Date(c.endDate);
-        return {
-          ...c,
-          isActive: now <= end,
-        };
-      });
+      const campaignsWithActiveFlag = data.map((c: any) => ({
+        ...c,
+        isActive: c.isActive,
+      }));
 
       setCampaigns(campaignsWithActiveFlag);
     } catch (err) {
@@ -52,16 +49,18 @@ const AdminCampaignList = () => {
     try {
       const res = await fetch(`${API_BASE_URL}/campaigns/${id}/finish`, {
         method: "PATCH",
-        credentials: "include", 
+        credentials: "include",
       });
 
       if (!res.ok) {
         throw new Error("No se pudo finalizar la campaña.");
       }
 
-      fetchCampaigns(); 
+      fetchCampaigns();
+      toast.success("La campaña fue finalizada con éxito."); // 👉 mensaje
     } catch (error) {
       console.error("Error al finalizar campaña:", error);
+      toast.error("Ocurrió un error al finalizar la campaña.");
     }
   };
 
@@ -71,13 +70,64 @@ const AdminCampaignList = () => {
     setShowModal(true);
   };
 
+  const handleDeleteCampaign = (campaign: Campaign) => {
+    toast.custom((t) => (
+      <div
+        className={`bg-white rounded-xl shadow-lg p-6 border border-gray-200 w-[90%] max-w-md ${
+          t.visible ? "animate-enter" : "animate-leave"
+        }`}
+      >
+        <h2 className="text-lg font-semibold text-gray-800 mb-2">
+          ¿Eliminar campaña?
+        </h2>
+        <p className="text-gray-600 mb-4">
+          Vas a eliminar <strong>{campaign.title}</strong>. Esta acción no se
+          puede deshacer.
+        </p>
+        <div className="flex justify-center gap-4">
+          <button
+            onClick={async () => {
+              toast.dismiss(t.id);
+
+              try {
+                const res = await fetch(
+                  `${API_BASE_URL}/campaigns/${campaign.id}`,
+                  {
+                    method: "DELETE",
+                    credentials: "include",
+                  }
+                );
+
+                if (!res.ok) throw new Error("Error al eliminar");
+
+                toast.success("Campaña eliminada con éxito.");
+                fetchCampaigns();
+              } catch (err) {
+                console.error(err);
+                toast.error("Error al eliminar campaña.");
+              }
+            }}
+            className="px-4 py-2 rounded-md bg-red-600 text-white font-semibold hover:bg-red-700 transition"
+          >
+            Sí, eliminar
+          </button>
+          <button
+            onClick={() => toast.dismiss(t.id)}
+            className="px-4 py-2 rounded-md bg-gray-300 text-gray-800 font-medium hover:bg-gray-400 transition"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    ));
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
 
       <main className="flex-1 flex flex-col w-full px-6 py-10 md:px-12 lg:px-16 bg-white pb-28">
         <section className="max-w-7xl w-full mx-auto flex flex-col gap-12">
-          
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 uppercase">
               Campañas
@@ -94,7 +144,6 @@ const AdminCampaignList = () => {
             </button>
           </div>
 
-         
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {campaigns.map((campaign) => (
               <div
@@ -136,6 +185,12 @@ const AdminCampaignList = () => {
                     aria-label="Finalizar campaña"
                     onClick={() => handleFinishCampaign(campaign.id)}
                   />
+                  <Trash2
+                    size={20}
+                    className="text-red-600 hover:text-red-800 cursor-pointer transition"
+                    aria-label="Eliminar campaña"
+                    onClick={() => handleDeleteCampaign(campaign)}
+                  />
                 </div>
               </div>
             ))}
@@ -143,7 +198,6 @@ const AdminCampaignList = () => {
         </section>
       </main>
 
-     
       <Modal
         isOpen={showModal}
         onClose={() => {

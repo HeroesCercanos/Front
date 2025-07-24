@@ -45,49 +45,58 @@ const CreateCampaignForm = ({ onClose, refreshCampaigns, campaignToEdit }: Props
 
   // ✅ Validar y enviar el formulario
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    // Validación: título no vacío
-    if (!formData.title.trim()) {
-      toast.error("El título no puede estar vacío.");
-      return;
+  // Validación: título no vacío
+  if (!formData.title.trim()) {
+    toast.error("El título no puede estar vacío.");
+    return;
+  }
+
+  // Validación: fechas
+  const start = new Date(formData.startDate);
+  const end = new Date(formData.endDate);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Ignora la hora, solo compara la fecha
+
+  if (start < today) {
+    toast.error("La fecha de inicio no puede ser anterior a hoy.");
+    return;
+  }
+
+  if (end < start) {
+    toast.error("La fecha de finalización no puede ser anterior a la de inicio.");
+    return;
+  }
+
+  try {
+    if (campaignToEdit) {
+      // PATCH para editar campaña existente
+      const res = await fetch(`${API_BASE_URL}/campaigns/${campaignToEdit.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // si usás cookies
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) throw new Error("No se pudo actualizar la campaña");
+      toast.success("¡Campaña actualizada!");
+    } else {
+      // POST para crear nueva campaña
+      await createCampaign(formData);
+      toast.success("¡Campaña creada!");
     }
 
-    // Validación: fechas
-    const start = new Date(formData.startDate);
-    const end = new Date(formData.endDate);
+    refreshCampaigns();
+    onClose();
+  } catch (err: any) {
+    toast.error(err.message || "Error al guardar la campaña");
+  }
+};
 
-    if (end < start) {
-      toast.error("La fecha de finalización no puede ser anterior a la de inicio.");
-      return;
-    }
-
-    try {
-      if (campaignToEdit) {
-        // PATCH para editar campaña existente
-        const res = await fetch(`${API_BASE_URL}/campaigns/${campaignToEdit.id}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include", // si usás cookies
-          body: JSON.stringify(formData),
-        });
-
-        if (!res.ok) throw new Error("No se pudo actualizar la campaña");
-        toast.success("¡Campaña actualizada!");
-      } else {
-        // POST para crear nueva campaña
-        await createCampaign(formData);
-        toast.success("¡Campaña creada!");
-      }
-
-      refreshCampaigns();
-      onClose();
-    } catch (err: any) {
-      toast.error(err.message || "Error al guardar la campaña");
-    }
-  };
 
   return (
     <form

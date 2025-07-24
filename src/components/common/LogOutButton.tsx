@@ -21,7 +21,6 @@ const LogOutButton = () => {
 			console.warn('Logout server error', err);
 		}
 
-		localStorage.removeItem('jwtToken');
 		setUserData(null);
 
 		router.replace('/login');
