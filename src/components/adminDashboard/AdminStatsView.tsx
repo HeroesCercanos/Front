@@ -22,8 +22,7 @@ useEffect(() => {
       ]);
 
       const now = new Date();
-      const active = campaigns.filter((c: any) => new Date(c.endDate) >= now);
-      const activeReports = incidents.filter((r: any) => r.status === "activo");
+const active = campaigns.filter((c: any) => c.isActive === true );      const activeReports = incidents.filter((r: any) => r.status === "activo");
 
       setActiveCampaigns(active.length);
       setTotalDonations(total);

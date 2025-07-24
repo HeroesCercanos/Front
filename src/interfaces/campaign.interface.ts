@@ -1,7 +1,7 @@
 export interface ICampaign {
   id: string;
   title: string;
-  description?: string; // <--- opcional
+  description?: string; 
   startDate: string;
   endDate: string;
   status: string;
