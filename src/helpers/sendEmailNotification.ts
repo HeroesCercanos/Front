@@ -12,17 +12,17 @@ export const notifyOnRegister = async (name: string, email: string) => {
   }
 };
 
-export const notifyOnDonation = async (name: string, email: string, amount: number) => {
+/* export const notifyOnDonation = async (name: string, email: string, amount: number) => {
   try {
     await fetch(`${API}/api/send-donation-email`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json" },0
       body: JSON.stringify({ name, email, amount }),
     });
   } catch (err) {
     console.error("Error al enviar email de donación:", err);
   }
-};
+}; */
 
 export const notifyOnIncident = async (name: string, email: string, type: string, location: string) => {
   try {
