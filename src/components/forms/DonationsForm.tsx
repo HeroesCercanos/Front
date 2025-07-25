@@ -84,17 +84,18 @@ const DonationForm = () => {
           description,
         }),
       });
-
       const data = await res.json();
-
-      // Ahora comprobamos checkoutUrl en lugar de data.id
-      if (!res.ok || !data.checkoutUrl) {
+      // Comprobamos que vino checkoutUrl y preferenceId
+      const { checkoutUrl, preferenceId } = data;
+      if (!res.ok || !checkoutUrl) {
         throw new Error(data.message || "Error al crear preferencia de pago");
       }
 
+      // **Aquí ya tenés el preferenceId** que luego usarás para simular el webhook:
+      console.log("Preference ID:", preferenceId);
+
       // Redirigimos al checkout de MercadoPago
-      // Y redirigimos con checkoutUrl
-      window.location.href = data.checkoutUrl;
+      window.location.href = checkoutUrl;
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Ocurrió un error al iniciar el pago");
