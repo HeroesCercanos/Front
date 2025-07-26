@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Pencil, PlusCircle, BookmarkCheck, Trash2 } from "lucide-react";
+import { Pencil, PlusCircle, SquareX, Trash2, RotateCcw } from "lucide-react";
 import Sidebar from "./Sidebar";
 import CreateCampaignForm from "../forms/CampaignForm";
 import Modal from "../campaign/CampaignModal";
@@ -44,9 +44,12 @@ const AdminCampaignList = () => {
     fetchCampaigns();
   }, []);
 
+  const [pulsingId, setPulsingId] = useState<string | null>(null);
+
   // ✅ Finalizar campaña (envía cookies)
   const handleFinishCampaign = async (id: string) => {
     try {
+      setPulsingId(id);
       const res = await fetch(`${API_BASE_URL}/campaigns/${id}/finish`, {
         method: "PATCH",
         credentials: "include",
@@ -56,11 +59,13 @@ const AdminCampaignList = () => {
         throw new Error("No se pudo finalizar la campaña.");
       }
 
-      fetchCampaigns();
+      await fetchCampaigns();
       toast.success("La campaña fue finalizada con éxito."); // 👉 mensaje
     } catch (error) {
       console.error("Error al finalizar campaña:", error);
       toast.error("Ocurrió un error al finalizar la campaña.");
+    } finally {
+      setTimeout(() => setPulsingId(null), 1000);
     }
   };
 
@@ -122,6 +127,26 @@ const AdminCampaignList = () => {
     ));
   };
 
+  const handleReactivateCampaign = async (id: string) => {
+    try {
+      setPulsingId(id);
+      const res = await fetch(`${API_BASE_URL}/campaigns/${id}/reactivate`, {
+        method: "PATCH",
+        credentials: "include",
+      });
+
+      if (!res.ok) throw new Error("No se pudo reactivar la campaña.");
+
+      await fetchCampaigns();
+      toast.success("La campaña fue reactivada con éxito.");
+    } catch (error) {
+      console.error("Error al reactivar campaña:", error);
+      toast.error("Ocurrió un error al reactivar la campaña.");
+    } finally {
+      setTimeout(() => setPulsingId(null), 1000);
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
@@ -173,24 +198,48 @@ const AdminCampaignList = () => {
                 </p>
 
                 <div className="flex gap-4 mt-4 justify-end">
+                  <span title="Editar campaña">
                   <Pencil
                     size={20}
                     className="text-blue-600 hover:text-blue-800 cursor-pointer transition"
                     aria-label="Editar campaña"
                     onClick={() => handleEditClick(campaign)}
                   />
-                  <BookmarkCheck
-                    size={20}
-                    className="text-green-600 hover:text-red-800 cursor-pointer transition"
-                    aria-label="Finalizar campaña"
-                    onClick={() => handleFinishCampaign(campaign.id)}
-                  />
+                  </span>
+
+                  {campaign.isActive ? (
+                    <span title="Finalizar campaña">
+                      <SquareX
+                        size={20}
+                        className={`text-green-600 hover:text-red-800 cursor-pointer transition ${
+                          pulsingId === campaign.id ? "animate-pulse" : ""
+                        }`}
+                        aria-label="Finalizar campaña"
+                        onClick={() => handleFinishCampaign(campaign.id)}
+                      />
+                    </span>
+                  ) : (
+
+                    <span title="Reactivar campaña">
+                    <RotateCcw
+                      size={20}
+                      className={`text-orange-600 hover:text-green-700 cursor-pointer transition ${
+                        pulsingId === campaign.id ? "animate-pulse" : ""
+                      }`}
+                      aria-label="Reactivar campaña"
+                      onClick={() => handleReactivateCampaign(campaign.id)}
+                    />
+                    </span>
+                  )}
+
+                  <span title="Eliminar campaña">
                   <Trash2
                     size={20}
                     className="text-red-600 hover:text-red-800 cursor-pointer transition"
                     aria-label="Eliminar campaña"
                     onClick={() => handleDeleteCampaign(campaign)}
                   />
+                  </span>
                 </div>
               </div>
             ))}
