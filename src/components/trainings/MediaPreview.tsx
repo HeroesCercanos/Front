@@ -1,7 +1,7 @@
 'use client';
 
 import { CloudinaryMedia } from '@/interfaces/cloudinary.interface';
-import ImageWithControls from '../trainings/ImageWithControls';
+import ImageWithControls from './ImageWithControls';
 
 interface Props {
 	media: CloudinaryMedia;
@@ -10,13 +10,20 @@ interface Props {
 export default function MediaPreview({ media }: Props) {
 	const isVideo = media.resource_type === 'video';
 	const isPDF = media.format === 'pdf';
+	const isRaw = media.resource_type === 'raw' && !isPDF;
 	const label = media.public_id.split('/').pop();
 
 	return (
 		<div className='w-full h-[90vh] max-w-5xl mx-auto px-6 py-12 flex flex-col items-center justify-center'>
 			<h1 className='text-3xl font-semibold mb-6 text-center'>{label}</h1>
 
-			{isPDF ? (
+			{isVideo ? (
+				<video
+					src={media.secure_url}
+					controls
+					className='w-full h-full rounded-2xl shadow-lg object-cover'
+				/>
+			) : isPDF ? (
 				<>
 					<iframe
 						src={media.secure_url}
@@ -31,12 +38,14 @@ export default function MediaPreview({ media }: Props) {
 						Descargar PDF
 					</a>
 				</>
-			) : isVideo ? (
-				<video
-					src={media.secure_url}
-					controls
-					className='w-full h-full rounded-2xl shadow-lg object-cover'
-				/>
+			) : isRaw ? (
+				<a
+					href={`${media.secure_url}?response-content-disposition=attachment`}
+					download
+					className='text-6xl'
+				>
+					📄
+				</a>
 			) : (
 				<ImageWithControls src={media.secure_url} alt={label || 'image'} />
 			)}
