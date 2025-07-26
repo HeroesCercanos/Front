@@ -1,5 +1,5 @@
 'use client';
-import React, { FormEvent, useState, ChangeEvent } from 'react';
+import React, { FormEvent, useState } from 'react';
 import { uploadMedia } from '@/lib/api';
 import toast from 'react-hot-toast';
 
@@ -12,14 +12,9 @@ export default function MediaUploadForm({
 		'image'
 	);
 	const [file, setFile] = useState<File | null>(null);
+	const [title, setTitle] = useState('');
 	const [caption, setCaption] = useState('');
 	const [loading, setLoading] = useState(false);
-
-	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-		if (e.currentTarget.files && e.currentTarget.files[0]) {
-			setFile(e.currentTarget.files[0]);
-		}
-	};
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -31,6 +26,7 @@ export default function MediaUploadForm({
 		const form = new FormData();
 		form.append('resourceType', resourceType);
 		form.append('file', file);
+		form.append('title', title);
 		form.append('caption', caption);
 		try {
 			await uploadMedia(form);
@@ -49,9 +45,7 @@ export default function MediaUploadForm({
 				<label className='block font-medium mb-1'>Tipo de archivo</label>
 				<select
 					value={resourceType}
-					onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-						setResourceType(e.target.value as 'image' | 'video' | 'raw')
-					}
+					onChange={(e) => setResourceType(e.target.value as any)}
 					className='w-full border rounded p-2'
 				>
 					<option value='image'>Imagen</option>
@@ -64,7 +58,7 @@ export default function MediaUploadForm({
 				<div className='flex items-center'>
 					<label
 						htmlFor='file-input'
-						className='cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded'
+						className='cursor-pointer bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded'
 					>
 						{file ? file.name : 'Seleccionar archivo...'}
 					</label>
@@ -72,25 +66,34 @@ export default function MediaUploadForm({
 						id='file-input'
 						type='file'
 						accept='image/*,video/*,application/pdf'
-						onChange={handleFileChange}
+						onChange={(e) => setFile(e.currentTarget.files?.[0] || null)}
 						className='hidden'
 					/>
 				</div>
 			</div>
 			<div>
+				<label className='block font-medium mb-1'>Título</label>
+				<input
+					type='text'
+					value={title}
+					onChange={(e) => setTitle(e.target.value)}
+					className='w-full border rounded p-2'
+					placeholder='Título de la imagen/video/PDF'
+				/>
+			</div>
+			<div>
 				<label className='block font-medium mb-1'>Texto descriptivo</label>
 				<textarea
 					value={caption}
-					onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-						setCaption(e.target.value)
-					}
+					onChange={(e) => setCaption(e.target.value)}
 					className='w-full border rounded p-2'
-					placeholder='Ingresá un texto que se mostrará en la tarjeta'
+					rows={3}
+					placeholder='Descripción detallada'
 				/>
 			</div>
 			<button
 				type='submit'
-				disabled={loading}
+				disabled={loading || !file || !title}
 				className='w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 transition'
 			>
 				{loading ? 'Subiendo...' : 'Enviar'}

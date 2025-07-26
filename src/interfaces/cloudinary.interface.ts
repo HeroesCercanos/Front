@@ -4,4 +4,10 @@ export interface CloudinaryMedia {
 	resource_type: 'image' | 'video' | 'raw';
 	format: string;
 	duration?: number;
+	context?: {
+		custom?: {
+			title?: string;
+			caption?: string;
+		};
+	};
 }
