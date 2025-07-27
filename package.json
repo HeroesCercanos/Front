@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "flowbite-react": "^0.12.3",
     "i": "^0.3.7",
     "jose": "^6.0.12",
     "js-cookie": "^3.0.5",

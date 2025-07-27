@@ -1,0 +1,224 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { API_BASE_URL } from "@/config/api";
+import toast from "react-hot-toast";
+import Sidebar from "./Sidebar";
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  totalDonated?: number;
+  reportsCount?: number;
+  isActive: boolean;
+}
+
+const UserManagementView: React.FC = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [search, setSearch] = useState("");
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [showToggleModal, setShowToggleModal] = useState(false);
+
+  // Carga usuarios y enriquece con donaciones y reportes
+  const fetchUsers = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/users`, { credentials: "include" });
+      const data: User[] = await res.json();
+      const enriched = await Promise.all(
+        data.map(async (u) => {
+          try {
+            const [donRes, repRes] = await Promise.all([
+              fetch(`${API_BASE_URL}/donations/admin/total?userId=${u.id}`, { credentials: "include" }),
+              fetch(`${API_BASE_URL}/incident/${u.id}/history`, { credentials: "include" })
+            ]);
+            const don = await donRes.json();
+            const rep = await repRes.json();
+            return { ...u, totalDonated: don.total || 0, reportsCount: rep.length || 0 };
+          } catch {
+            return { ...u, totalDonated: 0, reportsCount: 0 };
+          }
+        })
+      );
+      setUsers(enriched);
+    } catch {
+      toast.error("Error al traer usuarios");
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  // Alterna rol entre admin y user
+  const handleToggleRole = async (user: User) => {
+    try {
+      const newRole = user.role === "admin" ? "user" : "admin";
+      await fetch(`${API_BASE_URL}/users/${user.id}/role`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ role: newRole }),
+      });
+      toast.success(`Rol cambiado a ${newRole}`);
+      fetchUsers();
+    } catch {
+      toast.error("Error al cambiar el rol");
+    }
+  };
+
+  // Alterna estado activo/inactivo
+  const handleToggleActive = async () => {
+    if (!selectedUser) return;
+    try {
+      const action = selectedUser.isActive ? "deactivate" : "reactivate";
+      await fetch(
+        `${API_BASE_URL}/users/${selectedUser.id}/${action}`,
+        {
+          method: "PATCH",
+          credentials: "include",
+        }
+      );
+      toast.success(
+        selectedUser.isActive ? "Usuario desactivado" : "Usuario reactivado"
+      );
+      setShowToggleModal(false);
+      setSelectedUser(null);
+      fetchUsers();
+    } catch {
+      toast.error("Error al cambiar estado de la cuenta");
+    }
+  };
+
+  const filtered = users.filter(
+    (u) =>
+      u.name.toLowerCase().includes(search.toLowerCase()) ||
+      u.email.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div className="flex flex-col lg:flex-row min-h-screen">
+      <Sidebar />
+      <main className="flex-1 p-4 overflow-auto bg-gray-50">
+        <div className="overflow-x-auto shadow rounded bg-white">
+          <div className="p-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <label htmlFor="search" className="sr-only">
+              Buscar usuario
+            </label>
+            <input
+              id="search"
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full md:w-80 p-2 border rounded"
+              placeholder="Buscar por nombre o email"
+              aria-label="Buscar usuarios"
+            />
+          </div>
+
+          <table className="min-w-[700px] w-full text-sm text-left" role="grid">
+            <caption className="sr-only">Tabla de gestión de usuarios</caption>
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-4 py-2">Usuario</th>
+                <th className="px-4 py-2">Rol</th>
+                <th className="px-4 py-2">Estado</th>
+                <th className="px-4 py-2">Total Donado</th>
+                <th className="px-4 py-2">Reportes</th>
+                <th className="px-4 py-2">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((u) => (
+                <tr key={u.id} className="border-b hover:bg-gray-50">
+                  <td className="px-4 py-3">
+                    <p className="font-medium">{u.name}</p>
+                    <p className="text-xs text-gray-600">{u.email}</p>
+                  </td>
+                  <td className="px-4 py-3">{u.role}</td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-semibold ${
+                        u.isActive
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                      aria-label={u.isActive ? "Activo" : "Inactivo"}
+                    >
+                      {u.isActive ? "Activo" : "Inactivo"}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">${u.totalDonated?.toFixed(2)}</td>
+                  <td className="px-4 py-3">{u.reportsCount}</td>
+                  <td className="px-4 py-3 flex flex-wrap gap-2">
+                    <button
+                      onClick={() => handleToggleRole(u)}
+                      className="text-indigo-600 text-sm hover:underline"
+                      aria-label={`${
+                        u.role === "admin" ? "Degradar a usuario" : "Promover a admin"
+                      }`}
+                    >
+                      {u.role === "admin" ? "Degradar" : "Promover"}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setSelectedUser(u);
+                        setShowToggleModal(true);
+                      }}
+                      className={`text-sm hover:underline ${
+                        u.isActive ? "text-red-600" : "text-green-600"
+                      }`}
+                      aria-label={
+                        u.isActive ? "Desactivar usuario" : "Reactivar usuario"
+                      }
+                    >
+                      {u.isActive ? "Desactivar" : "Reactivar"}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {showToggleModal && selectedUser && (
+            <div className="fixed inset-0 bg-black/25 backdrop-blur-sm flex items-center justify-center">
+              <div className="bg-white p-6 rounded shadow-lg max-w-sm w-full">
+                <h3 className="text-lg font-medium mb-2">
+                  {selectedUser.isActive
+                    ? "Desactivar usuario"
+                    : "Reactivar usuario"}
+                </h3>
+                <p className="mb-4 text-sm text-gray-700">
+                  {selectedUser.isActive
+                    ? `Vas a desactivar a ${selectedUser.name}.`
+                    : `Vas a reactivar a ${selectedUser.name}.`}
+                </p>
+                <div className="flex justify-end gap-3">
+                  <button
+                    onClick={() => setShowToggleModal(false)}
+                    className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={handleToggleActive}
+                    className={`px-4 py-2 rounded text-white ${
+                      selectedUser.isActive
+                        ? "bg-red-600 hover:bg-red-700"
+                        : "bg-green-600 hover:bg-green-700"
+                    }`}
+                  >
+                    {selectedUser.isActive ? "Desactivar" : "Reactivar"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default UserManagementView;

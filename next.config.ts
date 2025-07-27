@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import withFlowbiteReact from "flowbite-react/plugin/nextjs";
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
@@ -19,5 +20,4 @@ const nextConfig: NextConfig = {
 	},
 };
 
-export default nextConfig;
-
+export default withFlowbiteReact(nextConfig);
