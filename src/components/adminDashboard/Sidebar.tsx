@@ -11,6 +11,7 @@ import {
   UserRoundSearch,
   Menu,
   X,
+  Users,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -65,6 +66,10 @@ const Sidebar = () => {
           <Link href="/admin/training" className="flex items-center gap-2 hover:text-red-400">
             <PlayCircle size={18} />
             <p className="text-sm">Capacitaciones</p>
+          </Link>
+          <Link href="/admin/users" className="flex items-center gap-2 hover:text-red-400">
+            <Users size={18} />
+            <p className="text-sm">Gestión de usuarios</p>
           </Link>
           <Link href="/dashboard" className="flex items-center gap-2 hover:text-red-400">
             <UserRoundSearch size={18} />

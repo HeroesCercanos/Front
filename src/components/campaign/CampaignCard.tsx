@@ -23,9 +23,7 @@ const phrases = [
   "Un acto de amor puede ser un gran cambio",
   "Cada donación es un paso hacia la seguridad",
   "Con tu ayuda, todo es posible 💫",
-  "No hace falta ser bombero para salvar una vida",
   "Tu compromiso vale oro 🔥",
-
 ];
 
 const CampaignCard: React.FC<Props> = ({ campaign, index = 0 }) => {
@@ -49,7 +47,6 @@ const phrase = phrases[Math.floor(Math.random() * phrases.length)];
         <br/>¡Aún estás a tiempo!
       </p>
 
-      {/* Botones verticales */}
       <div className="flex flex-col gap-2 w-fit">
 
         <button
