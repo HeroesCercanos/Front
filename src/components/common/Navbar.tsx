@@ -49,7 +49,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className="bg-black text-white py-2 px-4 shadow-md"
+      className="sticky top-0 z-50 bg-black text-white py-2 px-4 shadow-md"
       role="navigation"
       aria-label="Menú principal"
     >
