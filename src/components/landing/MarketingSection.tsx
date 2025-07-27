@@ -39,7 +39,7 @@ const MarketingSection: React.FC = () => (
         Ser bombero voluntario no es un trabajo. <strong>Es una forma de vivir.</strong>
       </p>
 
-      <MarketingCarousel slides={slides} intervalMs={3500} />
+      <MarketingCarousel slides={slides} intervalMs={4000} visibleCount={3}/>
     </div>
   </section>
 );
