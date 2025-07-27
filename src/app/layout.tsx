@@ -69,7 +69,6 @@ export default function RootLayout({
 					<VoiceflowPositionFixer />
 					<Footer />
 					</AuthProvider>
-					<Footer />:
 				<Script
   			strategy="afterInteractive"
   			dangerouslySetInnerHTML={{
