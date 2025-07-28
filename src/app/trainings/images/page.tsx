@@ -7,7 +7,7 @@ export default async function ImagesPage() {
 
 	return (
 		<>
-			<h1 className='text-2xl font-bold mb-4'>Imágenes</h1>
+			<h1 className='text-2xl font-bold mb-4 pt-7 sm:pt-7'>Imágenes</h1>
 			<MediaGrid media={images} />
 		</>
 	);
