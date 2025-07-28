@@ -11,6 +11,8 @@ import {
   UserRoundSearch,
   Menu,
   X,
+  Users,
+
   BarChart3,
 } from "lucide-react";
 
@@ -55,6 +57,10 @@ const Sidebar = () => {
             <LayoutDashboard size={18} />
             <p className="text-sm">Inicio</p>
           </Link>
+          <Link href="/admin/metrics" className="flex items-center gap-2 hover:text-red-400">
+            <BarChart3 size={18} />
+            <p className="text-sm">Métricas</p>
+          </Link>
           <Link href="/admin/campaigns" className="flex items-center gap-2 hover:text-red-400">
             <Flag size={18} />
             <p className="text-sm">Campañas</p>
@@ -67,6 +73,10 @@ const Sidebar = () => {
             <PlayCircle size={18} />
             <p className="text-sm">Capacitaciones</p>
           </Link>
+          <Link href="/admin/users" className="flex items-center gap-2 hover:text-red-400">
+            <Users size={18} />
+            <p className="text-sm">Gestión de usuarios</p>
+          </Link> 
           <Link href="/admin/metrics" className="flex items-center gap-2 hover:text-red-400">
             <BarChart3 size={18} />
             <p className="text-sm">Métricas</p>
