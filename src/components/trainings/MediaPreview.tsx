@@ -14,14 +14,14 @@ export default function MediaPreview({ media }: Props) {
 	const label = media.public_id.split('/').pop();
 
 	return (
-		<div className='w-full h-[90vh] max-w-5xl mx-auto px-6 py-12 flex flex-col items-center justify-center'>
+		<div className='w-full h-[90vh] max-w-5xl mx-auto px-6 py-12 flex flex-col items-center justify-center inset-shadow-sm inset-shadow-gray-400/20'>
 			<h1 className='text-3xl font-semibold mb-6 text-center'>{label}</h1>
 
 			{isVideo ? (
 				<video
 					src={media.secure_url}
 					controls
-					className='w-full h-full rounded-2xl shadow-lg object-cover'
+					className='w-full max-h-[80vh] rounded-2xl shadow-lg object-contain'
 				/>
 			) : isPDF ? (
 				<>

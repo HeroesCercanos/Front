@@ -27,21 +27,15 @@ export default function ImageWithControls({ src, alt }: Props) {
 
 	return (
 		<div className='relative w-full h-full'>
-			<img ref={imgRef} src={src} alt={alt} className='w-full h-full' />
-			<div className='absolute bottom-4 right-4 flex flex-col space-y-2'>
+			<img ref={imgRef} src={src} alt={alt} className='w-full h-full object-contain' />
+			<div className='absolute bottom-4 right-2 flex flex-col space-y-2 rounded-4xl p-0.5'>
 				<button
 					onClick={handleFullScreen}
-					className='p-2 rounded-full hover:bg-gray-500 transition'
+					className='rounded-4xl hover:bg-white/40 transition'
 					title='Fullscreen'
 				>
-					<Maximize2 size={20} className='text-gray-200' />
+					<Maximize2 size={22} className='text-white bg-gray-400/80 rounded-4xl p-1' />
 				</button>
-				<a
-					href={src}
-					download
-					className='p-2 rounded-full hover:bg-gray-500 transition'
-					title='Descargar imagen'
-				></a>
 			</div>
 		</div>
 	);

@@ -20,12 +20,12 @@ export default function MediaCard({ item }: { item: CloudinaryMedia }) {
 		'Sin descripción';
 
 	return (
-		<div className='relative block border rounded-2xl shadow-md hover:shadow-lg transition transform hover:-translate-y-1 bg-white overflow-hidden'>
-			<div className='h-48 bg-gray-100 flex items-center justify-center'>
+		<div className='relative block rounded-lg inset-shadow-sm inset-shadow-gray-400/20 drop-shadow-lg box-shadow hover:shadow-lg transition transform hover:-translate-y-1 bg-white overflow-hidden'>
+			<div className='bg-black flex items-center justify-center w-full h-80'>
 				{isVideo ? (
 					<video
 						src={item.secure_url}
-						className='w-full h-full object-cover'
+						className='max-h-[80vh] object-contain'
 						muted
 						playsInline
 						controls
@@ -34,7 +34,7 @@ export default function MediaCard({ item }: { item: CloudinaryMedia }) {
 					<img
 						src='/pdf-icon.png'
 						alt='PDF'
-						className='w-16 h-16 object-contain'
+						className='w-full h-full object-contain'
 					/>
 				) : isRaw ? (
 					<a
@@ -59,13 +59,13 @@ export default function MediaCard({ item }: { item: CloudinaryMedia }) {
 						onClick={() => setShowDesc(true)}
 						className='text-red-600 hover:underline text-sm'
 					>
-						Ver Información
+						<p>Ver Información</p>
 					</button>
 				</div>
 			) : (
 				<div className='absolute inset-0 bg-white p-4 flex flex-col justify-between'>
 					<div className='overflow-auto text-sm text-gray-700'>
-						{description}
+						<p>{description}</p>
 					</div>
 					{isRaw && (
 						<a
@@ -79,9 +79,9 @@ export default function MediaCard({ item }: { item: CloudinaryMedia }) {
 					)}
 					<button
 						onClick={() => setShowDesc(false)}
-						className='mt-4 bg-red-600 hover:bg-red-700 text-white py-2 rounded'
+						className='mt-4 bg-red-600 hover:bg-red-700 text-white py-2 box-shadow rounded-lg inset-shadow-gray-400 drop-shadow-lg'
 					>
-						Volver
+						<p>Volver</p>
 					</button>
 				</div>
 			)}
