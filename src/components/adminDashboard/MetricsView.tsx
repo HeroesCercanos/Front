@@ -31,115 +31,80 @@ const COLORS = [
 export default function MetricsView() {
   const [openSection, setOpenSection] = useState<null | string>(null);
   const [donations, setDonations] = useState<{
-  total: number;
-  weekly: { date: string; total: number; count?: number }[];
-  monthly: { month: string; total: number; count?: number }[];
-}>({
-  total: 0,
-  weekly: [],
-  monthly: [],
-});
+    total: number;
+    weekly: { date: string; total: number; count?: number }[];
+    monthly: { month: string; total: number; count?: number }[];
+  }>({
+    total: 0,
+    weekly: [],
+    monthly: [],
+  });
 
-const [users, setUsers] = useState<{
-  total: number;
-  daily: { semana: string; altas: number }[];
-}>({
-  total: 0,
-  daily: [],
-});
-useEffect(() => {
-  const fetchMetrics = async () => {
-    try {
-      const donationData = await getDonationsMetrics();
+  const [users, setUsers] = useState<{
+    total: number;
+    daily: { semana: string; altas: number }[];
+  }>({
+    total: 0,
+    daily: [],
+  });
 
-      console.log("🔍 DONATION RAW DATA:", donationData);
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      try {
+        const donationData = await getDonationsMetrics();
 
-    const monthlyMapped = Array.isArray(donationData.monthly)
-  ? donationData.monthly.map((m: any) => ({
-      month: m.month,
-      total: m.total,
-    }))
-  : [];
+        // console.log("🔍 DONATION RAW DATA:", donationData); // Puedes comentar o quitar si ya no lo necesitas para depurar
 
-const weeklyMapped = Array.isArray(donationData.weekly)
-  ? donationData.weekly.map((w: any) => ({
-      date: w.date,
-      total: w.total,
-    }))
-  : [];
+        const monthlyMapped = Array.isArray(donationData.monthly)
+          ? donationData.monthly.map((m: any) => ({
+              month: m.month,
+              total: m.total,
+            }))
+          : [];
 
+        const weeklyMapped = Array.isArray(donationData.weekly)
+          ? donationData.weekly.map((w: any) => ({
+              date: w.date,
+              total: w.total,
+            }))
+          : [];
 
-      console.log("📊 DONACIONES POR MES:", monthlyMapped);
-      console.log("📈 DONACIONES POR SEMANA:", weeklyMapped);
+        // console.log("📊 DONACIONES POR MES:", monthlyMapped); // Puedes comentar o quitar
+        // console.log("📈 DONACIONES POR SEMANA:", weeklyMapped); // Puedes comentar o quitar
 
-      setDonations({
-        total: donationData?.total ?? 0,
-        monthly: monthlyMapped,
-        weekly: weeklyMapped,
-      });
+        setDonations({
+          total: donationData?.total ?? 0,
+          monthly: monthlyMapped,
+          weekly: weeklyMapped,
+        });
 
-      const userData = await getUsersMetrics();
+        const userData = await getUsersMetrics();
 
-      console.log("👤 USER RAW DATA:", userData);
+        // console.log("👤 USER RAW DATA:", userData); // Puedes comentar o quitar
 
-      const dailyFormatted = Array.isArray(userData.daily)
-        ? userData.daily.map((item: any) => ({
-            semana: new Date(item.date).toLocaleDateString("es-AR", {
-              day: "2-digit",
-              month: "short",
-            }),
-            altas: item.count,
-          }))
-        : [];
+        const dailyFormatted = Array.isArray(userData.daily)
+          ? userData.daily.map((item: any) => ({
+              semana: new Date(item.date).toLocaleDateString("es-AR", {
+                day: "2-digit",
+                month: "short",
+              }),
+              altas: item.count,
+            }))
+          : [];
 
-      console.log("👥 ALTAS DE USUARIOS:", dailyFormatted);
+        // console.log("👥 ALTAS DE USUARIOS:", dailyFormatted); // Puedes comentar o quitar
 
-      setUsers({
-        total: userData?.total || 0,
-        daily: dailyFormatted,
-      });
-    } catch (error) {
-      console.error("❌ Error al cargar métricas:", error);
-    }
-  };
+        setUsers({
+          total: userData?.total || 0,
+          daily: dailyFormatted,
+        });
+      } catch (error) {
+        console.error("❌ Error al cargar métricas:", error);
+      }
+    };
 
-  fetchMetrics();
-}, []);
-
-
-/*useEffect(() => {
-  const fetchMetrics = async () => {
-    try {
-      const donationData = await getDonationsMetrics();
-      setDonations({
-        total: donationData?.total || 0,
-        weekly: Array.isArray(donationData?.weekly) ? donationData.weekly : [],
-        monthly: Array.isArray(donationData?.monthly) ? donationData.monthly : [],
-      });
-
-      const userData = await getUsersMetrics();
-      const dailyFormatted = Array.isArray(userData.daily)
-        ? userData.daily.map((item: any) => ({
-            semana: new Date(item.date).toLocaleDateString('es-AR', {
-              day: '2-digit',
-              month: 'short',
-            }),
-            altas: item.count,
-          }))
-        : [];
-
-      setUsers({
-        total: userData?.total || 0,
-        daily: dailyFormatted,
-      });
-    } catch (error) {
-      console.error("Error al cargar métricas:", error);
-    }
-  };
-
-  fetchMetrics();
-}, []);*/
-
+    fetchMetrics();
+  }, []); // Dependencia vacía, se ejecuta una sola vez al montar el componente
 
   const toggleSection = (section: string) => {
     setOpenSection((prev) => (prev === section ? null : section));
@@ -150,7 +115,6 @@ const weeklyMapped = Array.isArray(donationData.weekly)
       <h1 className="text-2xl font-bold">Panel de Métricas</h1>
 
       {[
-
         {
           id: 'donaciones',
           title: 'Donaciones',
@@ -160,30 +124,29 @@ const weeklyMapped = Array.isArray(donationData.weekly)
                 <AdminStatsCard icon={<DollarSign />} label="Total Recaudado" value={`$${donations.total}`} />
               </div>
               <div className="mt-6 space-y-6">
-  <MetricChart
-    title="Donaciones por mes"
-    data={donations.monthly.map((m: any) => ({
-      mes: m.month, // usamos "month" desde el estado
-      monto: m.total,
-    }))}
-    dataKey="mes"
-    valueKey="monto"
-  />
+                <MetricChart
+                  title="Donaciones por mes"
+                  data={donations.monthly.map((m: any) => ({
+                    mes: m.month,
+                    monto: m.total,
+                  }))}
+                  dataKey="mes"
+                  valueKey="monto"
+                />
 
-  <MetricChart
-    title="Donaciones por semana"
-    data={donations.weekly.map((d: any) => ({
-      semana: new Date(d.date).toLocaleDateString('es-AR', {
-        day: '2-digit',
-        month: 'short',
-      }),
-      monto: d.total,
-    }))}
-    dataKey="semana"
-    valueKey="monto"
-  />
-</div>
-
+                <MetricChart
+                  title="Donaciones por semana"
+                  data={donations.weekly.map((d: any) => ({
+                    semana: new Date(d.date).toLocaleDateString('es-AR', {
+                      day: '2-digit',
+                      month: 'short',
+                    }),
+                    monto: d.total,
+                  }))}
+                  dataKey="semana"
+                  valueKey="monto"
+                />
+              </div>
             </>
           ),
         },
