@@ -22,13 +22,17 @@
 
 - 🔐 Autenticación con email y Google
 - 🧑‍💼 Roles diferenciados: admin / usuario
-- 🧾 Listado de campañas públicas
+- 🧾 Listado de campañas públicas para compartir por Whatsapp
 - 📦 Gestión de donaciones
-- 🎓 Capacitaciones y contenido informativo
+- 🎓 Capacitaciones y contenido informativo (Cloudinary)
 - 🧭 Geolocalización con mapa (Leaflet)
 - 📱 Totalmente responsive
-- 💲 Pasarela de pagos / mercadoPago
-- 📧 Notificaciones por email 
+- 💲 Pasarela de pagos / mercadoPago 
+- 📧 Notificaciones por email  
+- 👥 Gestor de usuarios (promover, degradar, desactivar)  
+- 🔥 Reportar incidentes / incendios - Gestión de reportes  
+- 📈 Métricas de admin
+  
 ---
 
 ## 🛠️ Instalación local
@@ -52,8 +56,8 @@ https://heroes-cercanos-front.onrender.com/
 --
 
 ## 👩‍💻 Autores
-Desarrollado con 💙 por Camila Ladner, Victoria Garay y Enzo Ibarra  
-Full Stack Developers especializados en Frontend, enfocados en crear tecnología con propósito.
+Desarrollado con 💙 por Camila Ladner, Victoria Garay, Enzo Ibarra, Manuela Castro Arellano y Mario Fuceneco   
+Full Stack Developers
 
 
 
