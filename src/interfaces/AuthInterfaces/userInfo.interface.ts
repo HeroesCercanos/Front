@@ -6,3 +6,8 @@ export interface IUserInfo {
 	phone?: string;
 	role: 'admin' | 'user';
 }
+
+export interface IUserFormValues extends IUserInfo {
+	password?: string;
+	confirmPassword?: string;
+}
