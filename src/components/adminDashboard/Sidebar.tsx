@@ -11,7 +11,11 @@ import {
   UserRoundSearch,
   Menu,
   X,
+<<<<<<< Updated upstream
   Users,
+=======
+  BarChart3,
+>>>>>>> Stashed changes
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -67,14 +71,20 @@ const Sidebar = () => {
             <PlayCircle size={18} />
             <p className="text-sm">Capacitaciones</p>
           </Link>
+<<<<<<< Updated upstream
           <Link href="/admin/users" className="flex items-center gap-2 hover:text-red-400">
             <Users size={18} />
             <p className="text-sm">Gestión de usuarios</p>
+=======
+          <Link href="/admin/metrics" className="flex items-center gap-2 hover:text-red-400">
+            <BarChart3 size={18} />
+            <p className="text-sm">Métricas</p>
+>>>>>>> Stashed changes
           </Link>
           <Link href="/dashboard" className="flex items-center gap-2 hover:text-red-400">
             <UserRoundSearch size={18} />
             <p className="text-sm">Vista del usuario</p>
-          </Link>
+          </Link>        
           <Link href="/" className="flex items-center gap-2 hover:text-red-400">
             <ArrowBigLeft size={18} />
             <p className="text-sm">Volver</p>
