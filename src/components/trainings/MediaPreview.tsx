@@ -1,7 +1,9 @@
 'use client';
 
+import React from 'react';
 import { CloudinaryMedia } from '@/interfaces/cloudinary.interface';
 import ImageWithControls from './ImageWithControls';
+import DownloadLink from '@/helpers/DownloadLink';
 
 interface Props {
 	media: CloudinaryMedia;
@@ -27,25 +29,30 @@ export default function MediaPreview({ media }: Props) {
 				<>
 					<iframe
 						src={media.secure_url}
-						title={label || 'PDF'}
+						title={label || 'PDF Preview'}
 						className='w-full h-full rounded-2xl shadow-lg'
+						loading='lazy'
 					/>
-					<a
-						href={`${media.secure_url}?response-content-disposition=attachment`}
-						download
+					<DownloadLink
+						url={media.secure_url}
+						filename={label || 'archivo.pdf'}
 						className='inline-block bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition mt-4'
 					>
-						Descargar PDF
-					</a>
+						<p>Descargar PDF</p>
+					</DownloadLink>
 				</>
 			) : isRaw ? (
-				<a
-					href={`${media.secure_url}?response-content-disposition=attachment`}
-					download
-					className='text-6xl'
+				<DownloadLink
+					url={media.secure_url}
+					filename={label}
+					className='inline-block'
 				>
-					📄
-				</a>
+					<img
+						src='/pdf-icon.png'
+						alt='Descargar archivo'
+						className='w-auto h-auto'
+					/>
+				</DownloadLink>
 			) : (
 				<ImageWithControls src={media.secure_url} alt={label || 'image'} />
 			)}
