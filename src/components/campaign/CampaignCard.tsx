@@ -1,6 +1,5 @@
 import { ICampaign } from "@/interfaces/campaign.interface";
 import React, { useState } from "react";
-import CampaignModal from "./CampaignModal";
 import { FaRegHeart } from "react-icons/fa";
 import CampaignDetailModal from "./CampaignDetailModal";
 
@@ -33,6 +32,11 @@ const CampaignCard: React.FC<Props> = ({ campaign, index = 0 }) => {
 
 const phrase = phrases[Math.floor(Math.random() * phrases.length)];
 
+ const today = new Date();
+  const end = new Date(campaign.endDate);
+  const diffMs = end.getTime() - today.getTime();
+  const daysLeft = Math.max(Math.ceil(diffMs / (1000 * 60 * 60 * 24)), 0);
+
   return (
     <div className="border rounded-lg shadow-md p-4 w-full max-w-xs bg-white hover:shadow-lg transition">
       <div className="flex items-center gap-2 mb-2 text-sm text-black-600 font-medium">
@@ -43,7 +47,7 @@ const phrase = phrases[Math.floor(Math.random() * phrases.length)];
       <h3 className="text-lg font-heading font-bold mb-2">{campaign.title}</h3>
 
       <p className="text-xs text-gray-500 mb-2">
-        Finaliza el {campaign.endDate}
+        Finaliza en {daysLeft} dias
         <br/>¡Aún estás a tiempo!
       </p>
 
