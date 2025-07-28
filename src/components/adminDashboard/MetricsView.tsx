@@ -22,6 +22,7 @@ import {
 } from 'recharts';
 import { getDonationsMetrics } from '@/helpers/getDonationsMetrics';
 import { getUsersMetrics } from '@/helpers/getUsersMetrics';
+import Sidebar from './Sidebar';
 
 const COLORS = [
   '#fecaca', '#fcd34d', '#fca5a5', '#a5b4fc',
@@ -111,8 +112,11 @@ export default function MetricsView() {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Panel de Métricas</h1>
+    <div className= "flex flex-col lg:flex-row min-h-screen">
+
+      <Sidebar/>
+    <div className="flex-1 p-4 overflow-auto bg-gray-50">
+      <h2 className="text-2xl font-bold mb-10">Panel de Métricas</h2>
 
       {[
         {
@@ -177,7 +181,7 @@ export default function MetricsView() {
           ),
         },
       ].map((section) => (
-        <div key={section.id} className="border border-gray-300 rounded-xl overflow-hidden">
+        <div key={section.id} className="mb-2 border border-gray-300 rounded-xl overflow-hidden">
           <button
             className="w-full flex justify-between items-center px-6 py-4 bg-gray-100 hover:bg-gray-200 text-left font-semibold text-lg transition"
             onClick={() => toggleSection(section.id)}
@@ -190,6 +194,7 @@ export default function MetricsView() {
           )}
         </div>
       ))}
+    </div>
     </div>
   );
 }

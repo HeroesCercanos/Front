@@ -13,7 +13,7 @@ interface Props {
 }
 
 const CampaignDetailModal: React.FC<Props> = ({ campaign, onClose }) => {
-  const campaignUrl = ("https://heroes-cercanos-front.onrender.com//#campaigns");
+  const campaignUrl = ("https://heroes-cercanos-front.onrender.com/#campaigns");
 
    const today = new Date();
   const end = new Date(campaign.endDate);
