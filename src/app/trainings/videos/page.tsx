@@ -7,7 +7,7 @@ export default async function VideosPage() {
 
 	return (
 		<div className=''>
-			<h1 className='text-2xl font-bold mb-4'>Videos</h1>
+			<h1 className='text-2xl font-bold mb-4 pt-7 sm:pt-7'>Videos</h1>
 			<MediaGrid media={videos} />
 		</div>
 	);
