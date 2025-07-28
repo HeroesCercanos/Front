@@ -92,7 +92,7 @@ export default function RootLayout({
       s.parentNode.insertBefore(v, s);
     })(document, 'script');`,
   }}
-/>						
+/>							
 			</body>
 		</html>
 	);
