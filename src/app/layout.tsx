@@ -71,6 +71,10 @@ export default function RootLayout({
 					<VoiceflowPositionFixer />
 					<Footer />
 					</AuthProvider>
+<<<<<<< Updated upstream
+=======
+					
+>>>>>>> Stashed changes
 				<Script
   			strategy="afterInteractive"
   			dangerouslySetInnerHTML={{
@@ -91,7 +95,11 @@ export default function RootLayout({
       s.parentNode.insertBefore(v, s);
     })(document, 'script');`,
   }}
+<<<<<<< Updated upstream
 />			
+=======
+/>				
+>>>>>>> Stashed changes
 			</body>
 		</html>
 	);
