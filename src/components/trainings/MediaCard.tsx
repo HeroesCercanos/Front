@@ -1,7 +1,9 @@
 'use client';
+
 import React, { useState } from 'react';
 import { CloudinaryMedia } from '@/interfaces/cloudinary.interface';
 import ImageWithControls from './ImageWithControls';
+import DownloadLink from '@/helpers/DownloadLink';
 
 export default function MediaCard({ item }: { item: CloudinaryMedia }) {
 	const [showDesc, setShowDesc] = useState(false);
@@ -13,14 +15,13 @@ export default function MediaCard({ item }: { item: CloudinaryMedia }) {
 		item.context?.custom?.title ||
 		item.context?.custom?.caption ||
 		item.public_id.split('/').pop()!;
-
 	const description =
 		item.context?.custom?.caption ||
 		item.context?.custom?.title ||
 		'Sin descripción';
 
 	return (
-		<div className='relative block rounded-lg inset-shadow-sm inset-shadow-gray-400/20 drop-shadow-lg box-shadow hover:shadow-lg transition transform hover:-translate-y-1 bg-white overflow-hidden'>
+		<div className='relative block rounded-lg inset-shadow-sm inset-shadow-gray-400/20 drop-shadow-lg hover:shadow-lg transition transform hover:-translate-y-1 bg-white overflow-hidden'>
 			<div className='bg-black flex items-center justify-center w-full h-80'>
 				{isVideo ? (
 					<video
@@ -37,14 +38,17 @@ export default function MediaCard({ item }: { item: CloudinaryMedia }) {
 						className='w-full h-full object-contain'
 					/>
 				) : isRaw ? (
-					<a
-						href={`${item.secure_url}?response-content-disposition=attachment`}
-						target='_blank'
-						rel='noopener noreferrer'
-						className='text-6xl'
+					<DownloadLink
+						url={item.secure_url}
+						filename={title}
+						className='inline-block'
 					>
-						📄
-					</a>
+						<img
+							src='/pdf-icon.png'
+							alt='Descargar archivo'
+							className='w-98 h-80 bg-gray-100'
+						/>
+					</DownloadLink>
 				) : (
 					<ImageWithControls src={item.secure_url} alt={title} />
 				)}
@@ -68,18 +72,17 @@ export default function MediaCard({ item }: { item: CloudinaryMedia }) {
 						<p>{description}</p>
 					</div>
 					{isRaw && (
-						<a
-							href={`${item.secure_url}?response-content-disposition=attachment`}
-							target='_blank'
-							rel='noopener noreferrer'
-							className='mt-4 text-blue-600 hover:underline'
+						<DownloadLink
+							url={item.secure_url}
+							filename={title}
+							className='mt-4 text-red-600 hover:underline'
 						>
-							Descargar archivo
-						</a>
+							<p>Descargar archivo</p>
+						</DownloadLink>
 					)}
 					<button
 						onClick={() => setShowDesc(false)}
-						className='mt-4 bg-red-600 hover:bg-red-700 text-white py-2 box-shadow rounded-lg inset-shadow-gray-400 drop-shadow-lg'
+						className='mt-4 bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg'
 					>
 						<p>Volver</p>
 					</button>
