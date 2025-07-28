@@ -40,14 +40,16 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
+		
 		<html lang='en'>
+			
 			<body
 				className={`${libreFranklin.variable} ${yaldevi.variable} antialiased font-sans`}
 			>
+				
 				<AuthProvider>
 					<Header />
 					<Navbar />
-
 					<Toaster
 						position='top-center'
 						toastOptions={{
@@ -89,11 +91,7 @@ export default function RootLayout({
       s.parentNode.insertBefore(v, s);
     })(document, 'script');`,
   }}
-/>
-
-
-
-				
+/>			
 			</body>
 		</html>
 	);
