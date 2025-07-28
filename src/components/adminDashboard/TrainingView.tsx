@@ -1,4 +1,3 @@
-// Front/src/components/adminDashboard/TrainingView.tsx
 'use client';
 
 import React, { useState } from 'react';
