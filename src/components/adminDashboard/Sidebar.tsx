@@ -77,10 +77,7 @@ const Sidebar = () => {
             <Users size={18} />
             <p className="text-sm">Gestión de usuarios</p>
           </Link> 
-          <Link href="/admin/metrics" className="flex items-center gap-2 hover:text-red-400">
-            <BarChart3 size={18} />
-            <p className="text-sm">Métricas</p>
-          </Link>
+         
           <Link href="/dashboard" className="flex items-center gap-2 hover:text-red-400">
             <UserRoundSearch size={18} />
             <p className="text-sm">Vista del usuario</p>

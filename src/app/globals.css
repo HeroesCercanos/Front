@@ -74,10 +74,4 @@ button,
 	display: none;
 }
 
-/* Mover el botón flotante de Voiceflow más arriba */
-.vfrc-launcher {
-  bottom: 160px !important; /* antes estaba muy abajo, ahora se aleja del borde inferior */
-  right: 28px !important; /* opcional, para mantenerlo alineado con el botón de reporte */
-  z-index: 9999 !important; /* asegurar que esté por encima */
-}
 
