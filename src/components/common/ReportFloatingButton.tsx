@@ -35,7 +35,6 @@ export const ReportFloatingButton = () => {
       router.push("/login");
       return;
     }
-
     setShowForm((prev) => !prev);
   };
 
@@ -50,7 +49,7 @@ export const ReportFloatingButton = () => {
     <>
       <button
         onClick={handleClick}
-        className="cursor-pointer fixed bottom-6 right-20 z-[9999] flex items-center gap-2 bg-black text-white px-5 py-3 rounded-full shadow-[0_4px_20px_rgba(255,0,0,0.7)] border-2 border-red-600 hover:scale-110 transition-transform duration-200"
+        className="cursor-pointer fixed bottom-5 right-20 z-[9999] flex items-center gap-2 bg-black text-white px-5 py-3 rounded-full shadow-[0_4px_20px_rgba(255,0,0,0.7)] border-2 border-red-600 hover:scale-110 transition-transform duration-200"
         aria-label={showForm ? "Cerrar formulario de reporte" : "Reportar incidente"}
       >
         {showForm ? (
@@ -110,12 +109,6 @@ export const ReportFloatingButton = () => {
                 Llamar al cuartel
                </a>
               </div>
-
-
-
-
-
-
             </div>
           </div>
         </div>

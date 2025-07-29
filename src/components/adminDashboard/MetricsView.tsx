@@ -30,6 +30,7 @@ const COLORS = [
 ];
 
 export default function MetricsView() {
+  
   const [openSection, setOpenSection] = useState<null | string>(null);
   const [donations, setDonations] = useState<{
     total: number;
@@ -53,9 +54,6 @@ export default function MetricsView() {
     const fetchMetrics = async () => {
       try {
         const donationData = await getDonationsMetrics();
-
-        // console.log("🔍 DONATION RAW DATA:", donationData); // Puedes comentar o quitar si ya no lo necesitas para depurar
-
         const monthlyMapped = Array.isArray(donationData.monthly)
           ? donationData.monthly.map((m: any) => ({
               month: m.month,
@@ -70,18 +68,13 @@ export default function MetricsView() {
             }))
           : [];
 
-        // console.log("📊 DONACIONES POR MES:", monthlyMapped); // Puedes comentar o quitar
-        // console.log("📈 DONACIONES POR SEMANA:", weeklyMapped); // Puedes comentar o quitar
-
-        setDonations({
+      setDonations({
           total: donationData?.total ?? 0,
           monthly: monthlyMapped,
           weekly: weeklyMapped,
         });
 
         const userData = await getUsersMetrics();
-
-        // console.log("👤 USER RAW DATA:", userData); // Puedes comentar o quitar
 
         const dailyFormatted = Array.isArray(userData.daily)
           ? userData.daily.map((item: any) => ({
@@ -92,9 +85,7 @@ export default function MetricsView() {
               altas: item.count,
             }))
           : [];
-
-        // console.log("👥 ALTAS DE USUARIOS:", dailyFormatted); // Puedes comentar o quitar
-
+       
         setUsers({
           total: userData?.total || 0,
           daily: dailyFormatted,
@@ -105,7 +96,7 @@ export default function MetricsView() {
     };
 
     fetchMetrics();
-  }, []); // Dependencia vacía, se ejecuta una sola vez al montar el componente
+  }, []); 
 
   const toggleSection = (section: string) => {
     setOpenSection((prev) => (prev === section ? null : section));

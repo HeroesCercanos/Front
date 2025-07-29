@@ -12,7 +12,7 @@ export const notifyOnRegister = async (name: string, email: string) => {
   }
 };
 
-/* export const notifyOnDonation = async (name: string, email: string, amount: number) => {
+/*export const notifyOnDonation = async (name: string, email: string, amount: number) => {
   try {
     await fetch(`${API}/api/send-donation-email`, {
       method: "POST",
