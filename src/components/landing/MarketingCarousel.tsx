@@ -42,7 +42,6 @@ const MarketingCarousel: React.FC<MarketingCarouselProps> = ({
     timerRef.current = window.setInterval(nextBlock, intervalMs);
   };
 
-  // Obtener el bloque circular de slides
   const currentSlides = Array.from({ length: Math.min(visibleCount, total) }).map((_, i) =>
     slides[(start + i) % total]
   );

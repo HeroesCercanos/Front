@@ -20,7 +20,6 @@ const CreateCampaignForm = ({ onClose, refreshCampaigns, campaignToEdit }: Props
     endDate: "",
   });
 
-  // 🚀 Precargar datos si estamos en modo edición
   useEffect(() => {
     if (campaignToEdit) {
       setFormData({
@@ -32,7 +31,6 @@ const CreateCampaignForm = ({ onClose, refreshCampaigns, campaignToEdit }: Props
     }
   }, [campaignToEdit]);
 
-  // 🔄 Manejar cambios en los inputs
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -43,22 +41,19 @@ const CreateCampaignForm = ({ onClose, refreshCampaigns, campaignToEdit }: Props
     }));
   };
 
-  // ✅ Validar y enviar el formulario
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
 
-  // Validación: título no vacío
   if (!formData.title.trim()) {
     toast.error("El título no puede estar vacío.");
     return;
   }
 
-  // Validación: fechas
   const start = new Date(formData.startDate);
   const end = new Date(formData.endDate);
 
   const today = new Date();
-  today.setHours(0, 0, 0, 0); // Ignora la hora, solo compara la fecha
+  today.setHours(0, 0, 0, 0); 
 
   if (start < today) {
     toast.error("La fecha de inicio no puede ser anterior a hoy.");
@@ -72,20 +67,18 @@ const CreateCampaignForm = ({ onClose, refreshCampaigns, campaignToEdit }: Props
 
   try {
     if (campaignToEdit) {
-      // PATCH para editar campaña existente
       const res = await fetch(`${API_BASE_URL}/campaigns/${campaignToEdit.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // si usás cookies
+        credentials: "include", 
         body: JSON.stringify(formData),
       });
 
       if (!res.ok) throw new Error("No se pudo actualizar la campaña");
       toast.success("¡Campaña actualizada!");
     } else {
-      // POST para crear nueva campaña
       await createCampaign(formData);
       toast.success("¡Campaña creada!");
     }

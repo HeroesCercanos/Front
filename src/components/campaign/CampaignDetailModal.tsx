@@ -6,6 +6,7 @@ import { API_BASE_URL } from "@/config/api";
 import {
   FaWhatsapp
 } from "react-icons/fa";
+import DonateButton from "../common/DonateButton";
 
 interface Props {
   campaign: ICampaign;
@@ -26,7 +27,7 @@ const CampaignDetailModal: React.FC<Props> = ({ campaign, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm ">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative border-1">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
         <button
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-600 hover:text-black"
@@ -65,11 +66,14 @@ const CampaignDetailModal: React.FC<Props> = ({ campaign, onClose }) => {
         <FaWhatsapp className="w-5 h-5" /> Compartir por WhatsApp
       </a>
 
+        <div className="flex justify-center">
         <p className="text-sm text-gray-600 mb-1 text-center">
           <br />
           Para donar por esta camapaña, podes hacer click en el botón "QUIERO
-          DONAR"
+          DONAR" indicando "{campaign.title}"
         </p>
+        <DonateButton/>
+        </div>
       </div>
     </div>
   );

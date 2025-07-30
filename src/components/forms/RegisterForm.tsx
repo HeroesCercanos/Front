@@ -30,7 +30,12 @@ const RegisterForm = () => {
     e.preventDefault();
     const errors = validateRegisterForm(formValues);
     setFormErrors(errors);
-    if (Object.keys(errors).length > 0) return;
+    if (Object.keys(errors).length > 0) {
+       Object.values(errors).forEach((msg) => {
+      if (msg) toast.error(msg);
+    });
+    return;
+    }
 
     try {
       const result = await sendRegister({
@@ -39,15 +44,18 @@ const RegisterForm = () => {
         password: formValues.password,
         confirmPassword: formValues.confirmPassword,
       });
-      if (!result) return;
+
+      if (!result) {
+      toast.error('No se pudo completar el registro. Inténtalo de nuevo.');
+      return;
+      }
 
       await notifyOnRegister(formValues.name, formValues.email);
 
       toast.success((result as any).message);
       router.replace("/login");
     } catch (err: any) {
-      console.error("Error en el registro:", err);
-      toast.error(err.message || "Hubo un error al registrar la cuenta");
+      toast.error(err.message || 'Hubo un error al registrar la cuenta');
     }
   };
 

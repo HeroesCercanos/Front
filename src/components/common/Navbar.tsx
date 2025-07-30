@@ -60,7 +60,9 @@ const Navbar = () => {
         {" "}
         <ul className="flex flex-wrap gap-4 text-xs md:text-sm items-center">
           {" "}
-          {pathname === "/dashboard" && (
+          {(pathname === "/dashboard" ||
+          pathname.startsWith("/trainings/") ||
+          pathname ===  "/faqs")  && (
             <li className="flex items-center text-xs md:text-sm">
               <Link
                 href="/"

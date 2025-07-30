@@ -7,12 +7,12 @@ import {
 export const sendRegister = async (
   newUser: IRegisterProps
 ): Promise<IRegisterResponse | null> => {
-  try {
+
     const response = await fetch(`${API_BASE_URL}/auth/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newUser),
-      credentials: 'include', // 🔑 Esto permite que la cookie sea recibida y almacenada
+      credentials: 'include',
     });
 
     const data = await response.json();
@@ -23,8 +23,4 @@ export const sendRegister = async (
     }
 
     return data as IRegisterResponse;
-  } catch (err: any) {
-    alert(err.message || 'Error al registrar usuario');
-    return null;
-  }
 };
