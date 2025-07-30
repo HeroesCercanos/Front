@@ -9,5 +9,5 @@ export const getDonationHistory = async () => {
     throw new Error('Error al obtener el historial de donaciones');
   }
 
-  return await res.json(); // [{ month: '2025-07', total: 1234 }]
+  return await res.json(); 
 };

@@ -70,7 +70,6 @@ const LoginForm = () => {
     window.location.href = `${API_BASE_URL}/auth/google`;
   };
 
-  // Modal blur + cerrar al hacer click afuera
   const modalRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -195,7 +194,6 @@ const LoginForm = () => {
         </form>
       </div>
 
-      {/* 🔒 MODAL */}
       {showForgotModal && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center px-4">
           <div

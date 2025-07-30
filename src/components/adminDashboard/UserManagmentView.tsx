@@ -21,7 +21,6 @@ const UserManagementView: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showToggleModal, setShowToggleModal] = useState(false);
 
-  // Carga usuarios y enriquece con donaciones y reportes
   const fetchUsers = async () => {
     try {
       const res = await fetch(`${API_BASE_URL}/users`, { credentials: "include" });
@@ -51,7 +50,6 @@ const UserManagementView: React.FC = () => {
     fetchUsers();
   }, []);
 
-  // Alterna rol entre admin y user
   const handleToggleRole = async (user: User) => {
     try {
       const newRole = user.role === "admin" ? "user" : "admin";
@@ -68,7 +66,6 @@ const UserManagementView: React.FC = () => {
     }
   };
 
-  // Alterna estado activo/inactivo
   const handleToggleActive = async () => {
     if (!selectedUser) return;
     try {

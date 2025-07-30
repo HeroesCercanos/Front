@@ -13,7 +13,7 @@ export const createCampaign = async (campaignData: {
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include", // Enviar cookies HttpOnly
+      credentials: "include",
       body: JSON.stringify(campaignData),
     });
 

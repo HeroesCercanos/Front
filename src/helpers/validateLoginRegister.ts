@@ -35,11 +35,16 @@ export function validateRegisterForm(values: IRegisterValues): IRegisterErrors {
   }
 
   if (!values.password) {
-    errors.password = "Contraseña requerida";
-  } else if (values.password.length < 6) {
-    errors.password = "Debe tener al menos 6 caracteres";
-  }
+  errors.password = "Contraseña requerida";
+} else {
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/;
 
+  if (!passwordRegex.test(values.password)) {
+    errors.password =
+      "La contraseña debe tener entre 8 y 15 caracteres e incluir al menos una letra minúscula, una mayúscula, un número y un caracter especial (!@#$%^&*)";
+  }
+}
   if (!values.confirmPassword) {
     errors.confirmPassword = "Debes confirmar la contraseña";
   } else if (values.confirmPassword !== values.password) {

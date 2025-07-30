@@ -37,7 +37,6 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Botón hamburguesa (visible solo en mobile) */}
       <button
         onClick={toggleSidebar}
         className="sm:hidden p-4 text-black z-50"
@@ -46,7 +45,6 @@ const Sidebar = () => {
         {isOpen ? <X size={28} /> : <Menu size={28} />}
       </button>
 
-      {/* Sidebar */}
       <aside
         ref={sidebarRef}
         className={`fixed top-0 left-0 h-full w-64 bg-black text-white transform transition-transform duration-300 ease-in-out z-40

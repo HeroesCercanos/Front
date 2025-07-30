@@ -1,66 +1,9 @@
-/* 'use client';
-
-import { API_BASE_URL } from '@/config/api';
-import React, { useState } from 'react';
-import { notifyOnDonation } from '@/helpers/sendEmailNotification';
-import { useAuth } from '@/context/AuthContext';
-
-const DonationForm = () => {
-	const { userData } = useAuth();
-
-	const [amount, setAmount] = useState('');
-	const [description, setDescription] = useState('');
-	const [error, setError] = useState('');
-	const [loading, setLoading] = useState(false);
-
-	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		setError('');
-		setLoading(true);
-
-		try {
-			const res = await fetch(`${API_BASE_URL}/donations/create_preference`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					amount: Number(amount),
-					description,
-				}),
-			});
-
-			const data = await res.json();
-
-			if (!res.ok || !data.id) {
-				throw new Error(data.message || 'Error al crear preferencia de pago');
-			}
-			// ✅ Enviar email de donación
-			if (userData?.user) {
-			await notifyOnDonation(
-			userData.user.name,
-			userData.user.email,
-			Number(amount)
-			);
-			}
-
-			// Redirigimos a MercadoPago Checkout Pro
-			window.location.href = `https://www.mercadopago.com.ar/checkout/v1/redirect?preference_id=${data.id}`;
-		} catch (err: any) {
-			setError(err.message || 'Ocurrió un error al iniciar el pago');
-		} finally {
-			setLoading(false);
-		}
-	}; */
-
 "use client";
 
 import { API_BASE_URL } from "@/config/api";
 import React, { useState } from "react";
-/* import { useAuth } from "@/context/AuthContext"; */
 
 const DonationForm = () => {
-  /*   const { userData } = useAuth(); */
 
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
@@ -78,23 +21,20 @@ const DonationForm = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // ← para enviar la cookie JWT
+        credentials: "include", 
         body: JSON.stringify({
           amount: Number(amount),
           description,
         }),
       });
       const data = await res.json();
-      // Comprobamos que vino checkoutUrl y preferenceId
       const { checkoutUrl, preferenceId } = data;
       if (!res.ok || !checkoutUrl) {
         throw new Error(data.message || "Error al crear preferencia de pago");
       }
 
-      // **Aquí ya tenés el preferenceId** que luego usarás para simular el webhook:
       console.log("Preference ID:", preferenceId);
 
-      // Redirigimos al checkout de MercadoPago
       window.location.href = checkoutUrl;
     } catch (err: any) {
       console.error(err);
