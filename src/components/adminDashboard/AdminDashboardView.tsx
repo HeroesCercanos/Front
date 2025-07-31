@@ -21,7 +21,6 @@ const AdminDashboardView = () => {
 					<p className='text-gray-600 mb-6'>GRACIAS POR TU SERVICIO</p>
 
 					<AdminStatsView />
-					<DonationHistory />
 				</main>
 			</div>
 		</div>

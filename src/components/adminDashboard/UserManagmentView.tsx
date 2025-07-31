@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { API_BASE_URL } from "@/config/api";
 import toast from "react-hot-toast";
 import Sidebar from "./Sidebar";
@@ -29,8 +29,8 @@ const UserManagementView: React.FC = () => {
         data.map(async (u) => {
           try {
             const [donRes, repRes] = await Promise.all([
-              fetch(`${API_BASE_URL}/donations/admin/total?userId=${u.id}`, { credentials: "include" }),
-              fetch(`${API_BASE_URL}/incident/${u.id}/history`, { credentials: "include" })
+              fetch(`${API_BASE_URL}/donations/user/${u.id}/history`, { credentials: "include" }),
+              fetch(`${API_BASE_URL}/incident/${u.id}/history`, { credentials: "include" }),
             ]);
             const don = await donRes.json();
             const rep = await repRes.json();
@@ -53,14 +53,18 @@ const UserManagementView: React.FC = () => {
   const handleToggleRole = async (user: User) => {
     try {
       const newRole = user.role === "admin" ? "user" : "admin";
-      await fetch(`${API_BASE_URL}/users/${user.id}/role`, {
+      const res = await fetch(`${API_BASE_URL}/users/${user.id}/role`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ role: newRole }),
       });
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        throw new Error(err?.message || "Error al cambiar el rol");
+      }
       toast.success(`Rol cambiado a ${newRole}`);
-      fetchUsers();
+      await fetchUsers();
     } catch {
       toast.error("Error al cambiar el rol");
     }
@@ -68,41 +72,43 @@ const UserManagementView: React.FC = () => {
 
   const handleToggleActive = async () => {
     if (!selectedUser) return;
+    const newStatus = !selectedUser.isActive;
     try {
-      const action = selectedUser.isActive ? "deactivate" : "reactivate";
-      await fetch(
-        `${API_BASE_URL}/users/${selectedUser.id}/${action}`,
+      const res = await fetch(
+        `${API_BASE_URL}/users/${selectedUser.id}/active`,
         {
           method: "PATCH",
+          headers: { "Content-Type": "application/json" },
           credentials: "include",
+          body: JSON.stringify({ isActive: newStatus }),
         }
       );
-      toast.success(
-        selectedUser.isActive ? "Usuario desactivado" : "Usuario reactivado"
-      );
+      if (!res.ok) {
+        const errData = await res.json().catch(() => null);
+        throw new Error(errData?.message || "Error al cambiar estado");
+      }
+      toast.success(newStatus ? "Usuario reactivado" : "Usuario desactivado");
       setShowToggleModal(false);
       setSelectedUser(null);
-      fetchUsers();
+      await fetchUsers();
     } catch {
       toast.error("Error al cambiar estado de la cuenta");
     }
   };
 
-  const filtered = users.filter(
-    (u) =>
-      u.name.toLowerCase().includes(search.toLowerCase()) ||
-      u.email.toLowerCase().includes(search.toLowerCase())
+  const filtered = users.filter((u) =>
+    u.name.toLowerCase().includes(search.toLowerCase()) ||
+    u.email.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen">
       <Sidebar />
       <main className="flex-1 p-4 overflow-auto bg-gray-50">
-        <div className="overflow-x-auto shadow rounded bg-white">
+        {/* Search */}
+        <div className="overflow-x-auto shadow rounded bg-white mb-4">
           <div className="p-4 flex flex-col md:flex-row justify-between items-center gap-4">
-            <label htmlFor="search" className="sr-only">
-              Buscar usuario
-            </label>
+            <label htmlFor="search" className="sr-only">Buscar usuario</label>
             <input
               id="search"
               type="text"
@@ -110,19 +116,65 @@ const UserManagementView: React.FC = () => {
               onChange={(e) => setSearch(e.target.value)}
               className="w-full md:w-80 p-2 border rounded"
               placeholder="Buscar por nombre o email"
-              aria-label="Buscar usuarios"
             />
           </div>
+        </div>
 
-          <table className="min-w-[700px] w-full text-sm text-left" role="grid">
-            <caption className="sr-only">Tabla de gestión de usuarios</caption>
+        {/* Mobile cards */}
+        <div className="space-y-4 md:hidden">
+          {filtered.map((u) => (
+            <div key={u.id} className="bg-white rounded shadow p-4">
+              <p className="font-medium">{u.name}</p>
+              <p className="text-xs text-gray-600 mb-2">{u.email}</p>
+              <p className="text-sm">
+                <strong>Rol:</strong> {u.role}
+              </p>
+              <p className="text-sm">
+                <strong>Estado:</strong>
+                <span className={`ml-1 px-1 rounded ${
+                  u.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                }`}>
+                  {u.isActive ? "Activo" : "Inactivo"}
+                </span>
+              </p>
+              <p className="text-sm">
+                <strong>Donado:</strong> ${u.totalDonated?.toFixed(2)}
+              </p>
+              <p className="text-sm mb-2">
+                <strong>Reportes:</strong> {u.reportsCount}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {u.isActive && (
+                  <button
+                    onClick={() => handleToggleRole(u)}
+                    className="text-indigo-600 text-sm hover:underline"
+                  >
+                    {u.role === "admin" ? "Degradar" : "Promover"}
+                  </button>
+                )}
+                <button
+                  onClick={() => { setSelectedUser(u); setShowToggleModal(true); }}
+                  className={`text-sm hover:underline ${
+                    u.isActive ? "text-red-600" : "text-green-600"
+                  }`}
+                >
+                  {u.isActive ? "Desactivar" : "Reactivar"}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Table for md+ */}
+        <div className="hidden md:block overflow-x-auto shadow rounded bg-white">
+          <table className="w-full text-sm text-left table-auto">
             <thead className="bg-gray-100">
               <tr>
                 <th className="px-4 py-2">Usuario</th>
                 <th className="px-4 py-2">Rol</th>
                 <th className="px-4 py-2">Estado</th>
-                <th className="px-4 py-2">Total Donado</th>
-                <th className="px-4 py-2">Reportes</th>
+                <th className="px-4 py-2 hidden lg:table-cell">Total Donado</th>
+                <th className="px-4 py-2 hidden lg:table-cell">Reportes</th>
                 <th className="px-4 py-2">Acciones</th>
               </tr>
             </thead>
@@ -135,40 +187,34 @@ const UserManagementView: React.FC = () => {
                   </td>
                   <td className="px-4 py-3">{u.role}</td>
                   <td className="px-4 py-3">
-                    <span
-                      className={`px-2 py-1 rounded text-xs font-semibold ${
-                        u.isActive
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                      aria-label={u.isActive ? "Activo" : "Inactivo"}
-                    >
+                    <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                      u.isActive
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}>
                       {u.isActive ? "Activo" : "Inactivo"}
                     </span>
                   </td>
-                  <td className="px-4 py-3">${u.totalDonated?.toFixed(2)}</td>
-                  <td className="px-4 py-3">{u.reportsCount}</td>
+                  <td className="px-4 py-3 hidden lg:table-cell">
+                    ${u.totalDonated?.toFixed(2)}
+                  </td>
+                  <td className="px-4 py-3 hidden lg:table-cell">
+                    {u.reportsCount}
+                  </td>
                   <td className="px-4 py-3 flex flex-wrap gap-2">
+                    {u.isActive && (
+                      <button
+                        onClick={() => handleToggleRole(u)}
+                        className="text-indigo-600 text-sm hover:underline"
+                      >
+                        {u.role === "admin" ? "Degradar" : "Promover"}
+                      </button>
+                    )}
                     <button
-                      onClick={() => handleToggleRole(u)}
-                      className="text-indigo-600 text-sm hover:underline"
-                      aria-label={`${
-                        u.role === "admin" ? "Degradar a usuario" : "Promover a admin"
-                      }`}
-                    >
-                      {u.role === "admin" ? "Degradar" : "Promover"}
-                    </button>
-                    <button
-                      onClick={() => {
-                        setSelectedUser(u);
-                        setShowToggleModal(true);
-                      }}
+                      onClick={() => { setSelectedUser(u); setShowToggleModal(true); }}
                       className={`text-sm hover:underline ${
                         u.isActive ? "text-red-600" : "text-green-600"
                       }`}
-                      aria-label={
-                        u.isActive ? "Desactivar usuario" : "Reactivar usuario"
-                      }
                     >
                       {u.isActive ? "Desactivar" : "Reactivar"}
                     </button>
@@ -177,42 +223,41 @@ const UserManagementView: React.FC = () => {
               ))}
             </tbody>
           </table>
+        </div>
 
-          {showToggleModal && selectedUser && (
-            <div className="fixed inset-0 bg-black/25 backdrop-blur-sm flex items-center justify-center">
-              <div className="bg-white p-6 rounded shadow-lg max-w-sm w-full">
-                <h3 className="text-lg font-medium mb-2">
-                  {selectedUser.isActive
-                    ? "Desactivar usuario"
-                    : "Reactivar usuario"}
-                </h3>
-                <p className="mb-4 text-sm text-gray-700">
-                  {selectedUser.isActive
-                    ? `Vas a desactivar a ${selectedUser.name}.`
-                    : `Vas a reactivar a ${selectedUser.name}.`}
-                </p>
-                <div className="flex justify-end gap-3">
-                  <button
-                    onClick={() => setShowToggleModal(false)}
-                    className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    onClick={handleToggleActive}
-                    className={`px-4 py-2 rounded text-white ${
-                      selectedUser.isActive
-                        ? "bg-red-600 hover:bg-red-700"
-                        : "bg-green-600 hover:bg-green-700"
-                    }`}
-                  >
-                    {selectedUser.isActive ? "Desactivar" : "Reactivar"}
-                  </button>
-                </div>
+        {/* Toggle Modal */}
+        {showToggleModal && selectedUser && (
+          <div className="fixed inset-0 bg-black/25 backdrop-blur-sm flex items-center justify-center">
+            <div className="bg-white p-6 rounded shadow-lg max-w-sm w-full">
+              <h3 className="text-lg font-medium mb-2">
+                {selectedUser.isActive ? "Desactivar usuario" : "Reactivar usuario"}
+              </h3>
+              <p className="mb-4 text-sm text-gray-700">
+                {selectedUser.isActive
+                  ? `Vas a desactivar a ${selectedUser.name}.`
+                  : `Vas a reactivar a ${selectedUser.name}.`}
+              </p>
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => setShowToggleModal(false)}
+                  className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleToggleActive}
+                  className={`px-4 py-2 rounded text-white ${
+                    selectedUser.isActive
+                      ? "bg-red-600 hover:bg-red-700"
+                      : "bg-green-600 hover:bg-green-700"
+                  }`}
+                >
+                  {selectedUser.isActive ? "Desactivar" : "Reactivar"}
+                </button>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </main>
     </div>
   );

@@ -32,37 +32,62 @@ const LoginForm = () => {
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // 1) Validación de formulario
     const errors = validateLoginForm(formValues);
     setFormErrors(errors);
-    if (Object.keys(errors).length > 0) return;
+    if (Object.keys(errors).length > 0) {
+      Object.values(errors).forEach((msg) => msg && toast.error(msg));
+      return;
+    }
 
     try {
+      // 2) Intentar login
       await sendLogin(formValues);
 
-      const res = await fetch(`${API_BASE_URL}/auth/me`, {
+      // 3) Intentar obtener datos del usuario
+      const resMe = await fetch(`${API_BASE_URL}/auth/me`, {
         credentials: "include",
       });
-      if (!res.ok) throw new Error("No autenticado tras login");
-      const data = await res.json();
 
+      if (!resMe.ok) {
+        // 3.a) Si el endpoint /me devuelve 401, suponemos que la cuenta está desactivada
+        if (resMe.status === 401) {
+          throw new Error("Usuario inactivo");
+        }
+        // 3.b) Otro fallo grave
+        throw new Error("No autenticado tras login");
+      }
+
+      // 4) Si /me OK, parsear y guardar en contexto
+      const { user } = await resMe.json();
       setUserData({
-        token: "",
+        token: "", // o donde guardes tu token
         user: {
-          id: data.user.id,
-          email: data.user.email,
-          name: data.user.name,
-          role: data.user.role,
-          donations: data.user.donations ?? [],
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          donations: user.donations ?? [],
         },
       });
 
-      toast.success(`¡Bienvenido ${data.user.name}! 🔥`);
+      // 5) Toast de éxito y redirección
+      toast.success(`¡Bienvenido ${user.name}! 🔥`);
       router.push("/");
-    } catch (error: any) {
-      console.error("Error en login:", error);
-      toast.error(error.message || "Error de autenticación");
+
+    } catch (err: any) {
+      // 6) Mostrar mensaje específico si es cuenta inactiva
+      if (err.message === "Usuario inactivo") {
+        toast.error(
+          "Tu cuenta ha sido desactivada. Por favor comunícate con Héroes Cercanos a heroescercanos@gmail.com para reactivarla."
+        );
+      } else {
+        toast.error(err.message || "Error de autenticación");
+      }
+      // No redirigimos en caso de error
     }
   };
 
