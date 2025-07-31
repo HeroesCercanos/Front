@@ -13,6 +13,7 @@ interface User {
   totalDonated?: number;
   reportsCount?: number;
   isActive: boolean;
+  createdAt: string,
 }
 
 const UserManagementView: React.FC = () => {
@@ -21,30 +22,42 @@ const UserManagementView: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showToggleModal, setShowToggleModal] = useState(false);
 
-  const fetchUsers = async () => {
-    try {
-      const res = await fetch(`${API_BASE_URL}/users`, { credentials: "include" });
-      const data: User[] = await res.json();
-      const enriched = await Promise.all(
-        data.map(async (u) => {
-          try {
-            const [donRes, repRes] = await Promise.all([
-              fetch(`${API_BASE_URL}/donations/user/${u.id}/history`, { credentials: "include" }),
-              fetch(`${API_BASE_URL}/incident/${u.id}/history`, { credentials: "include" }),
-            ]);
-            const don = await donRes.json();
-            const rep = await repRes.json();
-            return { ...u, totalDonated: don.total || 0, reportsCount: rep.length || 0 };
-          } catch {
-            return { ...u, totalDonated: 0, reportsCount: 0 };
-          }
-        })
-      );
-      setUsers(enriched);
-    } catch {
-      toast.error("Error al traer usuarios");
-    }
-  };
+const fetchUsers = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/users`, { credentials: "include" });
+    const data: User[] = await res.json();
+
+    // 1) enriquecemos con donaciones/reportes
+    const enriched = await Promise.all(
+      data.map(async (u) => {
+        try {
+          const [donRes, repRes] = await Promise.all([
+            fetch(`${API_BASE_URL}/donations/user/${u.id}/history`, { credentials: "include" }),
+            fetch(`${API_BASE_URL}/incident/${u.id}/history`,    { credentials: "include" }),
+          ]);
+          const don = await donRes.json();
+          const rep = await repRes.json();
+          return {
+            ...u,
+            totalDonated: don.total || 0,
+            reportsCount: rep.length || 0,
+          };
+        } catch {
+          return { ...u, totalDonated: 0, reportsCount: 0 };
+        }
+      })
+    );
+
+    enriched.sort((a, b) =>
+      new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+
+    setUsers(enriched);
+  } catch {
+    toast.error("Error al traer usuarios");
+  }
+};
+
 
   useEffect(() => {
     fetchUsers();
@@ -96,19 +109,22 @@ const UserManagementView: React.FC = () => {
     }
   };
 
-  const filtered = users.filter((u) =>
-    u.name.toLowerCase().includes(search.toLowerCase()) ||
-    u.email.toLowerCase().includes(search.toLowerCase())
+  const filtered = users.filter(
+    (u) =>
+      u.name.toLowerCase().includes(search.toLowerCase()) ||
+      u.email.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen">
       <Sidebar />
       <main className="flex-1 p-4 overflow-auto bg-gray-50">
-        {/* Search */}
+
         <div className="overflow-x-auto shadow rounded bg-white mb-4">
           <div className="p-4 flex flex-col md:flex-row justify-between items-center gap-4">
-            <label htmlFor="search" className="sr-only">Buscar usuario</label>
+            <label htmlFor="search" className="sr-only">
+              Buscar usuario
+            </label>
             <input
               id="search"
               type="text"
@@ -131,9 +147,13 @@ const UserManagementView: React.FC = () => {
               </p>
               <p className="text-sm">
                 <strong>Estado:</strong>
-                <span className={`ml-1 px-1 rounded ${
-                  u.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                }`}>
+                <span
+                  className={`ml-1 px-1 rounded ${
+                    u.isActive
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
+                  }`}
+                >
                   {u.isActive ? "Activo" : "Inactivo"}
                 </span>
               </p>
@@ -153,7 +173,10 @@ const UserManagementView: React.FC = () => {
                   </button>
                 )}
                 <button
-                  onClick={() => { setSelectedUser(u); setShowToggleModal(true); }}
+                  onClick={() => {
+                    setSelectedUser(u);
+                    setShowToggleModal(true);
+                  }}
                   className={`text-sm hover:underline ${
                     u.isActive ? "text-red-600" : "text-green-600"
                   }`}
@@ -187,11 +210,13 @@ const UserManagementView: React.FC = () => {
                   </td>
                   <td className="px-4 py-3">{u.role}</td>
                   <td className="px-4 py-3">
-                    <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                      u.isActive
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-semibold ${
+                        u.isActive
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
                       {u.isActive ? "Activo" : "Inactivo"}
                     </span>
                   </td>
@@ -211,7 +236,10 @@ const UserManagementView: React.FC = () => {
                       </button>
                     )}
                     <button
-                      onClick={() => { setSelectedUser(u); setShowToggleModal(true); }}
+                      onClick={() => {
+                        setSelectedUser(u);
+                        setShowToggleModal(true);
+                      }}
                       className={`text-sm hover:underline ${
                         u.isActive ? "text-red-600" : "text-green-600"
                       }`}
@@ -230,7 +258,9 @@ const UserManagementView: React.FC = () => {
           <div className="fixed inset-0 bg-black/25 backdrop-blur-sm flex items-center justify-center">
             <div className="bg-white p-6 rounded shadow-lg max-w-sm w-full">
               <h3 className="text-lg font-medium mb-2">
-                {selectedUser.isActive ? "Desactivar usuario" : "Reactivar usuario"}
+                {selectedUser.isActive
+                  ? "Desactivar usuario"
+                  : "Reactivar usuario"}
               </h3>
               <p className="mb-4 text-sm text-gray-700">
                 {selectedUser.isActive
