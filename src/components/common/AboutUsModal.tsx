@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import Image from 'next/image';

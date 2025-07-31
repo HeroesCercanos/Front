@@ -17,21 +17,19 @@ export const ReportFloatingButton = () => {
   const isAdminRoute = pathname.startsWith("/admin");
   const isAdminUser = userData?.user?.role === "admin";
 
-  if (isAdminRoute || isAdminUser) return null;
-
-  // Definimos los textos para el TTS
+  
   const toastAuthText = "¡Atención! Debés iniciar sesión para reportar un incidente.";
   const toastCloseText = "Formulario cerrado.";
   const modalText = `
-    Reportar incidente. Completá el siguiente formulario para reportar un incendio o accidente. 
-    Llamar al cuartel si es una emergencia.
+  Reportar incidente. Completá el siguiente formulario para reportar un incendio o accidente. 
+  Llamar al cuartel si es una emergencia.
   `;
-
-  // Hook para el texto del modal
+  
   const { speak: speakModal } = useSpeech(modalText);
   const { speak: speakCloseToast } = useSpeech(toastCloseText);
-
-
+  
+  if (isAdminRoute || isAdminUser) return null;
+  
   // Función para el TTS del toast de autenticación
   const speakAuthToast = (text: string) => {
     if ('speechSynthesis' in window) {
@@ -39,6 +37,7 @@ export const ReportFloatingButton = () => {
       window.speechSynthesis.speak(utterance);
     }
   };
+  
 
   const handleClick = () => {
     if (!userData) {
