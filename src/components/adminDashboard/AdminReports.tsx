@@ -1,9 +1,11 @@
+
+// components/AdminReports.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import { CheckSquare, Trash2, Pencil } from "lucide-react";
 import Sidebar from "./Sidebar";
-import { Report, HistoryEntry } from "@/interfaces/incident.interface";
+import { FullIncident, HistoryEntry } from "@/interfaces/incident.interface"; // Importar FullIncident
 import { toast } from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 import { updateIncidentByAdmin } from "@/helpers/updateIncidentByAdmin";
@@ -11,16 +13,14 @@ import { getIncidentReports } from "@/helpers/getIncidentReports";
 import { getIncidentHistory } from "@/helpers/getIncidentHistory";
 
 export default function AdminReports() {
-  const { userData  } = useAuth();
+  const { userData } = useAuth();
 
-  const [activeReports, setActiveReports] = useState<Report[]>([]);
+  const [activeReports, setActiveReports] = useState<FullIncident[]>([]); // Usar FullIncident
   const [history, setHistory] = useState<HistoryEntry[]>([]);
-  //const [selectedReport, setSelectedReport] = useState<Report | null>(null);
-  const [selectedReport, setSelectedReport] = useState<{ id: number; text: string } | null>(null);
+  // selectedReport necesita mantener todos los datos del incidente
+  const [selectedReport, setSelectedReport] = useState<FullIncident | null>(null); // Usar FullIncident
 
-  const [actionType, setActionType] = useState<"asistido" | "eliminado" | null>(
-    null
-  );
+  const [actionType, setActionType] = useState<"asistido" | "eliminado" | null>(null);
   const [comment, setComment] = useState("");
   const [victimName, setVictimName] = useState("");
   const [reason, setReason] = useState("");
@@ -28,19 +28,19 @@ export default function AdminReports() {
 
   const fetchReports = async () => {
     if (!userData?.user || userData.user.role !== "admin") return;
-     try {
-      const incidents = await getIncidentReports();
+    try {
+      const incidents = await getIncidentReports(); // Esto ahora devuelve FullIncident[]
       const activos = incidents.filter((i) => i.status === "activo");
       setActiveReports(activos);
 
-      const backendHistory = await getIncidentHistory();
+      const backendHistory = await getIncidentHistory(); // Asumo que esto ya devuelve el formato correcto
       const formattedHistory = backendHistory.map((entry: any) => ({
         id: entry.incident.id,
         text: `Reporte - ${entry.incident.createdAt.slice(0, 10)} - ${
-          entry.incident.description || "Sin descripción"
+          entry.incident.description || "Sin descripción" // `description` del backend es la descripción inicial del usuario
         }`,
         action: entry.action,
-        comment: entry.comment,
+        comment: entry.comment, // Comentario del admin
         timestamp: new Date(entry.createdAt).toLocaleString(),
         edited: false,
         victimName: entry.victimName,
@@ -54,15 +54,15 @@ export default function AdminReports() {
   };
 
   useEffect(() => {
-      fetchReports();
+    fetchReports();
   }, [userData]);
 
   const confirmAction = async () => {
     if (!selectedReport || !actionType) return;
-     try {
-      await updateIncidentByAdmin(selectedReport.id, {
+    try {
+      await updateIncidentByAdmin(selectedReport.id, { // ID es string del backend
         status: actionType,
-        adminComment: comment || undefined,
+        adminComment: comment || undefined, // Usar 'comment' para adminComment
         victimName: victimName || undefined,
         reason: reason || undefined,
       });
@@ -86,10 +86,15 @@ export default function AdminReports() {
     }
   };
 
-  const handleAction = (report: Report, type: "asistido" | "eliminado") => {
-    setSelectedReport(report);
+  // handleAction recibe un FullIncident
+  const handleAction = (report: FullIncident, type: "asistido" | "eliminado") => {
+    setSelectedReport(report); // report ahora es FullIncident
     setActionType(type);
     setEditIndex(null);
+    // Al editar, pre-popular los campos del reporte seleccionado
+    if (report.adminComment) setComment(report.adminComment);
+    if (report.victimName) setVictimName(report.victimName);
+    if (report.reason) setReason(report.reason);
   };
 
   return (
@@ -99,18 +104,36 @@ export default function AdminReports() {
         <h2 className="text-2xl font-bold">REPORTES</h2>
         <p className="text-sm text-gray-600">GRACIAS POR TU SERVICIO</p>
         <div className="bg-gray-200 p-4 rounded shadow-inner space-y-4">
-        <h3 className="text-lg font-semibold mb-2 text-gray-800">
-          REPORTES ACTIVOS
-        </h3>
+          <h3 className="text-lg font-semibold mb-2 text-gray-800">
+            REPORTES ACTIVOS
+          </h3>
           {activeReports.length === 0 ? (
             <p className="text-sm text-gray-600">No hay reportes activos.</p>
           ) : (
             activeReports.map((report) => (
               <div
-                key={report.id}
+                key={report.id} // El ID es un string (UUID)
                 className="bg-white p-3 rounded flex justify-between items-center shadow"
               >
-                <p className="text-sm">{report.text}</p>
+                {/* Mostrando la información de FullIncident */}
+                <div className="flex-1">
+                  <p className="font-semibold text-gray-800">
+                    Reporte de {report.type || "Tipo no especificado"}
+                  </p>
+                  {report.description && ( // Esta es la descripción inicial del usuario
+                    <p className="text-sm text-gray-700">Comentario del usuario: {report.description}</p>
+                  )}
+                  {report.user && report.user.name && (
+               <p className="text-sm text-gray-700">Reportado por: {report.user.name}</p>
+                 )}
+                  <p className="text-xs text-gray-600">
+                    Ubicación: Lat {parseFloat(report.latitude).toFixed(4)}, Lng {parseFloat(report.longitude).toFixed(4)}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Reportado el: {new Date(report.createdAt).toLocaleString()}
+                  </p>
+                </div>
+
                 <div className="flex gap-2">
                   <CheckSquare
                     className="text-green-600 hover:text-green-800 cursor-pointer"
@@ -128,7 +151,7 @@ export default function AdminReports() {
           )}
         </div>
 
-        {/* HISTORIAL DE ACCIONES */}
+        {/* Sección de Historial (parece estar bien, solo asegurar que entry.incident.id sea número si entry.id espera número) */}
         <div className="bg-gray-200 p-4 rounded shadow-inner">
           <h3 className="text-lg font-semibold mb-2 text-gray-800">
             HISTORIAL DE ACCIONES
@@ -166,7 +189,24 @@ export default function AdminReports() {
                   <button
                     type="button"
                     onClick={() => {
-                      setSelectedReport({ id: entry.id, text: entry.text });
+                     
+                      setSelectedReport({
+                        id: String(entry.id), 
+                        type: "accidente", 
+                        latitude: "0", 
+                        longitude: "0", 
+                        description: entry.text.split(' - ')[2] || '', // Intentar extraer del texto si es posible, si no, placeholder
+                        victimName: entry.victimName || null,
+                        reason: entry.reason || null,
+                        adminComment: entry.comment || null,
+                        status: entry.action, 
+                        createdAt: new Date(entry.timestamp).toISOString(),
+                        user: { 
+                           id: "historial-id-desconocido", 
+                           name: "Usuario Desconocido", 
+  
+        },
+                       });
                       setActionType(entry.action);
                       setComment(entry.comment);
                       setVictimName(entry.victimName || "");
@@ -185,7 +225,7 @@ export default function AdminReports() {
           )}
         </div>
 
-        {/* FORMULARIO MODAL */}
+        {/* Sección del Modal */}
         {selectedReport && actionType && (
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md space-y-4 relative">
@@ -212,8 +252,8 @@ export default function AdminReports() {
 
               <p className="text-sm text-gray-700 text-center">
                 {editIndex !== null
-                  ? `Modificando el reporte "${selectedReport.text}"`
-                  : `¿Qué se hizo con el reporte "${selectedReport.text}"?`}
+                  ? `Modificando el reporte "${selectedReport.description || selectedReport.type}"` // Mostrar descripción del usuario o tipo de incidente
+                  : `¿Qué se hizo con el reporte de ${selectedReport.type} (${selectedReport.description || 'sin comentario'})?`}
               </p>
 
               <input
@@ -246,7 +286,7 @@ export default function AdminReports() {
               <button
                 className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition"
                 onClick={confirmAction}
-                disabled={!comment.trim()}
+                disabled={!comment.trim()} // Deshabilitar si el comentario está vacío
                 aria-label="Confirmar acción"
               >
                 {editIndex !== null ? "Guardar cambios" : "Confirmar"}

@@ -35,18 +35,25 @@ export interface HistoryEntry {
 }
 
 
-export interface FullIncident {
-  id: number;
-  incidentType: IncidentType;
-  latitude: number;
-  longitude: number;
-  locationDetail?: string;
-  commentaries?: string;
-  reporterId: number;
+export interface FullIncident { 
+  id: string; // 
+  type: IncidentType; 
+  latitude: string; 
+  longitude: string; 
+  description: string; 
+  victimName: string | null; 
+  reason: string | null; 
+  adminComment: string | null; 
+  status: IncidentStatus; 
   createdAt: string;
-  updatedAt?: string;
-  action?: "asistido" | "eliminado";
-  adminCommentary?: string;
+  user: IncidentReporterInfo; 
+  updatedAt?: string; 
+  
+}
+export interface IncidentReporterInfo {
+  id: string; 
+  name: string; 
+  email?: string; 
 }
 
 export interface AdminActionDto {
