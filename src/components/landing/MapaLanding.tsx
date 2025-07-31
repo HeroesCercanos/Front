@@ -1,9 +1,30 @@
+'use client'
+
+import React from "react";
+import TTSButton from "@/components/common/TTSButton"; 
+import { FaUniversalAccess } from 'react-icons/fa'; 
+
 const MapaLanding = () => {
+  const mapText = `
+    Información del cuartel. Nos encontramos en Colón 643.
+    Podés comunicarte con nosotros al: 03775 422207.
+    Desde 1979 al servicio de la comunidad.
+    ¡Ante una emergencia llamá al 100!
+  `;
+
   return (
     <section
       id="cuartel"
-      className="w-full px-4 md:px-16 py-12 bg-gradient-to-r from-red-700 to-red-500 text-white"
+      className="w-full px-4 md:px-16 py-12 bg-gradient-to-r from-red-700 to-red-500 text-white relative" // Agregamos 'relative'
     >
+      <div className="absolute top-4 right-4">
+        <TTSButton 
+          text={mapText} 
+          icon={<FaUniversalAccess size={24} />} 
+          ariaLabel="Leer información del cuartel"
+        />
+      </div>
+
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         
         <div className="text-center md:text-left">
@@ -38,7 +59,3 @@ const MapaLanding = () => {
 };
 
 export default MapaLanding;
-
-
-
-

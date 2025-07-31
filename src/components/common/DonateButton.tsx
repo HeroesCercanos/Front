@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import DonationForm from "../forms/DonationsForm";
 import { createPortal } from "react-dom";
 import toast from "react-hot-toast";
+import useSpeech from "@/helpers/useSpeech"; 
 
 interface Props {
   children?: ReactNode;
@@ -16,6 +17,21 @@ export default function DonateButton({ children }: Props) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const toastTitle = "¡Atención!";
+  const toastDescription = "Debés iniciar sesión para hacer una donación.";
+  const modalText = "Formulario de donación. Completa los campos para realizar tu contribución. Monto y nombre de la campaña";
+
+  const { speak: speakModal } = useSpeech(modalText);
+  const { speak: speakDonateButton } = useSpeech("Quiero donar");
+
+  const speakToast = (title: string, description: string) => {
+    if ('speechSynthesis' in window) {
+      const fullText = `${title}. ${description}`;
+      const utterance = new SpeechSynthesisUtterance(fullText);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
   const handleClick = () => {
     if (!userData) {
       toast.custom((t) => (
@@ -24,12 +40,14 @@ export default function DonateButton({ children }: Props) {
             t.visible ? "animate-enter" : "animate-leave"
           }`}
         >
-          <h2 className="text-yellow-700 font-semibold mb-2">¡Atención!</h2>
+          <h2 className="text-yellow-700 font-semibold mb-2">{toastTitle}</h2>
           <p className="text-gray-700 text-sm">
-            Debés iniciar sesión para hacer una donación.
+            {toastDescription}
           </p>
         </div>
       ));
+      
+      speakToast(toastTitle, toastDescription);
 
       setTimeout(() => {
         router.push("/login");
@@ -39,7 +57,9 @@ export default function DonateButton({ children }: Props) {
     }
 
     setIsModalOpen(true);
+    speakModal();
   };
+
 
   return (
     <>

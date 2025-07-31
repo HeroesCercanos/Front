@@ -64,7 +64,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       // 4) Si /me OK, parsear y guardar en contexto
       const { user } = await resMe.json();
       setUserData({
-        token: "", // o donde guardes tu token
+        token: "",
         user: {
           id: user.id,
           email: user.email,
