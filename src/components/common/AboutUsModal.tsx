@@ -30,6 +30,7 @@ const team: TeamMember[] = [
     name: 'Enzo Ibarra',
     photo: '/Enzo.jpeg',
     description: 'Full Stack - Especializado en FrontEnd',
+    linkedin: 'https://www.linkedin.com/in/enzoibarra/',
     github: 'https://github.com/EnzoIbarra',
   },
   {
