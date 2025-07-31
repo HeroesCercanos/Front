@@ -6,6 +6,7 @@ import { Flame, X, PhoneOutgoing } from "lucide-react";
 import { IncidentReportForm } from "../forms/IncidentReportForm";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "react-hot-toast";
+import useSpeech from "@/helpers/useSpeech"; // Importamos el hook TTS
 
 export const ReportFloatingButton = () => {
   const [showForm, setShowForm] = useState(false);
@@ -17,6 +18,27 @@ export const ReportFloatingButton = () => {
   const isAdminUser = userData?.user?.role === "admin";
 
   if (isAdminRoute || isAdminUser) return null;
+
+  // Definimos los textos para el TTS
+  const toastAuthText = "¡Atención! Debés iniciar sesión para reportar un incidente.";
+  const toastCloseText = "Formulario cerrado.";
+  const modalText = `
+    Reportar incidente. Completá el siguiente formulario para reportar un incendio o accidente. 
+    Llamar al cuartel si es una emergencia.
+  `;
+
+  // Hook para el texto del modal
+  const { speak: speakModal } = useSpeech(modalText);
+  const { speak: speakCloseToast } = useSpeech(toastCloseText);
+
+
+  // Función para el TTS del toast de autenticación
+  const speakAuthToast = (text: string) => {
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
 
   const handleClick = () => {
     if (!userData) {
@@ -32,16 +54,22 @@ export const ReportFloatingButton = () => {
           </p>
         </div>
       ));
+      speakAuthToast(toastAuthText);
       router.push("/login");
       return;
     }
+    
     setShowForm((prev) => !prev);
+    if (!showForm) { // Si el formulario se va a abrir, lee el contenido
+      speakModal();
+    }
   };
 
   const handleClose = (showToast = true) => {
     setShowForm(false);
     if (showToast) {
       toast("Formulario cerrado");
+      speakCloseToast(); // Llama al TTS para el toast de cierre
     }
   };
 
@@ -96,18 +124,17 @@ export const ReportFloatingButton = () => {
 
               <IncidentReportForm onClose={handleClose} />
 
-             
               <div className="mt-4">
-               <a
-                href="tel:100"
-                className="w-full flex items-center justify-center gap-2 bg-white 
-                text-red-600 font-semibold text-lg px-4 py-[10px] rounded-md
-                 hover:bg-red-300 transition-colors uppercase"
-                aria-label="Llamar al cuartel más cercano"
+                <a
+                  href="tel:100"
+                  className="w-full flex items-center justify-center gap-2 bg-white 
+                   text-red-600 font-semibold text-lg px-4 py-[10px] rounded-md
+                   hover:bg-red-300 transition-colors uppercase"
+                  aria-label="Llamar al cuartel más cercano"
                 >
-               <PhoneOutgoing className="w-4 h-4" aria-hidden="true" />
-                Llamar al cuartel
-               </a>
+                  <PhoneOutgoing className="w-4 h-4" aria-hidden="true" />
+                  Llamar al cuartel
+                </a>
               </div>
             </div>
           </div>
@@ -116,4 +143,3 @@ export const ReportFloatingButton = () => {
     </>
   );
 };
-
