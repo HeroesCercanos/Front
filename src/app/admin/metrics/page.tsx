@@ -1,4 +1,4 @@
-import MetricsView from '@/components/adminDashboard/MetricsView'
+import MetricsView from '@/components/adminDashboard/metrics/MetricsView'
 import React from 'react'
 
 const page = () => {
