@@ -41,7 +41,7 @@ export default function MetricsView() {
         const donationData = await getDonationsMetrics();
         const userData = await getUsersMetrics();
         const reportData = await getReportsMetrics();
-        console.log("🔍 Reportes mensuales crudos:", reportData.monthly);
+        console.log("🔍 Altas diarias crudas:", userData.daily);
 
 
         setDonations({
@@ -115,9 +115,9 @@ export default function MetricsView() {
                  cantidad: r.count,
               }))}
               />
- <ReportesPorMesChart
-  title="Reportes por mes"
-  data={reports.monthly}
+    <ReportesPorMesChart
+    title="Reportes por mes"
+    data={reports.monthly}
 />
 
 
