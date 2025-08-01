@@ -8,8 +8,11 @@ import { sendIncidentReport } from "@/helpers/sendIncidentReport";
 import { IncidentReport, IncidentType } from "@/interfaces/incident.interface";
 import { toast } from "react-hot-toast";
 import { notifyOnIncident } from "@/helpers/sendEmailNotification";
+import { useRouter } from "next/navigation";
+
 
 const MapSelector = dynamic(() => import("../Map/MapSelector"), { ssr: false });
+const router = useRouter();
 
 
 interface Props {
@@ -88,6 +91,8 @@ export const IncidentReportForm = ({ onClose }: Props) => {
                 setDescription("");
                 setError("");
                 onClose(false);
+                router.replace("/"); 
+
               } catch {
                 toast.error("No se pudo enviar el reporte.");
               }
