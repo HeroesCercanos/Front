@@ -16,15 +16,17 @@ export interface DonationMetrics {
   monthly: MonthlyDonation[];
 }
 
-export interface DailyUser {
-  semana: string;
-  altas: number;
-}
-
 export interface UserMetrics {
   total: number;
   daily: DailyUser[];
 }
+
+export interface DailyUser {
+  // acá revisá que esté así:
+  date: string;   // ✅ fecha tipo "2025-08-01"
+  count: number;  // ✅ cantidad de usuarios
+}
+
 
 export interface WeeklyReport {
   week: string;

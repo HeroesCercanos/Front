@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 
 
 const MapSelector = dynamic(() => import("../Map/MapSelector"), { ssr: false });
-const router = useRouter();
+
 
 
 interface Props {
@@ -20,6 +20,7 @@ interface Props {
 }
 
 export const IncidentReportForm = ({ onClose }: Props) => {
+  const router = useRouter();
   const { userData } = useAuth();
   const [incidentType, setIncidentType] = useState<IncidentType | "">("");
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
