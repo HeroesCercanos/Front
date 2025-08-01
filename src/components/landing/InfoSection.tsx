@@ -4,14 +4,13 @@ import React, { useMemo } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { faqs } from '@/helpers/faqs';
-import TTSButton from "@/components/common/TTSButton"; // Importamos el botón TTS
-import { FaUniversalAccess } from 'react-icons/fa'; // Importamos el ícono
+import TTSButton from "@/components/common/TTSButton"; 
+import { FaUniversalAccess } from 'react-icons/fa';
 
 export default function InfoSection() {
     const router = useRouter();
     const handleClick = (id: string) => router.push(`/faqs#${id}`);
 
-    // Usamos useMemo para consolidar el texto y evitar recálculos innecesarios
     const consolidatedText = useMemo(() => {
         const faqsText = faqs.map(faq => `Pregunta: ${faq.question}`).join(' ');
         
@@ -22,16 +21,15 @@ export default function InfoSection() {
             Información útil. 
             Preguntas frecuentes recientes: ${faqsText}.
         `;
-    }, []); // El array de dependencias está vacío porque 'faqs' no cambia en este componente.
+    }, []); 
 
     return (
         <section
             id='FAQ'
             role='region'
             aria-labelledby='info-heading'
-            className='w-full px-4 md:px-16 py-12 bg-gray-100 relative' // Agregamos 'relative'
+            className='w-full px-4 md:px-16 py-12 bg-gray-100 relative'
         >
-            {/* Botón de TTS posicionado en la esquina superior derecha */}
             <div className="absolute top-4 right-4">
                 <TTSButton 
                     text={consolidatedText} 

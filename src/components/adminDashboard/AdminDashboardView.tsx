@@ -3,7 +3,7 @@
 import { useAuth } from '@/context/AuthContext';
 import Sidebar from '@/components/adminDashboard/Sidebar';
 import AdminStatsView from './AdminStatsView';
-import DonationHistory from './DonationHistory';
+import AdminWelcome from './AdminWelcome';
 
 const AdminDashboardView = () => {
 	const { userData } = useAuth();
@@ -21,6 +21,7 @@ const AdminDashboardView = () => {
 					<p className='text-gray-600 mb-6'>GRACIAS POR TU SERVICIO</p>
 
 					<AdminStatsView />
+					<AdminWelcome/>
 				</main>
 			</div>
 		</div>
