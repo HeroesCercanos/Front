@@ -52,7 +52,7 @@ const AdminWelcome = () => {
       </header>
 
       <p
-        className="mb-6 text-sm text-gray-600 dark:text-gray-300"
+        className="mb-6 text-sm text-gray-600"
         aria-live="polite"
       >
         Tu labor es fundamental para que esta comunidad funcione. Te dejamos un resumen de las tareas pendientes:
