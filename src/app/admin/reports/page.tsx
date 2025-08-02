@@ -1,4 +1,4 @@
-import AdminReports from '@/components/adminDashboard/AdminReports'
+import AdminReports from '@/components/adminDashboard/AdminReports/AdminReports'
 import React from 'react'
 
 const reports = () => {
