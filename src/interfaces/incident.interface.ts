@@ -1,4 +1,5 @@
 
+ 
 export type IncidentType = "incendio" | "accidente";
 export type IncidentStatus = "activo" | "asistido" | "eliminado";
 
@@ -23,32 +24,35 @@ export interface Report {
 }
 
 
+export interface FullIncident {
+  id: string;
+  type: string;
+  latitude: string;
+  longitude: string;
+  description: string;
+  victimName: string | null;
+  reason: string | null;
+  adminComment: string | null;
+  status: IncidentStatus; 
+  createdAt: string;
+  user?: {
+    id: string;
+    name: string;
+  };
+}
+
 export interface HistoryEntry {
-  id: number;
+  id: string; 
+  incidentId: string; 
   text: string;
   action: "asistido" | "eliminado";
   comment: string;
   timestamp: string;
-  edited?: boolean;
-  victimName?: string; 
-  reason?: string;
-}
-
-
-export interface FullIncident { 
-  id: string; // 
-  type: IncidentType; 
-  latitude: string; 
-  longitude: string; 
-  description: string; 
-  victimName: string | null; 
-  reason: string | null; 
-  adminComment: string | null; 
-  status: IncidentStatus; 
-  createdAt: string;
-  user: IncidentReporterInfo; 
-  updatedAt?: string; 
-  
+  edited: boolean;
+  victimName: string | null;
+  reason: string | null;
+  incidentDescription: string; 
+  incidentType: string; 
 }
 export interface IncidentReporterInfo {
   id: string; 

@@ -1,11 +1,10 @@
 
-// components/AdminReports.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import { CheckSquare, Trash2, Pencil } from "lucide-react";
 import Sidebar from "./Sidebar";
-import { FullIncident, HistoryEntry } from "@/interfaces/incident.interface"; // Importar FullIncident
+import { FullIncident, HistoryEntry } from "@/interfaces/incident.interface";
 import { toast } from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 import { updateIncidentByAdmin } from "@/helpers/updateIncidentByAdmin";
@@ -15,10 +14,9 @@ import { getIncidentHistory } from "@/helpers/getIncidentHistory";
 export default function AdminReports() {
   const { userData } = useAuth();
 
-  const [activeReports, setActiveReports] = useState<FullIncident[]>([]); // Usar FullIncident
+  const [activeReports, setActiveReports] = useState<FullIncident[]>([]);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
-  // selectedReport necesita mantener todos los datos del incidente
-  const [selectedReport, setSelectedReport] = useState<FullIncident | null>(null); // Usar FullIncident
+  const [selectedReport, setSelectedReport] = useState<FullIncident | null>(null);
 
   const [actionType, setActionType] = useState<"asistido" | "eliminado" | null>(null);
   const [comment, setComment] = useState("");
@@ -26,32 +24,50 @@ export default function AdminReports() {
   const [reason, setReason] = useState("");
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
+ 
   const fetchReports = async () => {
     if (!userData?.user || userData.user.role !== "admin") return;
     try {
-      const incidents = await getIncidentReports(); // Esto ahora devuelve FullIncident[]
+      const incidents = await getIncidentReports();
       const activos = incidents.filter((i) => i.status === "activo");
       setActiveReports(activos);
 
-      const backendHistory = await getIncidentHistory(); // Asumo que esto ya devuelve el formato correcto
-      const formattedHistory = backendHistory.map((entry: any) => ({
-        id: entry.incident.id,
-        text: `Reporte - ${entry.incident.createdAt.slice(0, 10)} - ${
-          entry.incident.description || "Sin descripción" // `description` del backend es la descripción inicial del usuario
-        }`,
-        action: entry.action,
-        comment: entry.comment, // Comentario del admin
-        timestamp: new Date(entry.createdAt).toLocaleString(),
-        edited: false,
-        victimName: entry.victimName,
-        reason: entry.reason,
-      }));
-      setHistory(formattedHistory);
+      const backendHistory = await getIncidentHistory();
+      const latestHistoryEntries = new Map<string, HistoryEntry>();
+      const sortedHistory = backendHistory.sort(
+        (a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      );
+
+      sortedHistory.forEach((entry: any) => {
+       
+        const formattedEntry: HistoryEntry = {
+          id: entry.id,
+          incidentId: entry.incident.id,
+          text: `Reporte - ${entry.incident.createdAt.slice(0, 10)} - ${
+            entry.incident.description || "Sin descripción"
+          }`,
+          action: entry.action,
+          comment: entry.comment,
+          timestamp: new Date(entry.createdAt).toLocaleString(),
+          edited: false,
+          victimName: entry.victimName,
+          reason: entry.reason,
+          incidentDescription: entry.incident.description,
+          incidentType: entry.incident.type,
+        };
+        latestHistoryEntries.set(formattedEntry.incidentId, formattedEntry);
+      });
+
+      const finalHistory = Array.from(latestHistoryEntries.values());
+      finalHistory.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+      setHistory(finalHistory);
     } catch (error) {
       console.error("Error al traer reportes o historial:", error);
       toast.error("No se pudieron cargar los reportes o el historial");
     }
   };
+
 
   useEffect(() => {
     fetchReports();
@@ -59,15 +75,16 @@ export default function AdminReports() {
 
   const confirmAction = async () => {
     if (!selectedReport || !actionType) return;
+    const incidentIdToUpdate = selectedReport.id;
     try {
-      await updateIncidentByAdmin(selectedReport.id, { // ID es string del backend
+      await updateIncidentByAdmin(incidentIdToUpdate, {
         status: actionType,
-        adminComment: comment || undefined, // Usar 'comment' para adminComment
+        adminComment: comment || undefined,
         victimName: victimName || undefined,
         reason: reason || undefined,
       });
 
-      await fetchReports();
+    await fetchReports();
       toast.success(
         actionType === "asistido"
           ? "✅ Reporte marcado como asistido"
@@ -86,15 +103,39 @@ export default function AdminReports() {
     }
   };
 
-  // handleAction recibe un FullIncident
   const handleAction = (report: FullIncident, type: "asistido" | "eliminado") => {
-    setSelectedReport(report); // report ahora es FullIncident
+    setSelectedReport(report);
     setActionType(type);
     setEditIndex(null);
-    // Al editar, pre-popular los campos del reporte seleccionado
     if (report.adminComment) setComment(report.adminComment);
     if (report.victimName) setVictimName(report.victimName);
     if (report.reason) setReason(report.reason);
+  };
+
+  const handleEditHistory = (entry: HistoryEntry, index: number) => {
+    const tempReport: FullIncident = {
+      id: entry.incidentId,
+      type: entry.incidentType,
+      latitude: "0",
+      longitude: "0",
+      description: entry.incidentDescription,
+      victimName: entry.victimName || null,
+      reason: entry.reason || null,
+      adminComment: entry.comment || null,
+      status: entry.action,
+      createdAt: entry.timestamp,
+      user: {
+        id: "historial-id-desconocido",
+        name: "Usuario Desconocido",
+      },
+    };
+
+    setSelectedReport(tempReport);
+    setActionType(entry.action as "asistido" | "eliminado");
+    setComment(entry.comment);
+    setVictimName(entry.victimName || "");
+    setReason(entry.reason || "");
+    setEditIndex(index);
   };
 
   return (
@@ -112,20 +153,19 @@ export default function AdminReports() {
           ) : (
             activeReports.map((report) => (
               <div
-                key={report.id} // El ID es un string (UUID)
+                key={report.id}
                 className="bg-white p-3 rounded flex justify-between items-center shadow"
               >
-                {/* Mostrando la información de FullIncident */}
                 <div className="flex-1">
                   <p className="font-semibold text-gray-800">
                     Reporte de {report.type || "Tipo no especificado"}
                   </p>
-                  {report.description && ( // Esta es la descripción inicial del usuario
+                  {report.description && (
                     <p className="text-sm text-gray-700">Comentario del usuario: {report.description}</p>
                   )}
                   {report.user && report.user.name && (
-               <p className="text-sm text-gray-700">Reportado por: {report.user.name}</p>
-                 )}
+                    <p className="text-sm text-gray-700">Reportado por: {report.user.name}</p>
+                  )}
                   <p className="text-xs text-gray-600">
                     Ubicación: Lat {parseFloat(report.latitude).toFixed(4)}, Lng {parseFloat(report.longitude).toFixed(4)}
                   </p>
@@ -151,7 +191,7 @@ export default function AdminReports() {
           )}
         </div>
 
-        {/* Sección de Historial (parece estar bien, solo asegurar que entry.incident.id sea número si entry.id espera número) */}
+
         <div className="bg-gray-200 p-4 rounded shadow-inner">
           <h3 className="text-lg font-semibold mb-2 text-gray-800">
             HISTORIAL DE ACCIONES
@@ -163,7 +203,8 @@ export default function AdminReports() {
           ) : (
             <ul className="text-sm text-gray-700 space-y-4">
               {history.map((entry, index) => (
-                <li key={`${entry.id}-${index}`} className="border-b pb-3">
+                <li key={entry.id} className="border-b pb-3">
+
                   <p>
                     <strong>{entry.text}</strong>
                   </p>
@@ -188,31 +229,7 @@ export default function AdminReports() {
 
                   <button
                     type="button"
-                    onClick={() => {
-                     
-                      setSelectedReport({
-                        id: String(entry.id), 
-                        type: "accidente", 
-                        latitude: "0", 
-                        longitude: "0", 
-                        description: entry.text.split(' - ')[2] || '', // Intentar extraer del texto si es posible, si no, placeholder
-                        victimName: entry.victimName || null,
-                        reason: entry.reason || null,
-                        adminComment: entry.comment || null,
-                        status: entry.action, 
-                        createdAt: new Date(entry.timestamp).toISOString(),
-                        user: { 
-                           id: "historial-id-desconocido", 
-                           name: "Usuario Desconocido", 
-  
-        },
-                       });
-                      setActionType(entry.action);
-                      setComment(entry.comment);
-                      setVictimName(entry.victimName || "");
-                      setReason(entry.reason || "");
-                      setEditIndex(index);
-                    }}
+                    onClick={() => handleEditHistory(entry, index)}
                     className="flex items-center gap-1 text-blue-600 hover:text-blue-800 cursor-pointer transition text-sm"
                     aria-label="Editar comentario"
                   >
@@ -225,7 +242,7 @@ export default function AdminReports() {
           )}
         </div>
 
-        {/* Sección del Modal */}
+
         {selectedReport && actionType && (
           <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md space-y-4 relative">
@@ -252,7 +269,7 @@ export default function AdminReports() {
 
               <p className="text-sm text-gray-700 text-center">
                 {editIndex !== null
-                  ? `Modificando el reporte "${selectedReport.description || selectedReport.type}"` // Mostrar descripción del usuario o tipo de incidente
+                  ? `Modificando el reporte "${selectedReport.description || selectedReport.type}"`
                   : `¿Qué se hizo con el reporte de ${selectedReport.type} (${selectedReport.description || 'sin comentario'})?`}
               </p>
 
@@ -286,7 +303,7 @@ export default function AdminReports() {
               <button
                 className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition"
                 onClick={confirmAction}
-                disabled={!comment.trim()} // Deshabilitar si el comentario está vacío
+                disabled={!comment.trim()}
                 aria-label="Confirmar acción"
               >
                 {editIndex !== null ? "Guardar cambios" : "Confirmar"}
@@ -298,4 +315,3 @@ export default function AdminReports() {
     </div>
   );
 }
-
