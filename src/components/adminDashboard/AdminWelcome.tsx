@@ -39,7 +39,7 @@ const AdminWelcome = () => {
 
   return (
     <section
-      className="mt-10 p-6 bg-gray-100 rounded-xl shadow-md text-black dark:text-gray-100"
+      className="mt-10 p-6 bg-gray-100 rounded-xl shadow-md text-black"
       aria-labelledby="admin-welcome-heading"
       role="region"
     >
