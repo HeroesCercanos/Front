@@ -99,7 +99,7 @@ const Sidebar = () => {
 						className='flex items-center gap-2 hover:text-red-400'
 					>
 						<MailPlus size={18} />
-						<p className='text-sm'>Campañas por correo</p>
+						<p className='text-sm'>Envíos de correo</p>
 					</Link>
 
 					<Link
