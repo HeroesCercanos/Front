@@ -147,13 +147,15 @@ export default function AdminReports() {
   };
 
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <section className="w-full p-6 text-black space-y-8">
+    <div className="flex flex-col md:flex-row min-h-screen">
+ <aside className="w-full md:w-64 bg-black text-white">
+    <Sidebar />
+  </aside>
+        <section className="flex-1 p-6 text-black bg-gray-50">
         <h2 className="text-2xl font-bold">REPORTES</h2>
-        <p className="text-sm text-gray-600">GRACIAS POR TU SERVICIO</p>
+        <p className="text-sm text-gray-600 mb-8">GRACIAS POR TU SERVICIO</p>
 
-        <div className="bg-gray-200 p-4 rounded shadow-inner space-y-4">
+        <div className="bg-gray-200 p-4 rounded shadow-inner space-y-4 mb-4">
           <h3 className="text-lg font-semibold mb-2 text-gray-800">REPORTES ACTIVOS</h3>
           <ActiveReportsList reports={activeReports} onAction={handleAction} />
         </div>

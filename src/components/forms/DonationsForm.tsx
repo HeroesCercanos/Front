@@ -45,7 +45,7 @@ const DonationForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 p-4 w-full max-w-md">
+    <form onSubmit={handleSubmit} className="space-y-4 p-2 w-full max-w-md flex flex-col">
       <div>
         <label htmlFor="amount" className="block font-semibold text-sm">
           Monto a donar
@@ -80,7 +80,7 @@ const DonationForm = () => {
 
       <button
         type="submit"
-        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full disabled:opacity-50"
+        className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-full transition duration-300 cursor-pointer"
         disabled={loading}
       >
         {loading ? "Redirigiendo..." : "Donar con MercadoPago"}

@@ -116,8 +116,10 @@ const fetchUsers = async () => {
   );
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen">
-      <Sidebar />
+    <div className="flex min-h-screen">
+      <div className="w-64 bg-black text-white h-full">
+  <Sidebar />
+</div>
       <main className="flex-1 p-4 overflow-auto bg-gray-50">
 
         <div className="overflow-x-auto shadow rounded bg-white mb-4">

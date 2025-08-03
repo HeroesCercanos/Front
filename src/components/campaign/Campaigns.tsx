@@ -4,8 +4,8 @@ import React, { useEffect, useState } from "react";
 import DonateButton from "@/components/common/DonateButton";
 import { getCampaigns } from "@/helpers/getCampaigns";
 import CampaignList from "@/components/campaign/CampaignList";
-import TTSButton from "@/components/common/TTSButton"; 
-import { FaUniversalAccess } from 'react-icons/fa'; 
+import TTSButton from "@/components/common/TTSButton";
+import { FaUniversalAccess } from "react-icons/fa";
 
 type Campaign = {
   id: string;
@@ -18,31 +18,41 @@ type Campaign = {
 
 const Campaigns = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-  const [campaignsText, setCampaignsText] = useState<string>(''); 
+  const [campaignsText, setCampaignsText] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
+      
         const data = await getCampaigns();
-        setCampaigns(data);
-      } catch (error) {
-        console.error("Error al cargar campañas:", error);
-      }
+        const dataChanged = JSON.stringify(data) !== JSON.stringify(campaigns);
+        if (dataChanged) {
+          setCampaigns(data);
+        }
+      
     };
 
     fetchData();
-  }, []);
+
+    const interval = setInterval(fetchData, 1000);
+
+    return () => clearInterval(interval);
+  }, [campaigns]);
 
   useEffect(() => {
     if (campaigns.length > 0) {
-      const consolidatedText = campaigns.map(campaign => 
-        `Campaña: ${campaign.title}. Descripción: ${campaign.description || 'Sin descripción.'}`
-      ).join(' ');
+      const consolidatedText = campaigns
+        .map(
+          (campaign) =>
+            `Campaña: ${campaign.title}. Descripción: ${
+              campaign.description || "Sin descripción."
+            }`
+        )
+        .join(" ");
 
       const fullText = `Campañas y donaciones. ${consolidatedText}`;
       setCampaignsText(fullText);
     } else {
-      setCampaignsText('Actualmente no hay campañas disponibles.');
+      setCampaignsText("Actualmente no hay campañas disponibles.");
     }
   }, [campaigns]);
 
@@ -52,9 +62,9 @@ const Campaigns = () => {
       className="w-full px-4 sm:px-8 md:px-16 py-12 bg-gray-100 text-black relative"
     >
       <div className="absolute top-4 right-4">
-        <TTSButton 
-          text={campaignsText} 
-          icon={<FaUniversalAccess size={24} />} 
+        <TTSButton
+          text={campaignsText}
+          icon={<FaUniversalAccess size={24} />}
           ariaLabel="Leer campañas y donaciones"
         />
       </div>

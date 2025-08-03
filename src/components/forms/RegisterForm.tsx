@@ -19,6 +19,7 @@ const RegisterForm = () => {
     password: "",
     confirmPassword: "",
   });
+
   const [formErrors, setFormErrors] = useState<IRegisterErrors>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -26,28 +27,34 @@ const RegisterForm = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setFormValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const errors = validateRegisterForm({ ...formValues, [name]: value });
+
+    setFormErrors((prev) => ({
+      ...prev,
+      [name]: errors[name as keyof IRegisterErrors],
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const errors = validateRegisterForm(formValues);
     setFormErrors(errors);
+
     if (Object.keys(errors).length > 0) {
-       Object.values(errors).forEach((msg) => {
-      if (msg) toast.error(msg);
-    });
-    return;
+      Object.values(errors).forEach((msg) => {
+        if (msg) toast.error(msg);
+      });
+      return;
     }
 
     try {
-      const result = await sendRegister({
-        name: formValues.name,
-        email: formValues.email,
-        password: formValues.password,
-        confirmPassword: formValues.confirmPassword,
-      });
+      const result = await sendRegister(formValues);
 
       if (!result) {
-      toast.error('No se pudo completar el registro. Inténtalo de nuevo.');
-      return;
+        toast.error("No se pudo completar el registro. Inténtalo de nuevo.");
+        return;
       }
 
       await notifyOnRegister(formValues.name, formValues.email);
@@ -55,7 +62,7 @@ const RegisterForm = () => {
       toast.success((result as any).message);
       router.replace("/login");
     } catch (err: any) {
-      toast.error(err.message || 'Hubo un error al registrar la cuenta');
+      toast.error(err.message || "Hubo un error al registrar la cuenta");
     }
   };
 
@@ -69,13 +76,14 @@ const RegisterForm = () => {
             type="text"
             name="name"
             placeholder="Nombre completo"
-            className="w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+            className={`w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 ${
+              formErrors.name ? "border-red-500 ring-red-500" : "focus:ring-red-500"
+            }`}
             value={formValues.name}
             onChange={handleChange}
+            onBlur={handleBlur}
           />
-          {formErrors.name && (
-            <p className="text-red-500 text-sm">{formErrors.name}</p>
-          )}
+          {formErrors.name && <p className="text-red-500 text-sm">{formErrors.name}</p>}
         </div>
 
         <div>
@@ -83,13 +91,14 @@ const RegisterForm = () => {
             type="email"
             name="email"
             placeholder="Email"
-            className="w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+            className={`w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 ${
+              formErrors.email ? "border-red-500 ring-red-500" : "focus:ring-red-500"
+            }`}
             value={formValues.email}
             onChange={handleChange}
+            onBlur={handleBlur}
           />
-          {formErrors.email && (
-            <p className="text-red-500 text-sm">{formErrors.email}</p>
-          )}
+          {formErrors.email && <p className="text-red-500 text-sm">{formErrors.email}</p>}
         </div>
 
         <div className="relative">
@@ -97,9 +106,12 @@ const RegisterForm = () => {
             type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Contraseña"
-            className="w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 pr-10"
+            className={`w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 pr-10 ${
+              formErrors.password ? "border-red-500 ring-red-500" : "focus:ring-red-500"
+            }`}
             value={formValues.password}
             onChange={handleChange}
+            onBlur={handleBlur}
           />
           <button
             type="button"
@@ -109,9 +121,7 @@ const RegisterForm = () => {
           >
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
-          {formErrors.password && (
-            <p className="text-red-500 text-sm">{formErrors.password}</p>
-          )}
+          {formErrors.password && <p className="text-red-500 text-sm">{formErrors.password}</p>}
         </div>
 
         <div className="relative">
@@ -119,9 +129,12 @@ const RegisterForm = () => {
             type={showConfirmPassword ? "text" : "password"}
             name="confirmPassword"
             placeholder="Confirmar contraseña"
-            className="w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 pr-10"
+            className={`w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 pr-10 ${
+              formErrors.confirmPassword ? "border-red-500 ring-red-500" : "focus:ring-red-500"
+            }`}
             value={formValues.confirmPassword}
             onChange={handleChange}
+            onBlur={handleBlur}
           />
           <button
             type="button"
@@ -144,7 +157,7 @@ const RegisterForm = () => {
         </button>
 
         <p className="text-center text-sm mt-2">
-          Ya tienes cuenta?{" "}
+          ¿Ya tienes cuenta?{" "}
           <Link
             href="/login"
             className="text-red-500 font-semibold hover:underline"
