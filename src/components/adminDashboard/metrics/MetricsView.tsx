@@ -76,7 +76,9 @@ export default function MetricsView() {
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen">
-      <Sidebar />
+        <aside className="w-full md:w-64 bg-black text-white">
+    <Sidebar />
+  </aside>
       <div className="flex-1 p-4 overflow-auto bg-gray-50">
         <h2 className="text-2xl font-bold mb-10">Panel de Métricas</h2>
 
