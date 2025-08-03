@@ -9,11 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-<<<<<<< Updated upstream
-=======
-    "@tiptap/react": "^3.0.9",
-    "@tiptap/starter-kit": "^3.0.9",
->>>>>>> Stashed changes
     "flowbite-react": "^0.12.3",
     "i": "^0.3.7",
     "jose": "^6.0.12",
