@@ -85,6 +85,12 @@ export default function EmailCampaignList() {
 		}
 	};
 
+	const statusLabels: Record<Campaign['status'], string> = {
+		draft: 'Borrador',
+		scheduled: 'Programada',
+		sent: 'Enviada',
+	};
+
 	return (
 		<>
 			<div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6'>
@@ -102,7 +108,7 @@ export default function EmailCampaignList() {
 					<div key={c.id} className='bg-gray-100 p-4 rounded shadow relative'>
 						<h3 className='text-lg font-semibold'>{c.subject}</h3>
 						<p className='text-sm text-gray-600'>
-							Estado: <strong>{c.status}</strong>
+							Estado: <strong>{statusLabels[c.status]}</strong>
 						</p>
 						{c.scheduledAt && (
 							<p className='text-sm text-gray-600'>
