@@ -14,11 +14,13 @@ import AlertBar from '@/components/dashboard/AlertBar';
 import { useAuth } from '@/context/AuthContext';
 import DonateButton from '../common/DonateButton';
 import UserInfoModal from './UserInfoModal';
+import DonationHistoryModal from './DonationHistoryModal';
 
 export default function DashboardView() {
 	const { userData } = useAuth();
 	const router = useRouter();
 	const [showModal, setShowModal] = useState(false);
+	const [showDonationsModal, setShowDonationsModal] = useState(false);
 
 	return (
 		<main className='max-w-7xl mx-auto px-6 py-12 space-y-8'>
@@ -48,13 +50,23 @@ export default function DashboardView() {
 						</DonateButton>
 					}
 				/>
+
 				<DashboardCard
 					icon={<ClipboardList size={80} />}
 					title='Ver mis donaciones'
 					description='Revisá tu historial y el impacto generado'
 					buttonLabel='Historial'
-					onClick={() => router.push('/historial')}
+					onClick={() => setShowDonationsModal(true)}
+					customButton={
+						<button
+							className='bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg cursor-pointer'
+							onClick={() => setShowDonationsModal(true)}
+						>
+							Historial
+						</button>
+					}
 				/>
+
 				<DashboardCard
 					icon={<TvMinimalPlay size={80} />}
 					title='Capacitación disponible'
@@ -102,6 +114,10 @@ export default function DashboardView() {
 					user={userData.user}
 					onClose={() => setShowModal(false)}
 				/>
+			)}
+
+			{showDonationsModal && (
+				<DonationHistoryModal onClose={() => setShowDonationsModal(false)} />
 			)}
 		</main>
 	);

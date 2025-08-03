@@ -108,21 +108,33 @@ export default function UserInfoModal({ user, onClose }: Props) {
 	const doSave = async () => {
 		setIsSaving(true);
 		try {
+			const sanitizedAddress = form.address?.trim() ?? '';
+			const rawPhone = form.phone?.trim() ?? '';
+			const sanitizedPhone = rawPhone.replace(/\D/g, '');
+
 			const payload: Partial<IUserFormValues> = {
-				name: form.name,
-				phone: form.phone,
-				address: form.address,
+				name: form.name.trim(),
+				address: sanitizedAddress,
 			};
-			if (form.password) payload.password = form.password;
+
+			// ⚠️ SOLO incluir phone si no está vacío Y es válido
+			if (sanitizedPhone && /^[0-9]{7,}$/.test(sanitizedPhone)) {
+				payload.phone = sanitizedPhone;
+			}
+
+			console.log('Payload final:', payload);
 
 			const res = await fetch(`${API_BASE_URL}/users/${user.id}`, {
-				method: 'PUT',
+				method: 'PATCH',
 				credentials: 'include',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(payload),
 			});
-			if (!res.ok) throw new Error('Error al guardar');
-			
+			if (!res.ok) {
+				const error = await res.json();
+				throw new Error(error.message || 'Error al guardar');
+			}
+
 			const updated = await res.json();
 			setUserData?.({
 				...userData!,
@@ -130,7 +142,6 @@ export default function UserInfoModal({ user, onClose }: Props) {
 			});
 
 			setIsEditing(false);
-
 			setForm((prev) => ({ ...prev, password: '', confirmPassword: '' }));
 
 			toast.success('Datos actualizados');
@@ -139,6 +150,56 @@ export default function UserInfoModal({ user, onClose }: Props) {
 			toast.error('Error guardando');
 		} finally {
 			setIsSaving(false);
+		}
+	};
+
+	const handleDeleteAccount = () => {
+		toast.custom((t) => (
+			<div
+				className={`bg-white p-4 rounded-xl shadow-lg max-w-xs w-full ${
+					t.visible ? 'animate-enter' : 'animate-leave'
+				}`}
+			>
+				<h3 className='font-semibold mb-2'>¿Eliminar tu cuenta?</h3>
+				<p className='text-sm text-gray-600 mb-4'>
+					Esta acción es permanente y no se puede deshacer.
+				</p>
+				<div className='flex justify-end gap-2'>
+					<button
+						onClick={() => {
+							toast.dismiss(t.id);
+							doDelete();
+						}}
+						className='px-4 py-2 bg-red-600 text-white rounded'
+					>
+						Sí, eliminar
+					</button>
+					<button
+						onClick={() => toast.dismiss(t.id)}
+						className='px-4 py-2 bg-gray-200 rounded'
+					>
+						Cancelar
+					</button>
+				</div>
+			</div>
+		));
+	};
+	const doDelete = async () => {
+		try {
+			const res = await fetch(`${API_BASE_URL}/users/${user.id}`, {
+				method: 'DELETE',
+				credentials: 'include',
+			});
+			if (!res.ok) {
+				const error = await res.json().catch(() => null);
+				throw new Error(error?.message || 'Error al eliminar la cuenta');
+			}
+
+			toast.success('Cuenta eliminada');
+			window.location.href = '/login';
+		} catch (err) {
+			console.error(err);
+			toast.error('Error eliminando la cuenta');
 		}
 	};
 
@@ -269,7 +330,13 @@ export default function UserInfoModal({ user, onClose }: Props) {
 					)}
 				</div>
 				{isEditing && (
-					<div className='text-right'>
+					<div className='flex justify-between'>
+						<button
+							onClick={handleDeleteAccount}
+							className='bg-gray-300 text-black py-2 px-4 rounded hover:bg-gray-400 transition'
+						>
+							Eliminar cuenta
+						</button>
 						<button
 							onClick={handleSave}
 							disabled={isSaving}
