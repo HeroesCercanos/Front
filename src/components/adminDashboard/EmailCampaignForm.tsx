@@ -32,6 +32,7 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 	const [parrafo2, setParrafo2] = useState('');
 	const [cierre, setCierre] = useState('');
 	const [previewOpen, setPreviewOpen] = useState(false);
+	const [templateOpen, setTemplateOpen] = useState(false);
 
 	useEffect(() => {
 		if (initialData) {
@@ -63,7 +64,6 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 			.split(',')
 			.map((email) => email.trim())
 			.filter((e) => e);
-
 
 		try {
 			const res = await fetch(
@@ -110,103 +110,115 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 	`;
 
 	return (
-		<form onSubmit={handleSubmit} className='space-y-6'>
-			<div>
-				<label className='block font-medium mb-1'>Asunto</label>
-				<input
-					type='text'
-					className='w-full border rounded p-2'
-					value={subject}
-					onChange={(e) => setSubject(e.target.value)}
-					required
-				/>
-			</div>
+		<>
+			<form onSubmit={handleSubmit} className='space-y-6'>
+				<div>
+					<label className='block font-medium mb-1'>Asunto</label>
+					<input
+						type='text'
+						className='w-full border rounded p-2'
+						value={subject}
+						onChange={(e) => setSubject(e.target.value)}
+						required
+					/>
+				</div>
 
-			<div>
-				<label className='block font-medium mb-1'>Destinatarios</label>
-				<textarea
-					className='w-full border rounded p-2'
-					rows={2}
-					value={recipients}
-					onChange={(e) => setRecipients(e.target.value)}
-					placeholder='Separar por coma, o dejar vacío para enviar a todos'
-				/>
-			</div>
+				<div>
+					<label className='block font-medium mb-1'>Destinatarios</label>
+					<textarea
+						className='w-full border rounded p-2'
+						rows={2}
+						value={recipients}
+						onChange={(e) => setRecipients(e.target.value)}
+						placeholder='Separar por coma, o dejar vacío para enviar a todos'
+					/>
+				</div>
 
-			<hr className='my-4' />
+				<hr className='my-4' />
 
-			<div>
-				<label className='block font-medium mb-1'>Título del correo</label>
-				<input
-					type='text'
-					className='w-full border rounded p-2'
-					value={titulo}
-					onChange={(e) => setTitulo(e.target.value)}
-					required
-				/>
-			</div>
+				<div>
+					<label className='block font-medium mb-1'>Título del correo</label>
+					<input
+						type='text'
+						className='w-full border rounded p-2'
+						placeholder='Completar con {{titulo}} de la plantilla'
+						value={titulo}
+						onChange={(e) => setTitulo(e.target.value)}
+						required
+					/>
+				</div>
 
-			<div>
-				<label className='block font-medium mb-1'>Primer párrafo</label>
-				<textarea
-					className='w-full border rounded p-2'
-					rows={2}
-					value={parrafo1}
-					onChange={(e) => setParrafo1(e.target.value)}
-					required
-				/>
-			</div>
+				<div>
+					<label className='block font-medium mb-1'>Primer párrafo</label>
+					<textarea
+						className='w-full border rounded p-2'
+						placeholder='Completar con {{parrafo1}} de la plantilla'
+						rows={2}
+						value={parrafo1}
+						onChange={(e) => setParrafo1(e.target.value)}
+						required
+					/>
+				</div>
 
-			<div>
-				<label className='block font-medium mb-1'>Segundo párrafo</label>
-				<textarea
-					className='w-full border rounded p-2'
-					rows={2}
-					value={parrafo2}
-					onChange={(e) => setParrafo2(e.target.value)}
-					required
-				/>
-			</div>
+				<div>
+					<label className='block font-medium mb-1'>Segundo párrafo</label>
+					<textarea
+						className='w-full border rounded p-2'
+						placeholder='Completar con {{parrafo2}} de la plantilla'
+						rows={2}
+						value={parrafo2}
+						onChange={(e) => setParrafo2(e.target.value)}
+						required
+					/>
+				</div>
 
-			<div>
-				<label className='block font-medium mb-1'>Cierre</label>
-				<input
-					type='text'
-					className='w-full border rounded p-2'
-					value={cierre}
-					onChange={(e) => setCierre(e.target.value)}
-					required
-				/>
-			</div>
+				<div>
+					<label className='block font-medium mb-1'>Cierre</label>
+					<input
+						type='text'
+						className='w-full border rounded p-2'
+						placeholder='Completar con {{cierre}} de la plantilla'
+						value={cierre}
+						onChange={(e) => setCierre(e.target.value)}
+						required
+					/>
+				</div>
 
-			<div>
-				<label className='block font-medium mb-1'>
-					Programar envío (opcional)
-				</label>
-				<input
-					type='datetime-local'
-					className='w-full border rounded p-2'
-					value={scheduledAt}
-					onChange={(e) => setScheduledAt(e.target.value)}
-				/>
-			</div>
+				<div>
+					<label className='block font-medium mb-1'>
+						Programar envío (opcional)
+					</label>
+					<input
+						type='datetime-local'
+						className='w-full border rounded p-2'
+						value={scheduledAt}
+						onChange={(e) => setScheduledAt(e.target.value)}
+					/>
+				</div>
 
-			<div className='flex flex-col sm:flex-row gap-4'>
-				<button
-					type='button'
-					onClick={() => setPreviewOpen(true)}
-					className='px-4 py-2 rounded bg-gray-600 text-white hover:bg-gray-700 transition'
-				>
-					Previsualizar
-				</button>
-
-				<button
-					type='submit'
-					className='px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 transition'
-				>
-					{initialData ? 'Actualizar campaña' : 'Crear campaña'}
-				</button>
-			</div>
+				<div className='flex flex-col sm:flex-row gap-4'>
+					<button
+						type='button'
+						onClick={() => setPreviewOpen(true)}
+						className='px-4 py-2 rounded bg-gray-600 text-white hover:bg-gray-700 transition'
+					>
+						Previsualizar
+					</button>
+					<button
+						type='button'
+						onClick={() => setTemplateOpen(true)}
+						className='px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 transition'
+					>
+						Ver plantilla
+					</button>
+					<button
+						type='submit'
+						className='px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 transition'
+					>
+						{initialData ? 'Actualizar campaña' : 'Crear campaña'}
+					</button>
+				</div>
+			</form>
 
 			<EmailPreviewModal
 				isOpen={previewOpen}
@@ -214,6 +226,24 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 				subject={subject}
 				html={previewHtml}
 			/>
-		</form>
+
+			{templateOpen && (
+				<div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
+					<div className='bg-white p-4 rounded shadow max-w-lg w-full relative'>
+						<button
+							onClick={() => setTemplateOpen(false)}
+							className='absolute top-2 right-2 text-gray-500 hover:text-black'
+						>
+							✕
+						</button>
+						<img
+							src='/template.png'
+							alt='Vista previa plantilla'
+							className='w-full h-auto rounded'
+						/>
+					</div>
+				</div>
+			)}
+		</>
 	);
 }
