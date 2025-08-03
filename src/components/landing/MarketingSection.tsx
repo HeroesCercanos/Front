@@ -8,9 +8,7 @@ import { FaUniversalAccess } from 'react-icons/fa';
 const slides = [
   { image: "/bomberos.png", alt: "Nuestros bomberos"},
   { image: "/capacitacion.png", alt: "Bomberos capacitandose"},
-  { image: "/carrera.png", alt: "Bomberos en las carreras"},
   { image: "/comunidad.png", alt: "Bomberos ayudando a los vecinos"},
-  { image: "/incendio1.png", alt: "Cuando se activa la sirena, no hay duda solo acción"},
   { image: "/incendio3.png", alt: "Bomberos en servicio"},
   { image: "/incendio4.png", alt: "En Monte Caseros"},
   { image: "/incendio5.png", alt: "Apagando el incendio"},
@@ -56,7 +54,7 @@ const MarketingSection: React.FC = () => {
           Ser bombero voluntario no es un trabajo. <strong>Es una forma de vivir.</strong>
         </p>
 
-        <MarketingCarousel slides={slides} intervalMs={4000} visibleCount={3}/>
+        <MarketingCarousel slides={slides} intervalMs={4000}/>
       </div>
     </section>
   );

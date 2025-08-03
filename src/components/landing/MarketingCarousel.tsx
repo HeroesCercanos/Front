@@ -9,22 +9,38 @@ interface Slide {
 
 interface MarketingCarouselProps {
   slides: Slide[];
-  visibleCount?: number;
   intervalMs?: number;
 }
 
 const MarketingCarousel: React.FC<MarketingCarouselProps> = ({
   slides,
-  visibleCount = 3,
   intervalMs = 5000,
 }) => {
   const [start, setStart] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(3);
   const timerRef = useRef<number | null>(null);
   const total = slides.length;
 
   const nextBlock = () => {
     setStart((prev) => (prev + visibleCount) % total);
   };
+
+  useEffect(() => {
+    const updateVisibleCount = () => {
+      if (window.innerWidth < 768) {
+        setVisibleCount(1);
+      } else {
+        setVisibleCount(3);
+      }
+    };
+
+    updateVisibleCount();
+    window.addEventListener("resize", updateVisibleCount);
+
+    return () => {
+      window.removeEventListener("resize", updateVisibleCount);
+    };
+  }, []);
 
   useEffect(() => {
     timerRef.current = window.setInterval(nextBlock, intervalMs);
@@ -58,13 +74,13 @@ const MarketingCarousel: React.FC<MarketingCarouselProps> = ({
         {currentSlides.map((slide, idx) => (
           <div
             key={idx}
-            className="flex-shrink-0 p-1 transition-all duration-700 ease-in-out"
+            className="flex-shrink-0 p-2 transition-all duration-700 ease-in-out"
             style={{ width: `${100 / visibleCount}%` }}
           >
             <img
               src={slide.image}
               alt={slide.alt}
-              className="w-full h-80 object-cover rounded-lg transition-all duration-700 ease-in-out"
+              className="w-full h-100 object-contain rounded-lg transition-transform duration-500 ease-in-out"
             />
           </div>
         ))}
@@ -75,7 +91,7 @@ const MarketingCarousel: React.FC<MarketingCarouselProps> = ({
           pause();
           setStart((s) => (s - visibleCount + total) % total);
         }}
-        className="cursor-pointer absolute left-2 top-1/2 transform -translate-y-1/2 bg-opacity-75 p-0.5 rounded-full hover:bg-white"
+        className="cursor-pointer absolute left-2 top-1/2 transform -translate-y-1/2 bg-opacity-75 p-0.5 rounded-full bg-black text-white hover:scale-110"
         aria-label="Anterior"
       >
         ‹
@@ -85,7 +101,7 @@ const MarketingCarousel: React.FC<MarketingCarouselProps> = ({
           pause();
           nextBlock();
         }}
-        className="cursor-pointer absolute right-2 top-1/2 transform -translate-y-1/2 bg-opacity-75 p-0.5 rounded-full hover:bg-white"
+        className="cursor-pointer absolute right-2 top-1/2 transform -translate-y-1/2 bg-opacity-75 p-0.5 rounded-full bg-black text-white hover:scale-110"
         aria-label="Siguiente"
       >
         ›
