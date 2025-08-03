@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 interface SpeechHook {
   speak: () => void;
@@ -8,17 +8,20 @@ interface SpeechHook {
 
 const useSpeech = (text: string): SpeechHook => {
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
-  const [utterance, setUtterance] = useState<SpeechSynthesisUtterance | null>(null);
+  const [utterance, setUtterance] = useState<SpeechSynthesisUtterance | null>(
+    null
+  );
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
       const synth = window.speechSynthesis;
       const newUtterance = new SpeechSynthesisUtterance(text);
+      newUtterance.lang = "es-AR";
 
       newUtterance.onstart = () => setIsSpeaking(true);
       newUtterance.onend = () => setIsSpeaking(false);
       newUtterance.onerror = (event) => {
-        console.error('Error en el TTS:', event.error);
+        console.error("Error en el TTS:", event.error);
         setIsSpeaking(false);
       };
 
@@ -28,7 +31,7 @@ const useSpeech = (text: string): SpeechHook => {
         synth.cancel();
       };
     } else {
-      console.warn('La API de Web Speech no es compatible con este navegador.');
+      console.warn("La API de Web Speech no es compatible con este navegador.");
     }
   }, [text]);
 

@@ -1,6 +1,6 @@
-// src/components/common/TTSButton.tsx
+
 import React, { ReactNode } from 'react';
-import { FaPlay, FaStop } from 'react-icons/fa'; // Mantenemos estos iconos por si los queremos usar en otro lado
+import { FaPlay, FaStop } from 'react-icons/fa'; 
 import useSpeech from '@/helpers/useSpeech';
 
 interface TTSButtonProps {
