@@ -40,8 +40,8 @@ export default function DonationHistoryModal({ onClose }: Props) {
 
 	return (
 		<div className='fixed inset-0 z-[999] flex items-center justify-center backdrop-blur-sm bg-black/30'>
-			<div className='bg-white rounded-2xl shadow-xl p-6 w-full max-w-2xl space-y-4'>
-				<div className='flex items-center justify-between'>
+			<div className='bg-white rounded-2xl shadow-xl p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto'>
+				<div className='flex items-center justify-between mb-4'>
 					<h2 className='text-xl font-bold'>Historial de Donaciones</h2>
 					<button onClick={onClose}>
 						<X />
@@ -55,22 +55,24 @@ export default function DonationHistoryModal({ onClose }: Props) {
 				) : donations.length === 0 ? (
 					<p>No realizaste ninguna donación aún.</p>
 				) : (
-					<ul className='space-y-3'>
-						{donations.map((don) => (
-							<li
-								key={don.id}
-								className='p-3 border rounded-lg flex justify-between'
-							>
-								<div>
-									<p className='font-medium'>Monto: ${don.amount}</p>
-									<p className='text-sm text-gray-500'>
-										Fecha: {new Date(don.createdAt).toLocaleDateString()}
+					<ul>
+						{donations.map((don, idx) => (
+							<div key={don.id}>
+								<li className='p-4 rounded-lg shadow-inner shadow-gray-300 flex justify-between'>
+									<div>
+										<p className='font-medium'>Monto: ${don.amount}</p>
+										<p className='text-sm text-gray-500'>
+											Fecha: {new Date(don.createdAt).toLocaleDateString()}
+										</p>
+									</div>
+									<p className='text-sm italic text-gray-600'>
+										{don.message || 'Sin mensaje'}
 									</p>
-								</div>
-								<p className='text-sm italic text-gray-600'>
-									{don.message || 'Sin mensaje'}
-								</p>
-							</li>
+								</li>
+								{idx !== donations.length - 1 && (
+									<hr className='my-3 border-gray-200' />
+								)}
+							</div>
 						))}
 					</ul>
 				)}
