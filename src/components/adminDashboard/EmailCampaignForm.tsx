@@ -69,7 +69,7 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 						onClick={() => toast.dismiss(t.id)}
 						className='px-3 py-1 bg-gray-200 rounded'
 					>
-						Cancelar
+						<p>Cancelar</p>
 					</button>
 					<button
 						onClick={async () => {

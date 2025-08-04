@@ -24,7 +24,7 @@ export default function MediaUploadForm({
 		}
 
 		toast.custom((t) => (
-			<div className='bg-white border border-gray-300 rounded p-4 shadow-md w-full max-w-sm'>
+			<div className='bg-white border border-gray-300 rounded p-6 shadow-md w-full max-w-sm'>
 				<p className='mb-2'>¿Confirmás subir este archivo?</p>
 				<div className='flex justify-end gap-2'>
 					<button
