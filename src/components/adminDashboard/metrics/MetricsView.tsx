@@ -76,10 +76,10 @@ export default function MetricsView() {
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen">
-        <aside className="w-full md:w-64 bg-black text-white">
+        <aside className="w-full md:w-64 bg-black text-black">
     <Sidebar />
   </aside>
-      <div className="flex-1 p-4 overflow-auto bg-gray-50">
+      <div className="flex-1 p-4 overflow-auto bg-gray-50 pt-9 md:pt-2">
         <h2 className="text-2xl font-bold mb-10">Panel de Métricas</h2>
 
         {[

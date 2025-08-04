@@ -15,7 +15,7 @@ const AdminDashboardView = () => {
 
 			<div className='flex-1 bg-white'>
 				<main className='p-4 md:p-8'>
-					<h2 className='text-2xl md:text-3xl font-semibold mb-1'>
+					<h2 className='text-2xl md:text-3xl font-semibold mb-1 sm: pt-6'>
 						¡Hola, {userData?.user.name}!
 					</h2>
 					<p className='text-gray-600 mb-6'>GRACIAS POR TU SERVICIO</p>

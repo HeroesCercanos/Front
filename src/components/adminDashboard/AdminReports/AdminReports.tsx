@@ -148,10 +148,10 @@ export default function AdminReports() {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
- <aside className="w-full md:w-64 bg-black text-white">
+ <aside className="w-full md:w-64 bg-black text-black">
     <Sidebar />
   </aside>
-        <section className="flex-1 p-6 text-black bg-gray-50">
+        <section className="flex-1 p-6 text-black bg-gray-50 pt-9 md:pt-8">
         <h2 className="text-2xl font-bold">REPORTES</h2>
         <p className="text-sm text-gray-600 mb-8">GRACIAS POR TU SERVICIO</p>
 
