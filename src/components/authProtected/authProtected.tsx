@@ -19,16 +19,19 @@ const AuthProtected = ({ children }: Props) => {
 			router.push('/login');
 			return;
 		}
-		if (
-			pathname.startsWith('/admin') &&
-			userData.user.role.toLowerCase() !== 'admin'
-		) {
+		const role = userData.user.role.toLowerCase();
+
+		// Protege /admin solo para admin
+		if (pathname.startsWith('/admin') && role !== 'admin') {
 			router.push('/');
 			return;
 		}
+
+		// Protege rutas especiales bajo /trainings solo para admin
 		if (
-			pathname.startsWith('/admin') &&
-			userData.user.role.toLowerCase() !== 'admin'
+			(pathname.startsWith('/trainings/videos') ||
+				pathname.startsWith('/trainings/images')) &&
+			role !== 'admin'
 		) {
 			router.push('/');
 			return;
