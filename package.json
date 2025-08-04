@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "date-fns": "^4.1.0",
     "flowbite-react": "^0.12.3",
     "i": "^0.3.7",
     "jose": "^6.0.12",
@@ -20,6 +21,7 @@
     "next": "15",
     "nodemailer": "^7.0.5",
     "react": "^19.0.0",
+    "react-datepicker": "^8.4.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
