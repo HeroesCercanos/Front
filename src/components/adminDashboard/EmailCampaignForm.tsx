@@ -113,10 +113,11 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 		<>
 			<form onSubmit={handleSubmit} className='space-y-6'>
 				<div>
+					<p className='text-sm text-gray-700'>Nota: para saber que se debe poner en cada campo, consulta el botón de ver plantilla de abajo.</p>
 					<label className='block font-medium mb-1'>Asunto</label>
 					<input
 						type='text'
-						className='w-full border rounded p-2'
+						className='w-full border border-gray-300 shadow-inner shadow-gray-300 rounded p-2 hover:border hover:border-gray-500 focus:shadow-gray-50'
 						value={subject}
 						onChange={(e) => setSubject(e.target.value)}
 						required
@@ -126,7 +127,7 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 				<div>
 					<label className='block font-medium mb-1'>Destinatarios</label>
 					<textarea
-						className='w-full border rounded p-2'
+						className='w-full border border-gray-300 shadow-inner shadow-gray-300 rounded p-2 hover:border hover:border-gray-500 focus:shadow-gray-50'
 						rows={2}
 						value={recipients}
 						onChange={(e) => setRecipients(e.target.value)}
@@ -140,7 +141,7 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 					<label className='block font-medium mb-1'>Título del correo</label>
 					<input
 						type='text'
-						className='w-full border rounded p-2'
+						className='w-full border border-gray-300 shadow-inner shadow-gray-300 rounded p-2 hover:border hover:border-gray-500 focus:shadow-gray-50'
 						placeholder='Completar con {{titulo}} de la plantilla'
 						value={titulo}
 						onChange={(e) => setTitulo(e.target.value)}
@@ -151,7 +152,7 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 				<div>
 					<label className='block font-medium mb-1'>Primer párrafo</label>
 					<textarea
-						className='w-full border rounded p-2'
+						className='w-full border border-gray-300 shadow-inner shadow-gray-300 rounded p-2 hover:border hover:border-gray-500 focus:shadow-gray-50'
 						placeholder='Completar con {{parrafo1}} de la plantilla'
 						rows={2}
 						value={parrafo1}
@@ -163,7 +164,7 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 				<div>
 					<label className='block font-medium mb-1'>Segundo párrafo</label>
 					<textarea
-						className='w-full border rounded p-2'
+						className='w-full border border-gray-300 shadow-inner shadow-gray-300 rounded p-2 hover:border hover:border-gray-500 focus:shadow-gray-50'
 						placeholder='Completar con {{parrafo2}} de la plantilla'
 						rows={2}
 						value={parrafo2}
@@ -176,7 +177,7 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 					<label className='block font-medium mb-1'>Cierre</label>
 					<input
 						type='text'
-						className='w-full border rounded p-2'
+						className='w-full border border-gray-300 shadow-inner shadow-gray-300 rounded p-2 hover:border hover:border-gray-500 focus:shadow-gray-50'
 						placeholder='Completar con {{cierre}} de la plantilla'
 						value={cierre}
 						onChange={(e) => setCierre(e.target.value)}
@@ -190,7 +191,7 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 					</label>
 					<input
 						type='datetime-local'
-						className='w-full border rounded p-2'
+						className='w-full border border-gray-300 shadow-inner shadow-gray-300 rounded p-2 hover:border hover:border-gray-500 focus:shadow-gray-50'
 						value={scheduledAt}
 						onChange={(e) => setScheduledAt(e.target.value)}
 					/>
@@ -200,7 +201,7 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 					<button
 						type='button'
 						onClick={() => setPreviewOpen(true)}
-						className='px-4 py-2 rounded bg-gray-600 text-white hover:bg-gray-700 transition'
+						className='px-4 py-2 rounded bg-gray-500 text-white hover:bg-gray-700 transition'
 					>
 						Previsualizar
 					</button>
