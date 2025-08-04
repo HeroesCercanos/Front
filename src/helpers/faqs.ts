@@ -26,7 +26,7 @@ export const faqs: FAQItem[] = [
     id: "educacion",
     question: "¿Qué tipo de contenido educativo hay?",
     answer:
-      "Nuestra sección de capacitación incluye videos de primeros auxilios, guías en PDF sobre prevención de incendios e infografías interactivas. " +
+      "Nuestra sección de capacitación incluye videos de primeros auxilios e infografías interactivas. " +
       "Todo el material está disponible gratuitamente y se aloja en la nube para garantizar velocidad y calidad.",
     image: "/capacitacionesFAQs.png",
   },
