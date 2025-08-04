@@ -5,7 +5,6 @@ import Link from 'next/link';
 import {
 	TvMinimalPlay,
 	Image as ImageIcon,
-	FileText,
 	Menu,
 	X,
 } from 'lucide-react';
@@ -46,7 +45,9 @@ export default function TrainingSidebar() {
 					md:translate-x-0 md:flex`}
 			>
 				<nav className='px-6 py-8 space-y-6 flex flex-col'>
-					<h2 className='text-xl font-semibold mb-4 pt-7 sm:pt-7 lg:pt-1 md:pt-1'>Contenido Educativo</h2>
+					<h2 className='text-xl font-semibold mb-4 pt-7 sm:pt-7 lg:pt-1 md:pt-1'>
+						Contenido Educativo
+					</h2>
 					<Link
 						href='/trainings/videos'
 						className='flex items-center gap-3 hover:text-red-400'
@@ -58,12 +59,6 @@ export default function TrainingSidebar() {
 						className='flex items-center gap-3 hover:text-red-400'
 					>
 						<ImageIcon size={18} /> Imágenes
-					</Link>
-					<Link
-						href='/trainings/pdfs'
-						className='flex items-center gap-3 hover:text-red-400'
-					>
-						<FileText size={18} /> PDFs
 					</Link>
 				</nav>
 			</aside>

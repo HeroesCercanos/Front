@@ -21,7 +21,7 @@ export default function TrainingView() {
           <div>
             <h3 className="text-xl font-semibold mb-2">Subir nuevo archivo</h3>
             <p className="text-gray-700 text-sm">
-              Agrega imágenes, videos o PDFs a la plataforma.
+              Agrega imágenes o videos a la plataforma.
             </p>
           </div>
           <button
