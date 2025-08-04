@@ -40,7 +40,7 @@ export default function DonationHistoryModal({ onClose }: Props) {
 
 	return (
 		<div className='fixed inset-0 z-[999] flex items-center justify-center backdrop-blur-sm bg-black/30'>
-			<div className='bg-white rounded-2xl shadow-xl p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto'>
+			<div className='bg-white rounded-2xl shadow-xl p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto scrollbar-hide'>
 				<div className='flex items-center justify-between mb-4'>
 					<h2 className='text-xl font-bold'>Historial de Donaciones</h2>
 					<button onClick={onClose}>

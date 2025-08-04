@@ -2,10 +2,8 @@ import { NextResponse, NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
 
 export async function middleware(request: NextRequest) {
-	console.log('🔥 Middleware ejecutado en:', request.nextUrl.pathname);
 
 	const { pathname } = request.nextUrl;
-	console.log('🔥 Middleware ejecutado en:', request.nextUrl.pathname);
 
 	// proteger /dashboard, /admin y /trainings
 	if (
