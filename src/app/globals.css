@@ -3,6 +3,7 @@
 @source '../../.flowbite-react/class-list.json';
 @import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@600;700&family=Yaldevi:wght@400;500&display=swap');
 @import 'leaflet/dist/leaflet.css';
+@import 'react-datepicker/dist/react-datepicker.css';
 
 :root {
 	--font-titulos: 'Libre Franklin', sans-serif;
@@ -74,4 +75,10 @@ button,
 	display: none;
 }
 
+.react-datepicker-popper {
+	z-index: 9999 !important;
+}
 
+.react-datepicker__time-list-item--disabled {
+	display: none !important;
+}

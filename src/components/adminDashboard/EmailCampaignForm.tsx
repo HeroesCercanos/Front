@@ -5,6 +5,14 @@ import { useRouter } from 'next/navigation';
 import { API_BASE_URL } from '@/config/api';
 import EmailPreviewModal from './EmailPreviewModal';
 import toast from 'react-hot-toast';
+import DatePicker from 'react-datepicker';
+import { registerLocale } from 'react-datepicker';
+import { es } from 'date-fns/locale';
+import 'react-datepicker/dist/react-datepicker.css';
+import { isToday } from 'date-fns';
+import { useMemo } from 'react';
+
+registerLocale('es', es);
 
 type Props = {
 	initialData?: {
@@ -26,23 +34,19 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 	const router = useRouter();
 	const [subject, setSubject] = useState('');
 	const [recipients, setRecipients] = useState('');
-	const [scheduledAt, setScheduledAt] = useState('');
 	const [titulo, setTitulo] = useState('');
 	const [parrafo1, setParrafo1] = useState('');
 	const [parrafo2, setParrafo2] = useState('');
 	const [cierre, setCierre] = useState('');
 	const [previewOpen, setPreviewOpen] = useState(false);
 	const [templateOpen, setTemplateOpen] = useState(false);
+	const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
+	const [now, setNow] = useState(new Date());
 
 	useEffect(() => {
 		if (initialData) {
 			setSubject(initialData.subject || '');
 			setRecipients(initialData.recipients || '');
-			setScheduledAt(
-				initialData.scheduledAt
-					? new Date(initialData.scheduledAt).toISOString().slice(0, 16)
-					: ''
-			);
 			setTitulo(initialData.variables?.titulo || '');
 			setParrafo1(initialData.variables?.parrafo1 || '');
 			setParrafo2(initialData.variables?.parrafo2 || '');
@@ -77,7 +81,9 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 					body: JSON.stringify({
 						subject,
 						recipients: emails,
-						scheduledAt: scheduledAt || undefined,
+						scheduledAt: scheduledDate
+							? scheduledDate.toISOString()
+							: undefined,
 						titulo,
 						parrafo1,
 						parrafo2,
@@ -109,11 +115,33 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 		<p>${cierre}</p>
 	`;
 
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setNow(new Date());
+		}, 15 * 1000);
+
+		return () => clearInterval(interval);
+	}, []);
+
+	const minTime = useMemo(() => {
+		if (scheduledDate && isToday(scheduledDate)) {
+			const rounded = new Date(now);
+			const minutes = rounded.getMinutes();
+			const roundedMinutes = Math.ceil(minutes / 15) * 15;
+			rounded.setMinutes(roundedMinutes, 0, 0);
+			return rounded;
+		}
+		return new Date(new Date().setHours(7, 0, 0, 0));
+	}, [scheduledDate, now]);
+
 	return (
 		<>
 			<form onSubmit={handleSubmit} className='space-y-6'>
 				<div>
-					<p className='text-sm text-gray-700'>Nota: para saber que se debe poner en cada campo, consulta el botón de ver plantilla de abajo.</p>
+					<p className='text-sm text-gray-700'>
+						Nota: para saber que se debe poner en cada campo, consulta el botón
+						de ver plantilla de abajo.
+					</p>
 					<label className='block font-medium mb-1'>Asunto</label>
 					<input
 						type='text'
@@ -189,11 +217,21 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 					<label className='block font-medium mb-1'>
 						Programar envío (opcional)
 					</label>
-					<input
-						type='datetime-local'
+					<DatePicker
+						locale='es'
+						selected={scheduledDate}
+						onChange={(date: Date | null) => setScheduledDate(date)}
+						showTimeSelect
+						timeFormat='HH:mm'
+						timeIntervals={15}
+						dateFormat='dd/MM/yyyy HH:mm'
+						placeholderText='Seleccionar fecha y hora'
+						timeCaption='Hora'
+						minDate={new Date()}
+						minTime={minTime}
+						maxTime={new Date(new Date().setHours(22, 0, 0, 0))}
 						className='w-full border border-gray-300 shadow-inner shadow-gray-300 rounded p-2 hover:border hover:border-gray-500 focus:shadow-gray-50'
-						value={scheduledAt}
-						onChange={(e) => setScheduledAt(e.target.value)}
+						popperPlacement='bottom-end'
 					/>
 				</div>
 
