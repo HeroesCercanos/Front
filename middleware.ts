@@ -10,6 +10,8 @@ export async function middleware(request: NextRequest) {
 		pathname === '/dashboard' ||
 		pathname === '/admin' ||
 		pathname === '/trainings' ||
+		pathname === '/trainings/videos' ||
+		pathname === '/trainings/images' ||
 		pathname === '/admin/campaigns' ||
 		pathname === '/admin/email-campaigns' ||
 		pathname === '/admin/metrics' ||
@@ -52,10 +54,18 @@ export async function middleware(request: NextRequest) {
 export const config = {
 	matcher: [
 		'/dashboard',
-		'/dashboard/:path*',
 		'/admin',
-		'/admin/:path*',
+		'/admin/metrics',
+		'/admin/reports',
+		'/admin/campaigns',
+		'/admin/users',
+		'/admin/trainings',
+		'/admin/email-campaigns',
 		'/trainings',
-		'/trainings/:path*',
+		'/trainings/videos',
+		'/trainings/images',
 	],
 };
+
+		
+		
