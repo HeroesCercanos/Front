@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { API_BASE_URL } from '@/config/api';
 import { Pencil, Trash2, Send, Repeat } from 'lucide-react';
 import toast from 'react-hot-toast';
-// import { useRouter } from 'next/navigation';
 
 type Campaign = {
 	id: string;
@@ -17,7 +16,6 @@ type Campaign = {
 
 export default function EmailCampaignList() {
 	const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-	// const router = useRouter();
 
 	const fetchCampaigns = async () => {
 		try {
@@ -41,48 +39,112 @@ export default function EmailCampaignList() {
 	}, []);
 
 	const handleDelete = async (id: string) => {
-		if (!confirm('¿Estás seguro de eliminar esta campaña?')) return;
-		try {
-			await fetch(`${API_BASE_URL}/api/campaigns/${id}`, {
-				method: 'DELETE',
-				credentials: 'include',
-			});
-			toast.success('Campaña eliminada');
-			fetchCampaigns();
-		} catch {
-			toast.error('Error al eliminar campaña');
-		}
+		toast.custom((t) => (
+			<div className='bg-white border border-gray-300 rounded p-4 shadow-md'>
+				<p className='mb-2'>¿Estás seguro de eliminar esta campaña?</p>
+				<div className='flex justify-end gap-2'>
+					<button
+						onClick={() => toast.dismiss(t.id)}
+						className='px-3 py-1 bg-gray-200 rounded'
+					>
+						Cancelar
+					</button>
+					<button
+						onClick={async () => {
+							toast.dismiss(t.id);
+							try {
+								await fetch(`${API_BASE_URL}/api/campaigns/${id}`, {
+									method: 'DELETE',
+									credentials: 'include',
+								});
+								toast.success('Campaña eliminada');
+								fetchCampaigns();
+							} catch {
+								toast.error('Error al eliminar campaña');
+							}
+						}}
+						className='px-3 py-1 bg-red-600 text-white rounded'
+					>
+						Eliminar
+					</button>
+				</div>
+			</div>
+		));
 	};
 
 	const handleSendNow = async (id: string) => {
-		if (!confirm('¿Estás seguro de enviar esta campaña ahora?')) return;
-
-		try {
-			const res = await fetch(`${API_BASE_URL}/api/campaigns/${id}/send-now`, {
-				method: 'POST',
-				credentials: 'include',
-			});
-			if (!res.ok) throw new Error();
-			toast.success('Correo enviado');
-			fetchCampaigns();
-		} catch (err) {
-			console.error(err);
-			toast.error('Error al enviar ahora');
-		}
+		toast.custom((t) => (
+			<div className='bg-white border border-gray-300 rounded p-4 shadow-md'>
+				<p className='mb-2'>¿Enviar esta campaña ahora?</p>
+				<div className='flex justify-end gap-2'>
+					<button
+						onClick={() => toast.dismiss(t.id)}
+						className='px-3 py-1 bg-gray-200 rounded'
+					>
+						Cancelar
+					</button>
+					<button
+						onClick={async () => {
+							toast.dismiss(t.id);
+							try {
+								const res = await fetch(
+									`${API_BASE_URL}/api/campaigns/${id}/send-now`,
+									{
+										method: 'POST',
+										credentials: 'include',
+									}
+								);
+								if (!res.ok) throw new Error();
+								toast.success('Correo enviado');
+								fetchCampaigns();
+							} catch {
+								toast.error('Error al enviar ahora');
+							}
+						}}
+						className='px-3 py-1 bg-red-600 text-white rounded'
+					>
+						Enviar ahora
+					</button>
+				</div>
+			</div>
+		));
 	};
 
 	const handleResend = async (id: string) => {
-		if (!confirm('¿Querés reenviar esta campaña?')) return;
-		try {
-			const res = await fetch(`${API_BASE_URL}/api/campaigns/${id}/resend`, {
-				method: 'POST',
-				credentials: 'include',
-			});
-			if (!res.ok) throw new Error();
-			toast.success('Correo reenviado');
-		} catch {
-			toast.error('Error al reenviar');
-		}
+		toast.custom((t) => (
+			<div className='bg-white border border-gray-300 rounded p-4 shadow-md'>
+				<p className='mb-2'>¿Querés reenviar esta campaña?</p>
+				<div className='flex justify-end gap-2'>
+					<button
+						onClick={() => toast.dismiss(t.id)}
+						className='px-3 py-1 bg-gray-200 rounded'
+					>
+						Cancelar
+					</button>
+					<button
+						onClick={async () => {
+							toast.dismiss(t.id);
+							try {
+								const res = await fetch(
+									`${API_BASE_URL}/api/campaigns/${id}/resend`,
+									{
+										method: 'POST',
+										credentials: 'include',
+									}
+								);
+								if (!res.ok) throw new Error();
+								toast.success('Correo reenviado');
+							} catch {
+								toast.error('Error al reenviar');
+							}
+						}}
+						className='px-3 py-1 bg-red-600 text-white rounded'
+					>
+						Reenviar
+					</button>
+				</div>
+			</div>
+		));
 	};
 
 	const statusLabels: Record<Campaign['status'], string> = {
@@ -94,7 +156,9 @@ export default function EmailCampaignList() {
 	return (
 		<>
 			<div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6'>
-				<h2 className='text-2xl font-bold text-gray-800 pt-2 md:pt-1'>Campañas de correo</h2>
+				<h2 className='text-2xl font-bold text-gray-800 pt-2 md:pt-1'>
+					Campañas de correo
+				</h2>
 				<Link
 					href='/admin/email-campaigns/new'
 					className='self-start sm:self-auto bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition'

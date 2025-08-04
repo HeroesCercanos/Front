@@ -21,16 +21,46 @@ export default function UploadHistory() {
 			.finally(() => setLoading(false));
 	}, []);
 
-	const handleDelete = async (publicId: string) => {
-		if (!confirm('¿Eliminar este archivo?')) return;
-		try {
-			await deleteMedia(publicId);
-			setList((prev) => prev.filter((i) => i.public_id !== publicId));
-			toast.success('Archivo eliminado');
-		} catch (err) {
-			console.error(err);
-			toast.error('Error al eliminar');
-		}
+	const handleDelete = (publicId: string, title?: string) => {
+		toast.custom((t) => (
+			<div
+				className={`bg-white rounded-xl shadow-lg p-6 border border-gray-200 w-[90%] max-w-md ${
+					t.visible ? 'animate-enter' : 'animate-leave'
+				}`}
+			>
+				<h2 className='text-lg font-semibold text-gray-800 mb-2'>
+					¿Eliminar archivo?
+				</h2>
+				<p className='text-gray-600 mb-4'>
+					Vas a eliminar <strong>{title || 'este archivo'}</strong>. Esta acción
+					no se puede deshacer.
+				</p>
+				<div className='flex justify-center gap-4'>
+					<button
+						onClick={async () => {
+							toast.dismiss(t.id);
+							try {
+								await deleteMedia(publicId);
+								setList((prev) => prev.filter((i) => i.public_id !== publicId));
+								toast.success('Archivo eliminado con éxito.');
+							} catch (err) {
+								console.error(err);
+								toast.error('Error al eliminar archivo.');
+							}
+						}}
+						className='px-4 py-2 rounded-md bg-red-600 text-white font-semibold hover:bg-red-700 transition'
+					>
+						Sí, eliminar
+					</button>
+					<button
+						onClick={() => toast.dismiss(t.id)}
+						className='px-4 py-2 rounded-md bg-gray-300 text-gray-800 font-medium hover:bg-gray-400 transition'
+					>
+						Cancelar
+					</button>
+				</div>
+			</div>
+		));
 	};
 
 	const openEditModal = (media: CloudinaryMedia) => {
@@ -83,7 +113,9 @@ export default function UploadHistory() {
 									<Pencil size={16} />
 								</button>
 								<button
-									onClick={() => handleDelete(item.public_id.split('/').pop()!)}
+									onClick={() =>
+										handleDelete(item.public_id.split('/').pop()!, title)
+									}
 									className='text-red-600 hover:underline'
 								>
 									<Trash2 size={16} />
