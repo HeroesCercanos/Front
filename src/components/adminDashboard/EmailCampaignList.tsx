@@ -40,14 +40,14 @@ export default function EmailCampaignList() {
 
 	const handleDelete = async (id: string) => {
 		toast.custom((t) => (
-			<div className='bg-white border border-gray-300 rounded p-4 shadow-md'>
+			<div className='bg-white border border-gray-300 rounded p-6 shadow-md'>
 				<p className='mb-2'>¿Estás seguro de eliminar esta campaña?</p>
 				<div className='flex justify-end gap-2'>
 					<button
 						onClick={() => toast.dismiss(t.id)}
-						className='px-3 py-1 bg-gray-200 rounded'
+						className='px-3 py-1 bg-white rounded'
 					>
-						Cancelar
+						<p>Cancelar</p>
 					</button>
 					<button
 						onClick={async () => {
@@ -65,7 +65,7 @@ export default function EmailCampaignList() {
 						}}
 						className='px-3 py-1 bg-red-600 text-white rounded'
 					>
-						Eliminar
+						<p>Eliminar</p>
 					</button>
 				</div>
 			</div>
@@ -74,14 +74,14 @@ export default function EmailCampaignList() {
 
 	const handleSendNow = async (id: string) => {
 		toast.custom((t) => (
-			<div className='bg-white border border-gray-300 rounded p-4 shadow-md'>
+			<div className='bg-white border border-gray-300 rounded p-6 shadow-md'>
 				<p className='mb-2'>¿Enviar esta campaña ahora?</p>
 				<div className='flex justify-end gap-2'>
 					<button
 						onClick={() => toast.dismiss(t.id)}
-						className='px-3 py-1 bg-gray-200 rounded'
+						className='px-3 py-1 bg-white p-3 rounded'
 					>
-						Cancelar
+						<p>Cancelar</p>
 					</button>
 					<button
 						onClick={async () => {
@@ -103,7 +103,7 @@ export default function EmailCampaignList() {
 						}}
 						className='px-3 py-1 bg-red-600 text-white rounded'
 					>
-						Enviar ahora
+						<p>Enviar ahora</p>
 					</button>
 				</div>
 			</div>
@@ -112,14 +112,14 @@ export default function EmailCampaignList() {
 
 	const handleResend = async (id: string) => {
 		toast.custom((t) => (
-			<div className='bg-white border border-gray-300 rounded p-4 shadow-md'>
+			<div className='bg-white border border-gray-300 rounded p-6 shadow-md'>
 				<p className='mb-2'>¿Querés reenviar esta campaña?</p>
 				<div className='flex justify-end gap-2'>
 					<button
 						onClick={() => toast.dismiss(t.id)}
-						className='px-3 py-1 bg-gray-200 rounded'
+						className='px-3 py-1 bg-whi rounded'
 					>
-						Cancelar
+						<p>Cancelar</p>
 					</button>
 					<button
 						onClick={async () => {
@@ -140,7 +140,7 @@ export default function EmailCampaignList() {
 						}}
 						className='px-3 py-1 bg-red-600 text-white rounded'
 					>
-						Reenviar
+						<p>Reenviar</p>
 					</button>
 				</div>
 			</div>

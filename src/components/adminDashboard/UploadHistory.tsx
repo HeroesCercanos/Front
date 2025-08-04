@@ -50,13 +50,13 @@ export default function UploadHistory() {
 						}}
 						className='px-4 py-2 rounded-md bg-red-600 text-white font-semibold hover:bg-red-700 transition'
 					>
-						Sí, eliminar
+						<p>Sí, eliminar</p>
 					</button>
 					<button
 						onClick={() => toast.dismiss(t.id)}
 						className='px-4 py-2 rounded-md bg-gray-300 text-gray-800 font-medium hover:bg-gray-400 transition'
 					>
-						Cancelar
+						<p>Cancelar</p>
 					</button>
 				</div>
 			</div>

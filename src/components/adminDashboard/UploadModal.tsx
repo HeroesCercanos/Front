@@ -22,7 +22,7 @@ export default function UploadModal({ onClose, onUploadSuccess }: Props) {
 				<MediaUploadForm
 					onSuccess={() => {
 						onClose();
-						onUploadSuccess?.(); // ✅ dispara toast desde el padre si está definido
+						onUploadSuccess?.();
 					}}
 				/>
 			</div>
