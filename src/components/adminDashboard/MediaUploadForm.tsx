@@ -22,21 +22,43 @@ export default function MediaUploadForm({
 			toast.error('Seleccioná un archivo');
 			return;
 		}
-		setLoading(true);
-		const form = new FormData();
-		form.append('resourceType', resourceType);
-		form.append('file', file);
-		form.append('title', title);
-		form.append('caption', caption);
-		try {
-			await uploadMedia(form);
-			toast.success('Archivo subido con éxito');
-			onSuccess();
-		} catch {
-			toast.error('Error al subir');
-		} finally {
-			setLoading(false);
-		}
+
+		toast.custom((t) => (
+			<div className='bg-white border border-gray-300 rounded p-4 shadow-md w-full max-w-sm'>
+				<p className='mb-2'>¿Confirmás subir este archivo?</p>
+				<div className='flex justify-end gap-2'>
+					<button
+						onClick={() => toast.dismiss(t.id)}
+						className='px-3 py-1 bg-gray-200 text-sm rounded'
+					>
+						Cancelar
+					</button>
+					<button
+						onClick={async () => {
+							toast.dismiss(t.id);
+							setLoading(true);
+							const form = new FormData();
+							form.append('resourceType', resourceType);
+							form.append('file', file);
+							form.append('title', title);
+							form.append('caption', caption);
+							try {
+								await uploadMedia(form);
+								toast.success('Archivo subido con éxito');
+								onSuccess();
+							} catch {
+								toast.error('Error al subir');
+							} finally {
+								setLoading(false);
+							}
+						}}
+						className='px-3 py-1 bg-red-600 text-white text-sm rounded'
+					>
+						Subir
+					</button>
+				</div>
+			</div>
+		));
 	};
 
 	return (
