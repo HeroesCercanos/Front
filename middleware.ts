@@ -8,11 +8,14 @@ export async function middleware(request: NextRequest) {
 	// proteger /dashboard, /admin y /trainings
 	if (
 		pathname === '/dashboard' ||
-		pathname.startsWith('/dashboard/') ||
 		pathname === '/admin' ||
-		pathname.startsWith('/admin/') ||
 		pathname === '/trainings' ||
-		pathname.startsWith('/trainings/')
+		pathname === '/admin/campaigns' ||
+		pathname === '/admin/email-campaigns' ||
+		pathname === '/admin/metrics' ||
+		pathname === '/admin/reports' ||
+		pathname === '/admin/training' ||
+		pathname === '/admin/users'
 	) {
 		const token = request.cookies.get('jwtToken')?.value;
 

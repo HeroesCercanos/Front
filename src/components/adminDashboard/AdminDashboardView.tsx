@@ -8,10 +8,10 @@ import AdminWelcome from './AdminWelcome';
 const AdminDashboardView = () => {
 	const { userData } = useAuth();
 	return (
-		<div className='flex flex-col md:flex-row min-h-screen'>
-			<aside className='w-full md:w-64 bg-gray-100'>
-				<Sidebar />
-			</aside>
+		<div className="flex flex-col lg:flex-row min-h-screen">
+        <aside className="w-full md:w-64 bg-black text-black">
+    <Sidebar />
+  </aside>
 
 			<div className='flex-1 bg-white'>
 				<main className='p-4 md:p-8'>
