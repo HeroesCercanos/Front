@@ -2,7 +2,12 @@
 import React from 'react';
 import MediaUploadForm from './MediaUploadForm';
 
-export default function UploadModal({ onClose }: { onClose: () => void }) {
+type Props = {
+	onClose: () => void;
+	onUploadSuccess?: () => void;
+};
+
+export default function UploadModal({ onClose, onUploadSuccess }: Props) {
 	return (
 		<div className='fixed inset-0 bg-black/30 flex items-center justify-center z-50'>
 			<div className='bg-white rounded-2xl p-8 w-full max-w-lg shadow-lg relative'>
@@ -14,7 +19,12 @@ export default function UploadModal({ onClose }: { onClose: () => void }) {
 					&times;
 				</button>
 				<h3 className='text-xl font-bold mb-6 text-center'>Subir archivo</h3>
-				<MediaUploadForm onSuccess={onClose} />
+				<MediaUploadForm
+					onSuccess={() => {
+						onClose();
+						onUploadSuccess?.(); // ✅ dispara toast desde el padre si está definido
+					}}
+				/>
 			</div>
 		</div>
 	);

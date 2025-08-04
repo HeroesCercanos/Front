@@ -57,55 +57,72 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		const confirmed = confirm(
-			initialData
-				? '¿Estás seguro de actualizar esta campaña?'
-				: '¿Estás seguro de crear esta campaña?'
-		);
-		if (!confirmed) return;
+		toast.custom((t) => (
+			<div className='bg-white border border-gray-300 rounded p-4 shadow-md'>
+				<p className='mb-2'>
+					{initialData
+						? '¿Estás seguro de actualizar esta campaña?'
+						: '¿Estás seguro de crear esta campaña?'}
+				</p>
+				<div className='flex justify-end gap-2'>
+					<button
+						onClick={() => toast.dismiss(t.id)}
+						className='px-3 py-1 bg-gray-200 rounded'
+					>
+						Cancelar
+					</button>
+					<button
+						onClick={async () => {
+							toast.dismiss(t.id);
+							const emails = recipients
+								.split(',')
+								.map((email) => email.trim())
+								.filter((e) => e);
+							try {
+								const res = await fetch(
+									initialData
+										? `${API_BASE_URL}/api/campaigns/${initialData.id}`
+										: `${API_BASE_URL}/api/campaigns`,
+									{
+										method: initialData ? 'PATCH' : 'POST',
+										headers: { 'Content-Type': 'application/json' },
+										credentials: 'include',
+										body: JSON.stringify({
+											subject,
+											recipients: emails,
+											scheduledAt: scheduledDate
+												? scheduledDate.toISOString()
+												: undefined,
+											titulo,
+											parrafo1,
+											parrafo2,
+											cierre,
+										}),
+									}
+								);
+								if (!res.ok) {
+									throw new Error('Error al guardar la campaña');
+								}
+								toast.success(
+									initialData
+										? 'Campaña actualizada exitosamente'
+										: 'Campaña creada exitosamente'
+								);
 
-		const emails = recipients
-			.split(',')
-			.map((email) => email.trim())
-			.filter((e) => e);
-
-		try {
-			const res = await fetch(
-				initialData
-					? `${API_BASE_URL}/api/campaigns/${initialData.id}`
-					: `${API_BASE_URL}/api/campaigns`,
-				{
-					method: initialData ? 'PATCH' : 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					credentials: 'include',
-					body: JSON.stringify({
-						subject,
-						recipients: emails,
-						scheduledAt: scheduledDate
-							? scheduledDate.toISOString()
-							: undefined,
-						titulo,
-						parrafo1,
-						parrafo2,
-						cierre,
-					}),
-				}
-			);
-			if (!res.ok) {
-				throw new Error('Error al guardar la campaña');
-			}
-			toast.success(
-				initialData
-					? 'Campaña actualizada exitosamente'
-					: 'Campaña creada exitosamente'
-			);
-
-			if (onSuccess) onSuccess();
-			else router.push('/admin/email-campaigns');
-		} catch (err) {
-			console.error(err);
-			toast.error('Hubo un error al guardar la campaña');
-		}
+								if (onSuccess) onSuccess();
+								else router.push('/admin/email-campaigns');
+							} catch (err) {
+								console.error(err);
+								toast.error('Hubo un error al guardar la campaña');
+							}
+						}}
+						className='px-3 py-1 bg-red-600 text-white rounded'
+					>
+						{initialData ? 'Actualizar' : 'Crear'}
+					</button>
+				</div>
+			</div>
+		));
 	};
 
 	const previewHtml = `
@@ -214,9 +231,7 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 				</div>
 
 				<div>
-					<label className='block font-medium mb-1'>
-						Programar envío (opcional)
-					</label>
+					<label className='block font-medium mb-1'>Programar envío</label>
 					<DatePicker
 						locale='es'
 						selected={scheduledDate}
