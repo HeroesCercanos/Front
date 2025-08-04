@@ -9,7 +9,7 @@ export default function CreateEmailCampaignPage() {
 		<div className='flex min-h-screen bg-white'>
 			<Sidebar />
 			<main className='flex-1 p-8'>
-				<h2 className='text-2xl font-bold text-gray-800 mb-6'>
+				<h2 className='text-2xl font-bold text-gray-800 mb-6 sm: pt-2'>
 					Crear campaña de mail
 				</h2>
 				<EmailCampaignForm />

@@ -136,11 +136,11 @@ const UserManagementView: React.FC = () => {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
-      <aside className="w-full md:w-64 bg-black text-white">
+      <aside className="w-full md:w-64 bg-black text-black">
         <Sidebar />
       </aside>
 
-      <main className="flex-1 p-4 overflow-auto bg-gray-50">
+      <main className="flex-1 p-4 overflow-auto bg-gray-50 pt-12 md:pt-8">
         {/* Búsqueda */}
         <div className="overflow-x-auto shadow rounded bg-white mb-4">
           <div className="p-4 flex flex-col md:flex-row justify-between items-center gap-4">

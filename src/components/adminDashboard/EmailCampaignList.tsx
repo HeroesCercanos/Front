@@ -94,7 +94,7 @@ export default function EmailCampaignList() {
 	return (
 		<>
 			<div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6'>
-				<h2 className='text-2xl font-bold text-gray-800'>Campañas de correo</h2>
+				<h2 className='text-2xl font-bold text-gray-800 pt-2 md:pt-1'>Campañas de correo</h2>
 				<Link
 					href='/admin/email-campaigns/new'
 					className='self-start sm:self-auto bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition'

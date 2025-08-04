@@ -10,11 +10,11 @@ export default function TrainingView() {
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
-      <aside className="w-full md:w-64 bg-black text-white">
+      <aside className="w-full md:w-64 bg-black text-black">
         <Sidebar />
       </aside>
 
-      <section className="flex-1 p-6 bg-gray-50 flex flex-col gap-6">
+      <section className="flex-1 p-6 bg-gray-50 flex flex-col gap-6 pt-10 md:pt-8">
         <h2 className="text-2xl font-bold text-gray-800">Capacitaciones</h2>
 
         <div className="bg-gray-100 p-6 rounded-lg shadow-inner drop-shadow-lg flex flex-col justify-between w-full">
