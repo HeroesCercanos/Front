@@ -12,8 +12,9 @@ interface User {
   role: string;
   totalDonated?: number;
   reportsCount?: number;
+  banCount: number;
   isActive: boolean;
-  createdAt: string,
+  createdAt: string;
 }
 
 const UserManagementView: React.FC = () => {
@@ -22,42 +23,60 @@ const UserManagementView: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showToggleModal, setShowToggleModal] = useState(false);
 
-const fetchUsers = async () => {
-  try {
-    const res = await fetch(`${API_BASE_URL}/users`, { credentials: "include" });
-    const data: User[] = await res.json();
+  const fetchUsers = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/users`, {
+        credentials: "include",
+      });
+      const data: User[] = await res.json();
 
-    // 1) enriquecemos con donaciones/reportes
-    const enriched = await Promise.all(
-      data.map(async (u) => {
-        try {
-          const [donRes, repRes] = await Promise.all([
-            fetch(`${API_BASE_URL}/donations/user/${u.id}/history`, { credentials: "include" }),
-            fetch(`${API_BASE_URL}/incident/${u.id}/history`,    { credentials: "include" }),
-          ]);
-          const don = await donRes.json();
-          const rep = await repRes.json();
-          return {
-            ...u,
-            totalDonated: don.total || 0,
-            reportsCount: rep.length || 0,
-          };
-        } catch {
-          return { ...u, totalDonated: 0, reportsCount: 0 };
-        }
-      })
-    );
+      // enriquecemos con donaciones, reportes y baneos
+      const enriched = await Promise.all(
+        data.map(async (u) => {
+          try {
+            const [donRes, repRes, banRes] = await Promise.all([
+              fetch(`${API_BASE_URL}/donations/user/${u.id}/total`, {
+                credentials: "include",
+              }),
+              fetch(`${API_BASE_URL}/incident/user/${u.id}/count`, {
+                credentials: "include",
+              }),
+              fetch(`${API_BASE_URL}/bans/user/${u.id}/count`, {
+                credentials: "include",
+              }),
+            ]);
 
-    enriched.sort((a, b) =>
-      new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-    );
+            const don = await donRes.json(); // { userId, totalDonated }
+            const rep = await repRes.json(); // { userId, totalReports }
+            const ban = await banRes.json(); // { userId, totalBans }
 
-    setUsers(enriched);
-  } catch {
-    toast.error("Error al traer usuarios");
-  }
-};
+            return {
+              ...u,
+              totalDonated: don.totalDonated ?? 0,
+              reportsCount: rep.totalReports ?? 0,
+              banCount: ban.totalBans ?? 0,
+            };
+          } catch {
+            return {
+              ...u,
+              totalDonated: 0,
+              reportsCount: 0,
+              banCount: 0,
+            };
+          }
+        })
+      );
 
+      // orden por fecha de creación
+      enriched.sort(
+        (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      );
+      setUsers(enriched);
+    } catch {
+      toast.error("Error al traer usuarios");
+    }
+  };
 
   useEffect(() => {
     fetchUsers();
@@ -117,12 +136,12 @@ const fetchUsers = async () => {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
-  <aside className="w-full md:w-64 bg-black text-white">
-    <Sidebar />
-  </aside>
+      <aside className="w-full md:w-64 bg-black text-white">
+        <Sidebar />
+      </aside>
 
-  <main className="flex-1 p-4 overflow-auto bg-gray-50">
-
+      <main className="flex-1 p-4 overflow-auto bg-gray-50">
+        {/* Búsqueda */}
         <div className="overflow-x-auto shadow rounded bg-white mb-4">
           <div className="p-4 flex flex-col md:flex-row justify-between items-center gap-4">
             <label htmlFor="search" className="sr-only">
@@ -149,7 +168,7 @@ const fetchUsers = async () => {
                 <strong>Rol:</strong> {u.role}
               </p>
               <p className="text-sm">
-                <strong>Estado:</strong>
+                <strong>Estado:</strong>{" "}
                 <span
                   className={`ml-1 px-1 rounded ${
                     u.isActive
@@ -163,8 +182,11 @@ const fetchUsers = async () => {
               <p className="text-sm">
                 <strong>Donado:</strong> ${u.totalDonated?.toFixed(2)}
               </p>
-              <p className="text-sm mb-2">
+              <p className="text-sm">
                 <strong>Reportes:</strong> {u.reportsCount}
+              </p>
+              <p className="text-sm mb-2">
+                <strong>Baneos:</strong> {u.banCount}
               </p>
               <div className="flex flex-wrap gap-2">
                 {u.isActive && (
@@ -201,6 +223,7 @@ const fetchUsers = async () => {
                 <th className="px-4 py-2">Estado</th>
                 <th className="px-4 py-2 hidden lg:table-cell">Total Donado</th>
                 <th className="px-4 py-2 hidden lg:table-cell">Reportes</th>
+                <th className="px-4 py-2 hidden lg:table-cell">Baneos</th>
                 <th className="px-4 py-2">Acciones</th>
               </tr>
             </thead>
@@ -228,6 +251,9 @@ const fetchUsers = async () => {
                   </td>
                   <td className="px-4 py-3 hidden lg:table-cell">
                     {u.reportsCount}
+                  </td>
+                  <td className="px-4 py-3 hidden lg:table-cell">
+                    {u.banCount}
                   </td>
                   <td className="px-4 py-3 flex flex-wrap gap-2">
                     {u.isActive && (
