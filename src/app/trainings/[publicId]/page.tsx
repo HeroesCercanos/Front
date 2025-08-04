@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
 
 import { fetchSingleMedia } from '@/lib/cloudinaryClient';
 import MediaPreview from '@/components/trainings/MediaPreview';
 import { notFound } from 'next/navigation';
+import AuthProtected from '@/components/authProtected/authProtected';
 
 export default async function TrainingDetailPage({
 	params,
@@ -15,5 +14,8 @@ export default async function TrainingDetailPage({
 
 	if (!media) return notFound();
 
-	return <MediaPreview media={media} />;
+	return(
+		<AuthProtected>
+	 <MediaPreview media={media} />;
+	</AuthProtected>)
 }

@@ -4,6 +4,7 @@ import Sidebar from '@/components/adminDashboard/Sidebar';
 import EmailCampaignForm from '@/components/adminDashboard/EmailCampaignForm';
 import { useParams } from 'next/navigation';
 import { useEmailCampaign } from '@/helpers/useEmailCampaigns';
+import AuthProtected from '@/components/authProtected/authProtected';
 
 export default function EditEmailCampaignPage() {
 	const { id } = useParams();
@@ -15,6 +16,7 @@ export default function EditEmailCampaignPage() {
 		return <p className='p-4 text-red-500'>No se encontró la campaña.</p>;
 
 	return (
+		<AuthProtected>
 		<div className='flex min-h-screen bg-white'>
 			<Sidebar />
 			<main className='flex-1 p-8'>
@@ -22,5 +24,6 @@ export default function EditEmailCampaignPage() {
 				<EmailCampaignForm initialData={initialData} />
 			</main>
 		</div>
+		</AuthProtected>
 	);
 }

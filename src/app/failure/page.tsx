@@ -2,11 +2,13 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import AuthProtected from "@/components/authProtected/authProtected";
 
 
 const failure = () => {
     const router = useRouter();
     return (
+      <AuthProtected>
         <div className="flex flex-col items-center justify-center min-h-screen bg-white bg-opacity-80 p-6 text-center text-black">
       <h1 className="text-3xl font-bold text-red-600 mb-4">
         <p>Error en el pago ❌</p>
@@ -19,6 +21,7 @@ const failure = () => {
         Volver al inicio
       </button>
     </div>
+    </AuthProtected>
   );
 };
 
