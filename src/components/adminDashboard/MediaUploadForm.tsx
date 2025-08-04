@@ -50,7 +50,6 @@ export default function MediaUploadForm({
 				>
 					<option value='image'>Imagen</option>
 					<option value='video'>Video</option>
-					<option value='raw'>PDF</option>
 				</select>
 			</div>
 			<div>
@@ -65,7 +64,7 @@ export default function MediaUploadForm({
 					<input
 						id='file-input'
 						type='file'
-						accept='image/*,video/*,application/pdf'
+						accept='image/*,video/*'
 						onChange={(e) => setFile(e.currentTarget.files?.[0] || null)}
 						className='hidden'
 					/>
@@ -78,7 +77,7 @@ export default function MediaUploadForm({
 					value={title}
 					onChange={(e) => setTitle(e.target.value)}
 					className='w-full border rounded p-2'
-					placeholder='Título de la imagen/video/PDF'
+					placeholder='Título de la imagen o video'
 				/>
 			</div>
 			<div>
