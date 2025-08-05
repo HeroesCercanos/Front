@@ -30,8 +30,7 @@ export const ReportFloatingButton = () => {
   
   if (isAdminRoute || isAdminUser) return null;
   
-  // Función para el TTS del toast de autenticación
-  const speakAuthToast = (text: string) => {
+   const speakAuthToast = (text: string) => {
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(text);
       window.speechSynthesis.speak(utterance);
@@ -59,7 +58,7 @@ export const ReportFloatingButton = () => {
     }
     
     setShowForm((prev) => !prev);
-    if (!showForm) { // Si el formulario se va a abrir, lee el contenido
+    if (!showForm) { 
       speakModal();
     }
   };
@@ -68,7 +67,7 @@ export const ReportFloatingButton = () => {
     setShowForm(false);
     if (showToast) {
       toast("Formulario cerrado");
-      speakCloseToast(); // Llama al TTS para el toast de cierre
+      speakCloseToast(); 
     }
   };
 
@@ -76,7 +75,9 @@ export const ReportFloatingButton = () => {
     <>
       <button
   onClick={handleClick}
- className="cursor-pointer fixed bottom-24 sm:bottom-5 md:bottom-6 right-20 sm:right-24 md:right-32 z-[9999] flex items-center gap-2 bg-black text-white px-5 py-3 rounded-full shadow-[0_4px_20px_rgba(255,0,0,0.7)] border-2 border-red-600 hover:scale-110 transition-transform duration-200"
+ className="cursor-pointer fixed bottom-20 sm:bottom-2 md:bottom-4
+ right-6 sm:right-12 md:right-20 z-[9999] flex items-center gap-2 bg-black text-white px-5 py-3 rounded-full shadow-[0_4px_20px_rgba(255,0,0,0.7)] border-2 border-red-600 hover:scale-110 transition-transform duration-200"
+
 
 
   aria-label={showForm ? "Cerrar formulario de reporte" : "Reportar incidente"}
