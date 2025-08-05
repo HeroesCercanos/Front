@@ -117,9 +117,12 @@ export default function UserInfoModal({ user, onClose }: Props) {
 				address: sanitizedAddress,
 			};
 
-			// ⚠️ SOLO incluir phone si no está vacío Y es válido
 			if (sanitizedPhone && /^[0-9]{7,}$/.test(sanitizedPhone)) {
 				payload.phone = sanitizedPhone;
+			}
+
+			if (form.password && form.password.length >= 6) {
+				payload.password = form.password;
 			}
 
 			console.log('Payload final:', payload);
@@ -313,7 +316,7 @@ export default function UserInfoModal({ user, onClose }: Props) {
 								/>
 								<button
 									type='button'
-									className='absolute inset-y-0 right-2 top-1/2 flex items-center'
+									className='absolute inset-y-0 right-2 top-[36px]'
 									onClick={() => setShowConfirm((p) => !p)}
 								>
 									{showConfirm ? (
@@ -323,7 +326,9 @@ export default function UserInfoModal({ user, onClose }: Props) {
 									)}
 								</button>
 								{fieldErrors.confirmPassword && (
-									<p className='text-red-600'>{fieldErrors.confirmPassword}</p>
+									<p className='text-red-600 mt-6'>
+										{fieldErrors.confirmPassword}
+									</p>
 								)}
 							</div>
 						</>
