@@ -19,18 +19,25 @@ const RegisterForm = () => {
     password: "",
     confirmPassword: "",
   });
-
   const [formErrors, setFormErrors] = useState<IRegisterErrors>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setFormValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) =>
+    setFormValues((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const errors = validateRegisterForm({ ...formValues, [name]: value });
-
+    // validamos solo este campo
+    const errors = validateRegisterForm({
+      ...formValues,
+      [name]: value,
+    });
     setFormErrors((prev) => ({
       ...prev,
       [name]: errors[name as keyof IRegisterErrors],
@@ -39,26 +46,21 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // validamos todo el form
     const errors = validateRegisterForm(formValues);
     setFormErrors(errors);
-
     if (Object.keys(errors).length > 0) {
-      Object.values(errors).forEach((msg) => {
-        if (msg) toast.error(msg);
-      });
+      Object.values(errors).forEach((msg) => msg && toast.error(msg));
       return;
     }
 
     try {
       const result = await sendRegister(formValues);
-
       if (!result) {
         toast.error("No se pudo completar el registro. Inténtalo de nuevo.");
         return;
       }
-
       await notifyOnRegister(formValues.name, formValues.email);
-
       toast.success((result as any).message);
       router.replace("/login");
     } catch (err: any) {
@@ -71,81 +73,105 @@ const RegisterForm = () => {
       <h2 className="text-2xl font-bold text-center mb-4">Crear cuenta</h2>
 
       <form className="space-y-4" onSubmit={handleSubmit}>
+        {/* Nombre */}
         <div>
           <input
             type="text"
             name="name"
             placeholder="Nombre completo"
-            className={`w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 ${
-              formErrors.name ? "border-red-500 ring-red-500" : "focus:ring-red-500"
-            }`}
             value={formValues.name}
             onChange={handleChange}
             onBlur={handleBlur}
+            className={`w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 ${
+              formErrors.name
+                ? "border-red-500 ring-red-500"
+                : "focus:ring-red-500"
+            }`}
+            aria-label="Nombre completo"
           />
-          {formErrors.name && <p className="text-red-500 text-sm">{formErrors.name}</p>}
+          {formErrors.name && (
+            <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
+          )}
         </div>
 
+        {/* Email */}
         <div>
           <input
             type="email"
             name="email"
             placeholder="Email"
-            className={`w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 ${
-              formErrors.email ? "border-red-500 ring-red-500" : "focus:ring-red-500"
-            }`}
             value={formValues.email}
             onChange={handleChange}
             onBlur={handleBlur}
+            className={`w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 ${
+              formErrors.email
+                ? "border-red-500 ring-red-500"
+                : "focus:ring-red-500"
+            }`}
+            aria-label="Email"
           />
-          {formErrors.email && <p className="text-red-500 text-sm">{formErrors.email}</p>}
+          {formErrors.email && (
+            <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>
+          )}
         </div>
 
+        {/* Contraseña */}
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Contraseña"
-            className={`w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 pr-10 ${
-              formErrors.password ? "border-red-500 ring-red-500" : "focus:ring-red-500"
-            }`}
             value={formValues.password}
             onChange={handleChange}
             onBlur={handleBlur}
+            className={`w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 pr-10 ${
+              formErrors.password
+                ? "border-red-500 ring-red-500"
+                : "focus:ring-red-500"
+            }`}
+            aria-label="Contraseña"
           />
           <button
             type="button"
-            className="absolute right-2 top-2.5 text-gray-500 hover:text-red-500"
             onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-2 top-2.5 text-gray-500 hover:text-red-500"
             aria-label="Mostrar u ocultar contraseña"
           >
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
-          {formErrors.password && <p className="text-red-500 text-sm">{formErrors.password}</p>}
+          {formErrors.password && (
+            <p className="text-red-500 text-sm mt-1">{formErrors.password}</p>
+          )}
         </div>
 
+        {/* Confirmar contraseña */}
         <div className="relative">
           <input
             type={showConfirmPassword ? "text" : "password"}
             name="confirmPassword"
             placeholder="Confirmar contraseña"
-            className={`w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 pr-10 ${
-              formErrors.confirmPassword ? "border-red-500 ring-red-500" : "focus:ring-red-500"
-            }`}
             value={formValues.confirmPassword}
             onChange={handleChange}
             onBlur={handleBlur}
+            className={`w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 pr-10 ${
+              formErrors.confirmPassword
+                ? "border-red-500 ring-red-500"
+                : "focus:ring-red-500"
+            }`}
+            aria-label="Confirmar contraseña"
           />
           <button
             type="button"
-            className="absolute right-2 top-2.5 text-gray-500 hover:text-red-500"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute right-2 top-2.5 text-gray-500 hover:text-red-500"
             aria-label="Mostrar u ocultar confirmar contraseña"
           >
             {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
           {formErrors.confirmPassword && (
-            <p className="text-red-500 text-sm">{formErrors.confirmPassword}</p>
+            <p className="text-red-500 text-sm mt-1">
+              {formErrors.confirmPassword}
+            </p>
           )}
         </div>
 
