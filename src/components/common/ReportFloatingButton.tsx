@@ -6,7 +6,7 @@ import { Flame, X, PhoneOutgoing } from "lucide-react";
 import { IncidentReportForm } from "../forms/IncidentReportForm";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "react-hot-toast";
-import useSpeech from "@/helpers/useSpeech"; // Importamos el hook TTS
+import useSpeech from "@/helpers/useSpeech"; 
 
 export const ReportFloatingButton = () => {
   const [showForm, setShowForm] = useState(false);
@@ -75,19 +75,22 @@ export const ReportFloatingButton = () => {
   return (
     <>
       <button
-        onClick={handleClick}
-        className="cursor-pointer fixed bottom-5 right-20 z-[9999] flex items-center gap-2 bg-black text-white px-5 py-3 rounded-full shadow-[0_4px_20px_rgba(255,0,0,0.7)] border-2 border-red-600 hover:scale-110 transition-transform duration-200"
-        aria-label={showForm ? "Cerrar formulario de reporte" : "Reportar incidente"}
-      >
-        {showForm ? (
-          <X className="w-6 h-6 text-white" />
-        ) : (
-          <Flame className="w-6 h-6 text-red-500 cursor-pointer" />
-        )}
-        <span className="hidden sm:inline font-semibold text-base" aria-hidden="true">
-          {showForm ? "Cerrar" : "Reportar"}
-        </span>
-      </button>
+  onClick={handleClick}
+ className="cursor-pointer fixed bottom-24 sm:bottom-5 md:bottom-6 right-20 sm:right-24 md:right-32 z-[9999] flex items-center gap-2 bg-black text-white px-5 py-3 rounded-full shadow-[0_4px_20px_rgba(255,0,0,0.7)] border-2 border-red-600 hover:scale-110 transition-transform duration-200"
+
+
+  aria-label={showForm ? "Cerrar formulario de reporte" : "Reportar incidente"}
+>
+  {showForm ? (
+    <X className="w-6 h-6 text-white" />
+  ) : (
+    <Flame className="w-6 h-6 text-red-500 cursor-pointer" />
+  )}
+  <span className="hidden sm:inline font-semibold text-base" aria-hidden="true">
+    {showForm ? "Cerrar" : "Reportar"}
+  </span>
+</button>
+
 
       {showForm && (
         <div
