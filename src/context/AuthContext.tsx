@@ -42,6 +42,8 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
 						name: u.name,
 						role: u.role,
 						donations: u.donations ?? [],
+						phone: u.phone || '',
+						address: u.address || '',
 					},
 				});
 			})

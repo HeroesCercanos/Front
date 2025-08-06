@@ -154,9 +154,10 @@ export default function UserInfoModal({ user, onClose }: Props) {
 				}
 			}
 
+			const mergedUser = { ...user, ...updatedUser };
 			setUserData?.({
 				...userData!,
-				user: { ...userData!.user, ...updatedUser },
+				user: mergedUser,
 			});
 
 			setIsEditing(false);

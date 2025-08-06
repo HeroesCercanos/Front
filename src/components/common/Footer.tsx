@@ -49,8 +49,6 @@ export default function Footer() {
 					</ul>
 				</div>
 
-				<div className='mt-2 flex flex-col items-start space-y-1'></div>
-
 				<nav aria-label='Links adicionales'>
 					<h2 className='font-semibold mb-4 pt-3 lg:pt-0'>Links adicionales</h2>
 					<ul className='space-y-1 lg:space-y-2'>
