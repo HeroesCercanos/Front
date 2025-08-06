@@ -20,7 +20,7 @@ export default function DonationHistoryModal({ onClose }: Props) {
 		const fetchDonations = async () => {
 			try {
 				const res = await fetch(
-					`${API_BASE_URL}/donations/user/${userData?.user.id}/history`,
+					`${API_BASE_URL}/donations/user/${userData?.user.id}/donations`,
 					{ credentials: 'include' }
 				);
 				if (!res.ok) {
