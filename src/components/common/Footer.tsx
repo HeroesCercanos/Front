@@ -4,29 +4,45 @@ import Link from "next/link";
 import { Instagram, Facebook } from "lucide-react";
 import { useState } from "react";
 import AboutUsModal from "./AboutUsModal";
+import ReportPolicyModal from "./PoliticasDeUso";
 
 export default function Footer() {
+
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [isPolicyOpen, setIsPolicyOpen] = useState(false);
+
   return (
     <footer className="bg-black text-white" role="contentinfo">
       <AboutUsModal
         isOpen={isAboutOpen}
         onClose={() => setIsAboutOpen(false)}
       />
+      <ReportPolicyModal
+        isOpen={isPolicyOpen}
+        onClose={() => setIsPolicyOpen(false)}
+      />
 
       <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">HÉROES CERCANOS</h1>
-          <p className="uppercase mt-1 text-sm">Doná. Ayudá. Salvá.</p>
-          <button
-            type="button"
-            onClick={() => setIsAboutOpen(true)}
-            aria-label="Acerca de nosotros"
-            className="mt-2 text-sm hover:underline focus:outline-none"
-          >
-            Acerca de nosotros
-          </button>
-        </div>
+        <div className="mt-2 flex flex-col items-start space-y-1">
+  <button
+    type="button"
+    onClick={() => setIsAboutOpen(true)}
+    aria-label="Acerca de nosotros"
+    className="text-sm hover:underline focus:outline-none"
+  >
+    Acerca de nosotros
+  </button>
+  <button
+    type="button"
+    onClick={() => setIsPolicyOpen(true)}
+    aria-label="Política de uso de reportes"
+    className="text-sm hover:underline focus:outline-none"
+  >
+    Política de uso de reportes
+  </button>
+</div>
+
+
 
         <nav aria-label="Links adicionales">
           <h2 className="font-semibold mb-4">Links adicionales</h2>
