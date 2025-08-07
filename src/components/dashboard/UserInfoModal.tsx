@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	IUserInfo,
 	IUserFormValues,
@@ -18,20 +18,29 @@ export default function UserInfoModal({ user, onClose }: Props) {
 	const { userData, setUserData } = useAuth();
 
 	const [isEditing, setIsEditing] = useState(false);
-	const [form, setForm] = useState<IUserFormValues>({
-		id: user.id,
-		name: user.name || '',
-		email: user.email || '',
-		phone: user.phone || '',
-		address: user.address || '',
-		role: user.role,
-		password: '',
-		confirmPassword: '',
-	});
+
 	const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirm, setShowConfirm] = useState(false);
 	const [isSaving, setIsSaving] = useState(false);
+	const [form, setForm] = useState<IUserFormValues | null>(null);
+
+	useEffect(() => {
+		if (user) {
+			setForm({
+				id: user.id,
+				name: user.name || '',
+				email: user.email || '',
+				phone: user.phone || '',
+				address: user.address || '',
+				role: user.role,
+				password: '',
+				confirmPassword: '',
+			});
+		}
+	}, [user]);
+
+	if (!form) return null;
 
 	const validators: Record<string, (v: string) => string> = {
 		name: (v) => (v.trim() ? '' : 'Nombre requerido'),
@@ -48,7 +57,15 @@ export default function UserInfoModal({ user, onClose }: Props) {
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-		setForm((prev) => ({ ...prev, [name]: value }));
+		setForm((prev) => {
+			if (!prev) return prev;
+
+			return {
+				...prev,
+				[name]: value,
+			};
+		});
+
 		if (validators[name]) {
 			setFieldErrors((prev) => ({
 				...prev,
@@ -161,7 +178,15 @@ export default function UserInfoModal({ user, onClose }: Props) {
 			});
 
 			setIsEditing(false);
-			setForm((prev) => ({ ...prev, password: '', confirmPassword: '' }));
+
+			setForm((prev) => {
+				if (!prev) return prev;
+				return {
+					...prev,
+					password: '',
+					confirmPassword: '',
+				};
+			});
 
 			toast.success('Datos actualizados');
 		} catch (err) {
