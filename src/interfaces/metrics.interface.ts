@@ -22,9 +22,8 @@ export interface UserMetrics {
 }
 
 export interface DailyUser {
-  // acá revisá que esté así:
-  date: string;   // ✅ fecha tipo "2025-08-01"
-  count: number;  // ✅ cantidad de usuarios
+  date: string;   
+  count: number;  
 }
 
 

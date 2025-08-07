@@ -1,4 +1,3 @@
-
  
 export type IncidentType = "incendio" | "accidente";
 export type IncidentStatus = "activo" | "asistido" | "eliminado";

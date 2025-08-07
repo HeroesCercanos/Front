@@ -32,47 +32,7 @@ export default function AdminReports() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
- /* const fetchReports = async () => {
-    if (!userData?.user || userData.user.role !== "admin") return;
 
-    try {
-      const incidents = await getIncidentReports();
-      const activos = incidents.filter((i) => i.status === "activo");
-      setActiveReports(activos);
-
-      const backendHistory = await getIncidentHistory();
-      const latestHistoryEntries = new Map<string, HistoryEntry>();
-      const sortedHistory = backendHistory.sort(
-        (a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-      );
-
-      sortedHistory.forEach((entry: any) => {
-        const formattedEntry: HistoryEntry = {
-          id: entry.id,
-          incidentId: entry.incident.id,
-          text: `Reporte - ${entry.incident.createdAt.slice(0, 10)} - ${entry.incident.description || "Sin descripción"}`,
-          action: entry.action,
-          comment: entry.comment,
-          timestamp: entry.createdAt,
-          edited: false,
-          victimName: entry.victimName,
-          reason: entry.reason,
-          incidentDescription: entry.incident.description,
-          incidentType: entry.incident.type,
-        };
-        latestHistoryEntries.set(formattedEntry.incidentId, formattedEntry);
-      });
-
-      const finalHistory = Array.from(latestHistoryEntries.values()).sort(
-        (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-      );
-
-      setHistory(finalHistory);
-    } catch (error) {
-      console.error("Error al traer reportes o historial:", error);
-      toast.error("No se pudieron cargar los reportes o el historial");
-    }
-  };*/
   const fetchReports = async () => {
   if (!userData?.user || userData.user.role !== "admin") return;
 
@@ -91,7 +51,7 @@ export default function AdminReports() {
       action: entry.action,
       comment: entry.comment,
       timestamp: entry.createdAt,
-      edited: entry.edited ?? false, // <-- acá viene del backend si fue editado
+      edited: entry.edited ?? false, 
       victimName: entry.victimName,
       reason: entry.reason,
       incidentDescription: entry.incident.description,

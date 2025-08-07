@@ -2,13 +2,13 @@ import { API_BASE_URL } from "@/config/api";
 
 export const getUsersMetrics = async () => {
   try {
-    // Total de usuarios
+ 
     const totalRes = await fetch(`${API_BASE_URL}/users/stats/total`, {
       credentials: "include",
     });
     const totalData = await totalRes.json();
 
-    // Altas por día (últimos 7 días)
+    
     const dailyRes = await fetch(`${API_BASE_URL}/users/stats/registrations/daily?period=7`, {
       credentials: "include",
     });

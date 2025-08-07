@@ -13,8 +13,6 @@ import { useRouter } from "next/navigation";
 
 const MapSelector = dynamic(() => import("../Map/MapSelector"), { ssr: false });
 
-
-
 interface Props {
   onClose: (showToast?: boolean) => void;
 }

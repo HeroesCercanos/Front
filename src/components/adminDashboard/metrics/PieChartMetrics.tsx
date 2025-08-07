@@ -18,17 +18,17 @@ const PieChartMetrics = ({ title, data, dataKey, valueKey }: Props) => {
     const valor = entry[dataKey];
 
     if (dataKey === "status") {
-      if (valor === "activo") return "#ef4444"; // rojo
-      if (valor === "asistido") return "#22c55e"; // verde
-      if (valor === "eliminado") return "#9ca3af"; // gris
+      if (valor === "activo") return "#ef4444"; 
+      if (valor === "asistido") return "#22c55e"; 
+      if (valor === "eliminado") return "#9ca3af"; 
     }
 
     if (dataKey === "type") {
-      if (valor === "incendio") return "#f97316"; // naranja
-      if (valor === "accidente") return "#facc15"; // amarillo
+      if (valor === "incendio") return "#f97316"; 
+      if (valor === "accidente") return "#facc15"; 
     }
 
-    return "#a1a1aa"; // gris claro
+    return "#a1a1aa"; 
   };
 
   const renderCustomLegend = () => (
