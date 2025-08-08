@@ -33,20 +33,11 @@ export default function UserInfoModal({ onClose }: Props) {
 				confirmPassword: '',
 			};
 
-			console.log('1[Init] Datos desde userData.user:', {
-				phone: userData.user.phone,
-				address: userData.user.address,
-			});
-
 			setForm(initialForm);
 		}
 	}, [userData?.user]);
 
 	if (!form || !userData?.user) return null;
-	console.log('[2Modal] Datos iniciales cargados:', {
-		phone: userData.user.phone,
-		address: userData.user.address,
-	});
 
 	const validators: Record<string, (v: string) => string> = {
 		name: (v) => (v.trim() ? '' : 'Nombre requerido'),
@@ -137,7 +128,7 @@ export default function UserInfoModal({ onClose }: Props) {
 			if (sanitizedPhone && /^[0-9]{7,}$/.test(sanitizedPhone)) {
 				payload.phone = sanitizedPhone;
 			}
-			console.log('[3Guardar] Payload enviado al backend:', payload);
+
 			const resData = await fetch(`${API_BASE_URL}/users/${form.id}`, {
 				method: 'PATCH',
 				credentials: 'include',
@@ -153,7 +144,6 @@ export default function UserInfoModal({ onClose }: Props) {
 			}
 
 			const updatedUser = await resData.json();
-			console.log('[4Guardar] Datos recibidos del backend:', updatedUser);
 
 			if (form.password && form.confirmPassword) {
 				const resPass = await fetch(`${API_BASE_URL}/users/change-password`, {
@@ -171,10 +161,6 @@ export default function UserInfoModal({ onClose }: Props) {
 					throw new Error(error.message || 'Error al cambiar contraseña');
 				}
 			}
-			console.log('[5Contexto] userData.user actualizado:', {
-				...userData.user,
-				...updatedUser,
-			});
 
 			setUserData?.({
 				...userData,
@@ -189,7 +175,6 @@ export default function UserInfoModal({ onClose }: Props) {
 
 			toast.success('Datos actualizados');
 		} catch (err) {
-			console.error(err);
 			toast.error((err as Error).message || 'Error guardando');
 		} finally {
 			setIsSaving(false);
@@ -241,8 +226,7 @@ export default function UserInfoModal({ onClose }: Props) {
 
 			toast.success('Cuenta eliminada');
 			window.location.href = '/login';
-		} catch (err) {
-			console.error(err);
+		} catch {
 			toast.error('Error eliminando la cuenta');
 		}
 	};

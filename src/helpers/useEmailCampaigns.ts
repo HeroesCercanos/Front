@@ -49,8 +49,7 @@ export function useEmailCampaign(id?: string | string[]) {
 						variables: JSON.parse(campaign.variables),
 					});
 				}
-			} catch (err) {
-				console.error('Error cargando campaña:', err);
+			} catch {
 			} finally {
 				setLoading(false);
 			}
