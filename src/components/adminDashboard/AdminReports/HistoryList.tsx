@@ -1,4 +1,4 @@
-// components/HistoryList.tsx
+
 /*import { Pencil } from "lucide-react";
 import { HistoryEntry } from "@/interfaces/incident.interface";
 
@@ -69,7 +69,7 @@ export const HistoryList = ({ history, onEdit }: Props) => {
   );
 };*/
 
-// components/HistoryList.tsx
+
 import { Pencil } from "lucide-react";
 import { HistoryEntry } from "@/interfaces/incident.interface";
 

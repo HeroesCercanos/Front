@@ -91,14 +91,14 @@ export default function AdminReports() {
       action: entry.action,
       comment: entry.comment,
       timestamp: entry.createdAt,
-      edited: entry.edited ?? false, // <-- acá viene del backend si fue editado
+      edited: entry.edited ?? false, //   viene del backend si se editaó
       victimName: entry.victimName,
       reason: entry.reason,
       incidentDescription: entry.incident.description,
       incidentType: entry.incident.type,
     }));
 
-    // Ordenar por fecha descendente (más reciente primero)
+    // Ordenar por fecha más reciente primero
     const orderedHistory = fullHistory.sort(
       (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
