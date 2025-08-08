@@ -1,24 +1,19 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import {
-	IUserInfo,
-	IUserFormValues,
-} from '@/interfaces/AuthInterfaces/userInfo.interface';
+import { IUserFormValues } from '@/interfaces/AuthInterfaces/userInfo.interface';
 import { Pencil, X, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'react-hot-toast';
 import { API_BASE_URL } from '@/config/api';
 
 interface Props {
-	user: IUserInfo;
 	onClose: () => void;
 }
 
-export default function UserInfoModal({ user, onClose }: Props) {
+export default function UserInfoModal({ onClose }: Props) {
 	const { userData, setUserData } = useAuth();
 
 	const [isEditing, setIsEditing] = useState(false);
-
 	const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirm, setShowConfirm] = useState(false);
@@ -26,21 +21,32 @@ export default function UserInfoModal({ user, onClose }: Props) {
 	const [form, setForm] = useState<IUserFormValues | null>(null);
 
 	useEffect(() => {
-		if (user) {
-			setForm({
-				id: user.id,
-				name: user.name || '',
-				email: user.email || '',
-				phone: user.phone || '',
-				address: user.address || '',
-				role: user.role,
+		if (userData?.user) {
+			const initialForm = {
+				id: userData.user.id,
+				name: userData.user.name || '',
+				email: userData.user.email || '',
+				phone: userData.user.phone || '',
+				address: userData.user.address || '',
+				role: userData.user.role,
 				password: '',
 				confirmPassword: '',
-			});
-		}
-	}, [user]);
+			};
 
-	if (!form) return null;
+			console.log('1[Init] Datos desde userData.user:', {
+				phone: userData.user.phone,
+				address: userData.user.address,
+			});
+
+			setForm(initialForm);
+		}
+	}, [userData?.user]);
+
+	if (!form || !userData?.user) return null;
+	console.log('[2Modal] Datos iniciales cargados:', {
+		phone: userData.user.phone,
+		address: userData.user.address,
+	});
 
 	const validators: Record<string, (v: string) => string> = {
 		name: (v) => (v.trim() ? '' : 'Nombre requerido'),
@@ -57,14 +63,7 @@ export default function UserInfoModal({ user, onClose }: Props) {
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-		setForm((prev) => {
-			if (!prev) return prev;
-
-			return {
-				...prev,
-				[name]: value,
-			};
-		});
+		setForm((prev) => (prev ? { ...prev, [name]: value } : prev));
 
 		if (validators[name]) {
 			setFieldErrors((prev) => ({
@@ -89,6 +88,7 @@ export default function UserInfoModal({ user, onClose }: Props) {
 				}
 			);
 		}
+
 		if (Object.keys(errors).length) {
 			setFieldErrors(errors);
 			return;
@@ -137,8 +137,8 @@ export default function UserInfoModal({ user, onClose }: Props) {
 			if (sanitizedPhone && /^[0-9]{7,}$/.test(sanitizedPhone)) {
 				payload.phone = sanitizedPhone;
 			}
-
-			const resData = await fetch(`${API_BASE_URL}/users/${user.id}`, {
+			console.log('[3Guardar] Payload enviado al backend:', payload);
+			const resData = await fetch(`${API_BASE_URL}/users/${form.id}`, {
 				method: 'PATCH',
 				credentials: 'include',
 				headers: { 'Content-Type': 'application/json' },
@@ -153,6 +153,7 @@ export default function UserInfoModal({ user, onClose }: Props) {
 			}
 
 			const updatedUser = await resData.json();
+			console.log('[4Guardar] Datos recibidos del backend:', updatedUser);
 
 			if (form.password && form.confirmPassword) {
 				const resPass = await fetch(`${API_BASE_URL}/users/change-password`, {
@@ -170,23 +171,21 @@ export default function UserInfoModal({ user, onClose }: Props) {
 					throw new Error(error.message || 'Error al cambiar contraseña');
 				}
 			}
+			console.log('[5Contexto] userData.user actualizado:', {
+				...userData.user,
+				...updatedUser,
+			});
 
-			const mergedUser = { ...user, ...updatedUser };
 			setUserData?.({
-				...userData!,
-				user: mergedUser,
+				...userData,
+				user: { ...userData.user, ...updatedUser },
 			});
 
 			setIsEditing(false);
 
-			setForm((prev) => {
-				if (!prev) return prev;
-				return {
-					...prev,
-					password: '',
-					confirmPassword: '',
-				};
-			});
+			setForm((prev) =>
+				prev ? { ...prev, password: '', confirmPassword: '' } : prev
+			);
 
 			toast.success('Datos actualizados');
 		} catch (err) {
@@ -228,9 +227,10 @@ export default function UserInfoModal({ user, onClose }: Props) {
 			</div>
 		));
 	};
+
 	const doDelete = async () => {
 		try {
-			const res = await fetch(`${API_BASE_URL}/users/${user.id}`, {
+			const res = await fetch(`${API_BASE_URL}/users/${form!.id}`, {
 				method: 'DELETE',
 				credentials: 'include',
 			});
@@ -275,13 +275,13 @@ export default function UserInfoModal({ user, onClose }: Props) {
 								)}
 							</>
 						) : (
-							<p>{user.name}</p>
+							<p>{userData.user.name}</p>
 						)}
 					</div>
 					<div>
 						<label>Correo electrónico</label>
 						<input
-							value={user.email}
+							value={userData.user.email}
 							disabled
 							className='mt-1 block w-full border rounded p-2 bg-gray-100'
 						/>
@@ -301,7 +301,7 @@ export default function UserInfoModal({ user, onClose }: Props) {
 								)}
 							</>
 						) : (
-							<p>{user.phone || 'No especificado'}</p>
+							<p>{userData.user.phone || 'No especificado'}</p>
 						)}
 					</div>
 					<div>
@@ -319,9 +319,10 @@ export default function UserInfoModal({ user, onClose }: Props) {
 								)}
 							</>
 						) : (
-							<p>{user.address || 'No especificado'}</p>
+							<p>{userData.user.address || 'No especificado'}</p>
 						)}
 					</div>
+
 					{isEditing && (
 						<>
 							<div className='relative'>
@@ -348,26 +349,24 @@ export default function UserInfoModal({ user, onClose }: Props) {
 
 							<div className='relative'>
 								<label>Confirmar contraseña</label>
-								<div className='relative'>
-									<input
-										type={showConfirm ? 'text' : 'password'}
-										name='confirmPassword'
-										value={form.confirmPassword || ''}
-										onChange={handleChange}
-										className='mt-1 block w-full border rounded p-2 pr-10 h-10 focus:outline-none'
-									/>
-									<button
-										type='button'
-										className='absolute right-2 top-1/2 -translate-y-1/2'
-										onClick={() => setShowConfirm((p) => !p)}
-									>
-										{showConfirm ? (
-											<EyeOff className='w-5 h-5' />
-										) : (
-											<Eye className='w-5 h-5' />
-										)}
-									</button>
-								</div>
+								<input
+									type={showConfirm ? 'text' : 'password'}
+									name='confirmPassword'
+									value={form.confirmPassword || ''}
+									onChange={handleChange}
+									className='mt-1 block w-full border rounded p-2 pr-10 h-10 focus:outline-none'
+								/>
+								<button
+									type='button'
+									className='absolute right-2 top-1/2 -translate-y-1/2'
+									onClick={() => setShowConfirm((p) => !p)}
+								>
+									{showConfirm ? (
+										<EyeOff className='w-5 h-5' />
+									) : (
+										<Eye className='w-5 h-5' />
+									)}
+								</button>
 								{fieldErrors.confirmPassword && (
 									<p className='text-red-600 mt-1'>
 										{fieldErrors.confirmPassword}

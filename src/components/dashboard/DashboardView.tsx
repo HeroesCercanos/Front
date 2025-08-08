@@ -109,12 +109,7 @@ export default function DashboardView() {
 				}
 			/>
 
-			{showModal && userData?.user && (
-				<UserInfoModal
-					user={userData.user}
-					onClose={() => setShowModal(false)}
-				/>
-			)}
+			{showModal && <UserInfoModal onClose={() => setShowModal(false)} />}
 
 			{showDonationsModal && (
 				<DonationHistoryModal onClose={() => setShowDonationsModal(false)} />
