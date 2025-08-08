@@ -28,8 +28,7 @@ export default function EmailCampaignList() {
 			} else {
 				setCampaigns([]);
 			}
-		} catch (err) {
-			console.error(err);
+		} catch {
 			setCampaigns([]);
 		}
 	};

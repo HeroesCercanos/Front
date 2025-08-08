@@ -23,7 +23,6 @@ const AdminCampaignList = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [editingCampaign, setEditingCampaign] = useState<Campaign | null>(null);
 
-  // 🚀 Obtener todas las campañas
   const fetchCampaigns = async () => {
     try {
       const res = await fetch(`${API_BASE_URL}/campaigns`);
@@ -46,7 +45,6 @@ const AdminCampaignList = () => {
 
   const [pulsingId, setPulsingId] = useState<string | null>(null);
 
-  // ✅ Finalizar campaña (envía cookies)
   const handleFinishCampaign = async (id: string) => {
     try {
       setPulsingId(id);
@@ -69,7 +67,6 @@ const AdminCampaignList = () => {
     }
   };
 
-  // ✏️ Abrir modal para editar
   const handleEditClick = (campaign: Campaign) => {
     setEditingCampaign(campaign);
     setShowModal(true);

@@ -42,7 +42,6 @@ export default function MetricsView() {
         const userData = await getUsersMetrics();
         const reportData = await getReportsMetrics();
 
-        console.log("🔍 Altas diarias crudas:", userData.daily);
 
         setDonations({
           total: donationData?.total ?? 0,

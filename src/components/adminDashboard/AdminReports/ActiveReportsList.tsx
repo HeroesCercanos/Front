@@ -1,4 +1,3 @@
-// components/ActiveReportsList.tsx
 import { CheckSquare, Trash2 } from "lucide-react";
 import { FullIncident } from "@/interfaces/incident.interface";
 

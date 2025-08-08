@@ -1,4 +1,3 @@
-// helpers/sendLogin.ts
 import { API_BASE_URL } from '@/config/api';
 import { ILoginProps } from '@/interfaces/AuthInterfaces/login.interfaces';
 
