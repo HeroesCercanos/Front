@@ -43,8 +43,7 @@ export default function UploadHistory() {
 								await deleteMedia(publicId);
 								setList((prev) => prev.filter((i) => i.public_id !== publicId));
 								toast.success('Archivo eliminado con éxito.');
-							} catch (err) {
-								console.error(err);
+							} catch {
 								toast.error('Error al eliminar archivo.');
 							}
 						}}

@@ -3,7 +3,6 @@ import { CloudinaryMedia } from '@/interfaces/cloudinary.interface';
 
 async function handleApiError(res: Response): Promise<never> {
 	const errorData = await res.json().catch(() => ({}));
-	console.error('API Error:', res.status, errorData);
 	throw new Error(errorData?.message || 'Request failed');
 }
 
@@ -30,30 +29,19 @@ export async function uploadMedia(
 }
 
 export async function deleteMedia(publicId: string): Promise<void> {
-	console.log(
-		'Enviando DELETE a',
-		`${API_BASE_URL}/cloudinary/trainings/${publicId}`
-	);
 	const res = await fetch(
 		`${API_BASE_URL}/cloudinary/trainings/${encodeURIComponent(publicId)}`,
 		{ method: 'DELETE', credentials: 'include' }
 	);
 	if (!res.ok) {
-		console.error('Error DELETE:', res.status, await res.text());
 		throw new Error('Error eliminando media');
 	}
-	console.log('DELETE exitoso');
 }
 
 export async function patchMedia(
 	publicId: string,
 	updates: { title?: string; caption?: string }
 ): Promise<CloudinaryMedia> {
-	console.log(
-		'Enviando PATCH a',
-		`${API_BASE_URL}/cloudinary/trainings/${publicId}`
-	);
-	console.log('Payload:', updates);
 	const res = await fetch(
 		`${API_BASE_URL}/cloudinary/trainings/${encodeURIComponent(publicId)}`,
 		{
@@ -64,9 +52,7 @@ export async function patchMedia(
 		}
 	);
 	if (!res.ok) {
-		console.error('Error en PATCH:', res.status, await res.text());
 		throw new Error('Error actualizando media');
 	}
-	console.log('PATCH exitoso');
 	return res.json();
 }

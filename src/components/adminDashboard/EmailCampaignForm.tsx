@@ -111,8 +111,7 @@ export default function EmailCampaignForm({ initialData, onSuccess }: Props) {
 
 								if (onSuccess) onSuccess();
 								else router.push('/admin/email-campaigns');
-							} catch (err) {
-								console.error(err);
+							} catch {
 								toast.error('Hubo un error al guardar la campaña');
 							}
 						}}
